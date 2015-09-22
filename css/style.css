@@ -1,0 +1,58 @@
+.lblue{
+	background-color:#0099CC;
+}
+
+.dblue{
+	background-color: #003366;	
+}
+header{
+	//background-color:#0099CC;
+	position: relative;
+}
+
+header h1{
+	position: absolute;
+	bottom: 0px;
+	left: 60px;
+	z-index: 9;
+	margin: 0;
+	font-size: 64px;
+	color:#fff;
+	background-color:#0099CC;
+}
+
+header div{
+	z-index: 10;
+}
+
+#login-form ul{
+	list-style:none;
+	margin: 0;
+}
+
+#login-form label{
+	display: block;
+	text-align: center;
+}
+
+#login-form input{
+	width: 100%;
+	margin-top: 10px;
+	font-size: 22px;
+}
+
+.Home h2,.Home h3{
+	text-align: center;
+	color: #003366;
+}
+
+.btn-home{
+	margin-top: 20px;
+	font-size: 22px;
+	font-weight: bold;
+	text-align: center;
+	color:#fff;
+	background-color:#0099CC;
+	border-radius: 3px;
+	width: 100%;
+}
