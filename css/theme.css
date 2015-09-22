@@ -1,0 +1,36 @@
+.list-group-item:hover {
+  border-color: #2b669a;
+}
+
+.list-group-item:focus {
+  border-color: #2b669a;
+}
+
+.list-group-item:hover > .list-group-item-text {
+  color: rgb(199, 221, 239);
+}
+
+.list-group-item:hover > .list-group-item-heading {
+  color: #fff;
+}
+
+.list-group-item:focus > .list-group-item-text {
+  color: rgb(199, 221, 239);
+}
+
+.list-group-item:focus > .list-group-item-heading {
+  color: #fff;
+}
+
+.restaurant-list-item {
+  position: relative;
+}
+
+.restaurant-list-item .category-sublist {
+  position: absolute;
+  top: 0;
+  left: calc(100% + 20px);
+  display: none;
+  min-width: 100%;
+}
+
