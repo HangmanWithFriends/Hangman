@@ -47,6 +47,7 @@ def start_service():
     dispatcher.connect('get_login_page','/login',controller=page_handler, action='get_login_html',conditions=dict(method=['GET']))
     dispatcher.connect('get_lobby_page','/lobby',controller=page_handler, action='get_lobby_html',conditions=dict(method=['GET']))
     dispatcher.connect('get_request_phrase_page','/phrase',controller=page_handler, action='get_request_phrase_html',conditions=dict(method=['GET']))
+    dispatcher.connect('handle_login','/login',controller=page_handler, action='handle_login_request',conditions=dict(method=['POST']))
     
     cherrypy.quickstart(app)
     
