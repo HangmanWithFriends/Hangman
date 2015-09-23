@@ -17,11 +17,7 @@ class Page_Handler():
         pass
     
     def get_login_html(self):
-        return env.get_template('userlogin-tmpl.html').render(
-                base=cherrypy.request.base.rstrip('/') + '/'
-            )
+        return env.get_template('Home.html').render()
     
-    def get_home_html(self):
-        return 'This is the home page. Better html will follow.'
-    
-    
+    def get_lobby_html(self):
+        return env.get_template('Lobby.html').render()

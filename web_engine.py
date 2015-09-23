@@ -39,8 +39,8 @@ def start_service():
     
     page_handler = Page_Handler()
     
-    dispatcher.connect('get_home_page', '/home', controller=page_handler, action='get_home_html', conditions=dict(method=['GET']))
     dispatcher.connect('get_login_page','/login',controller=page_handler, action='get_login_html',conditions=dict(method=['GET']))
+    dispatcher.connect('get_lobby_page','/lobby',controller=page_handler, action='get_lobby_html',conditions=dict(method=['GET']))
     
     cherrypy.quickstart(app)
     
