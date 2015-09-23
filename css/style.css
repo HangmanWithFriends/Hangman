@@ -81,7 +81,7 @@ header div{
 	text-align: center;
 }
 
-#login-form input{
+#login-form input, #register-form input, #request_phrase-form input{
 	width: 100%;
 	margin-top: 10px;
 	font-size: 22px;
