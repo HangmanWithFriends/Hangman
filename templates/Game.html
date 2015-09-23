@@ -16,7 +16,7 @@
 </head>
 <header>
     <div class="blue" style="height: 60px"></div>
-    <a href="#"><h1>HANGMAN With Friends {{test}}</h1></a>
+    <h1>HANGMAN With Friends</h1>
     <div class="blue"style="height: 30px; margin-top:10px;"></div>
     <div class="player-avatar">
         <h3>Harry Potter</h3>
@@ -43,27 +43,31 @@
 	</div>
 	
 	<div class="col-md-4">
-	    <div class="chat-avatar">
-		    <h3>Lord Voldemort</h3>
-		    <img src="../img/lordv.jpg"/>
-	    </div>
-        
-        <div class="game-list">
-	        <ul>
-	            <li>
-	                <img src="../img/msg1.jpg" alt="Chatbox">
-	            </li>
+	    <div class="chat">
+                <div class="avatar">
+                    <img src="../img/lordv.jpg"/>
+		    <h3>Lord Voldemort</h3>	    
+		</div>
+
+		<div class="msg-list">
+                    <ul>
+	                <li>
+	                    <img src="../img/msg1.jpg" alt="Chatbox">
+	                </li>
 	            
-	            <li>
-	                <img src="../img/msg1.jpg" alt="Chatbox">
-	            <li>
-	        </ul>
-	        
-	        <form>
+	            	<li>
+	                    <img src="../img/msg1.jpg" alt="Chatbox">
+	                <li>
+	            </ul>
+                </div>
+
+                <div class="user-input">
+                    <form>
 		        <input type="text" name="chatmsg" placeholder="Enter message here">
 		        <input  class="btn-home" type="submit" value="Send">
 		    </form>
-	    <div>
+                </div>	
+	    </div>
 	</div>
 </body>
 </html>
