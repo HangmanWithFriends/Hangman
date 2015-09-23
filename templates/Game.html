@@ -31,43 +31,49 @@
 
 	
 <body>
-	<div class="col-md-8">
-		<h2>Guess the Word</h2>
+	<div class="col-md-5 col-md-offset-2" >	
+
 		<div class="game">
+			<div class="header">
+				<h3>Guess the Word</h3>
+			</div>
 			<img src="../img/gallows.jpg" alt="Hangman Gallows">
+		
+			<div class="user-input">
+				<form>
+					<input class="text-inline" type="text" name="letterguess" placeholder="Guess a letter or the word here">
+					<input class="btn-inline" type="submit" value="Guess">
+				</form>
+			</div>
 		</div>
-		<form>
-		    <input type="text" name="letterguess" placeholder="Guess a letter or the word here">
-		    <input  class="btn-home" type="submit" value="Guess">
-		</form>
 	</div>
 	
 	<div class="col-md-4">
 	    <div class="chat">
-                <div class="avatar">
-                    <img src="../img/lordv.jpg"/>
-		    <h3>Lord Voldemort</h3>	    
-		</div>
+			<div class="avatar">
+				<img src="../img/lordv.jpg"/>
+				<h3>Lord Voldemort</h3>	    
+			</div>
 
-		<div class="msg-list">
-                    <ul>
-	                <li>
-	                    <img src="../img/msg1.jpg" alt="Chatbox">
-	                </li>
+			<div class="msg-list">
+				<ul>
+					<li>
+						<img src="../img/msg1.jpg">
+					</li>
 	            
 	            	<li>
-	                    <img src="../img/msg1.jpg" alt="Chatbox">
+	                    <img src="../img/msg1.jpg">
 	                <li>
 	            </ul>
-                </div>
+			</div>
 
-                <div class="user-input">
-                    <form>
-		        <input type="text" name="chatmsg" placeholder="Enter message here">
-		        <input  class="btn-home" type="submit" value="Send">
-		    </form>
-                </div>	
-	    </div>
+			<div class="user-input">
+				<form>
+					<input class="text-inline" type="text" name="chatmsg" placeholder="Enter message here">
+					<input class="btn-inline" type="submit" value="Send">
+				</form>
+			</div>	
+		</div>
 	</div>
 </body>
 </html>
