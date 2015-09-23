@@ -30,3 +30,10 @@ class Page_Handler():
     def handle_login_request(self, usermail=None, password=None):
         result={'errors':[]}
         return json.dumps(result)
+
+    def get_register_html(self):
+        return env.get_template('Register.html').render()
+
+    def handle_register_request(self, usermail=None, password=None, name=None):
+        result = {'errors':[]}
+        return json.dumps(result)
