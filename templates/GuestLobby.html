@@ -1,0 +1,85 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+
+	<title>Hangman With Friends</title>
+	<meta name="description" content="Hangman With Friends">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	
+  	<link rel="stylesheet" href="../css/bootstrap.css">
+	<script src="../js/bootstrap.js"></script>
+	
+	<link rel="stylesheet" href="../css/style.css">
+</head>
+<header>
+	<div class="blue" style="height: 60px"></div>
+	<a href="#"><h1>HANGMAN With Friends {{test}}</h1></a>
+	<div class="blue"style="height: 30px; margin-top:10px;"></div>
+	<div class="player-avatar">
+		<h3>Guest</h3>
+		<img class="dropdown-toggle" src="../img/unknown.png" data-toggle="dropdown"/>
+		<ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+	      <li role="presentation"><a role="menuitem" tabindex="-1" href="/login">Logout</a></li>
+	      <li role="presentation"><a role="menuitem" tabindex="-1" href="/guestgame/1">Back to Game</a></li>   
+	    </ul>
+	</div>
+</header>
+
+
+<script>
+$(document).ready(function(){
+    $(".dropdown-toggle").dropdown();
+});
+</script>
+	
+<body>
+	<div class="container">
+		<div class="col-md-8">
+			<h2 class="dblue-text">SEE WHO ELSE IS HANGING:</h2>
+			<div class="game-list">
+				<ul>
+					<li>
+						<div class="avatar"><img src="../img/dumbledore.jpg"/></div>
+						<p>Albus Dumbledore started a game with Norman Morales</p>
+					</li>
+					<li>
+						<div class="avatar"><img src="../img/hermione.jpg"/></div>
+						<p>Hermione Granger just beat Ryan Boccabella</p>
+					</li>
+					<li>
+						<div class="avatar"><img src="../img/dobby.jpg"/></div>
+						<p>Dobby is now friends with Jesse Hamilton</p>
+					</li>
+					<li>
+						<div class="avatar"><img src="../img/dumbledore.jpg"/></div>
+						<p>Albus Dumbledore is now friends with Hagrid</p>
+					</li>
+					<li>
+						<div class="avatar"><img src="../img/ginny.jpg"/></div>
+						<p>Ginny Weasly just beat Ron Weasly</p>
+					</li>
+					<li>
+						<div class="avatar"><img src="../img/lordv.jpg"/></div>
+						<p>Lord Voldermort just beat Cornelius Fudge</p>
+					</li>
+					<li>
+						<div class="avatar"><img src="../img/hermione.jpg"/></div>
+						<p>Hermione Granger is now friends with Natalie Sanders</p>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="col-md-4">
+			<h2 class="dblue-text">READY TO PLAY?</h2>
+			<a href="/guestphrase"><div class="btn-home">Find a Game!</div></a>
+			
+		</div>
+	</div>
+	
+	
+</body>
+</html>
