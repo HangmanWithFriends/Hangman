@@ -1,12 +1,30 @@
 .lblue{
+	background-color: #E0FFFF;		
+}
+
+.blue{
 	background-color:#0099CC;
 }
 
 .dblue{
 	background-color: #003366;	
 }
+.dblue-text{
+	color: #003366;	
+}
+html,body, div{
+	background-color: #E0FFFF;	
+}
+
+.game-list::-webkit-scrollbar-thumb{
+	background-color: #E0FFFF;
+}
+.game-list::-webkit-scrollbar-button {
+      background-color: #7c2929;
+}
 header{
-	//background-color:#0099CC;
+	/*background-color:#0099CC;*/
+	background-color: #E0FFFF;
 	position: relative;
 }
 
@@ -17,15 +35,34 @@ header h1{
 	z-index: 9;
 	margin: 0;
 	font-size: 64px;
-	color:#fff;
+	color:#E0FFFF;
 	background-color:#0099CC;
 }
 
 header div{
 	z-index: 10;
 }
+.player-avatar{
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	background-color: transparent;
+	height: 100%;
+	text-align: right;
+	padding-right: 20px;
+}
 
-#login-form ul{
+.player-avatar h3{
+	display: inline-block;
+	color: #fff;
+	text-transform: uppercase;
+}
+
+.player-avatar img{
+	height: 100%;
+	display:inline-block;
+}
+#login-form ul, .game-list ul, .friend-list ul{
 	list-style:none;
 	margin: 0;
 }
@@ -55,4 +92,89 @@ header div{
 	background-color:#0099CC;
 	border-radius: 3px;
 	width: 100%;
+	cursor: pointer;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.game-list{
+	height: 320px;
+	overflow-y: scroll;
+}
+
+.game-list .avatar{
+	width: 64px;
+	height: 64px;
+	background-color:#0099CC;
+	display:inline-block;
+}
+.game-list .avatar img{
+	width: 100%;
+	padding: 8px;
+	max-height: 64px;
+	max-width: 64px;
+	height: 64px;
+}
+.game-list li{
+	display: block;
+	border-color: #E0FFFF;
+	border-bottom: 2px solid #E0FFFF;
+	position: relative;
+	height: 66px;
+	background-color: #fff;
+}
+
+.game-list p{
+	display:inline-block;
+	position: absolute;
+	margin: 0;
+	height: 64px;
+	/*top: 50%;
+	margin-top: -15px;*/
+	font-size: 16px;
+	padding-left: 10px;
+	background-color: #fff;
+	color: #003366;
+	line-height: 64px;
+}
+
+.friend-list ul{
+	height: 240px;
+	overflow-y: scroll;
+	padding: 0;
+}
+
+.friend-list li{
+	display: block;
+	border-color: #E0FFFF;
+	border-bottom: 1px solid #E0FFFF;
+	position: relative;
+	height: 31px;
+	background-color: #fff;
+	padding-left: 10px;
+	line-height: 31px;
+	color: #003366;
+}
+
+.friend-list p{
+	display:inline-block;
+	position: absolute;
+	margin: 0;
+	height: 30px;
+	top: 50%;
+	margin-top: -15px;
+	font-size: 16px;
+	padding-left: 10px;
+	background-color: #fff;
+	color: #003366;
+}
+
+.friend-list div{
+	width: 100%;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-left: 8px;
+	color: #fff;
+	font-weight: bold;
+	font-size: 22px;
 }
