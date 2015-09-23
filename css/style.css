@@ -106,9 +106,29 @@ header div{
 	padding-bottom: 10px;
 }
 
+.btn-inline{
+	margin-top: 5px;
+	font-size: 22px;
+	font-weight: bold;
+	text-align: center;
+	color:#fff;
+	background-color:#0099CC;
+	border-radius: 3px;
+	width: 100%;
+	cursor: pointer;
+	padding-top: 5 px;
+	padding-bottom: 5 px;
+	display: inline-block;
+}
+
+.text-inline{
+	margin-top: 5px;
+	display: inline-block;
+	width: 100%;
+}
+
 .chat{
 	height: 320px;
-	bottom: 0;
 }
 
 .chat .avatar{
@@ -133,12 +153,7 @@ header div{
 	display:inline-block;
 }
 
-.chat .user-input form{
-	width:100%;
-}
-
-.char .user-input  
-.char .msg-list{
+.chat .msg-list{
 	overflow-y: scroll;
 }
 
@@ -151,6 +166,41 @@ header div{
 
 .chat .msg-list ul{
 	padding: 0;
+}
+
+.game{
+	height: 320px;
+	max-width: 470px;
+}
+
+.game .header {
+	right: 200;
+	bottom: 200;
+	background-color:#0099CC;
+	width: 100%;
+	text-align: left;
+}
+
+.game .header h3{
+	color: #fff;
+	padding-right: 10px;
+	padding-left: 10px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.game .user-input{
+	max-width: 470px;
+	width:100%;
+}
+
+.game .user-input form{
+	max-width: 470px;
+	position: relative;
+}
+.game img{
+	width: 100%
+	position: relative;
 }
 
 .game-list{
