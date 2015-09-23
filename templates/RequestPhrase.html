@@ -1,0 +1,39 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+
+	<title>Hangman With Friends</title>
+	<meta name="description" content="Hangman With Friends">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+  	<link rel="stylesheet" href="../css/bootstrap.css">
+	<script src="../js/bootstrap.js"></script>
+</head>
+
+<header>
+	<div class="blue" style="height: 60px"></div>
+	<a href="#"><h1>HANGMAN With Friends</h1></a>
+	<div class="blue"style="height: 30px; margin-top:10px;"></div>
+</header>
+
+<style>
+	input {
+		width:100%;
+	}
+</style>
+
+<body>
+	<div class="col-md-4 col-md-offset-4 Home">
+		<h2>Enter the Phrase For Your<br>Opponent to Guess</h2>
+		<form id="request_phrase-form" name="request_phrase" action="index_submit" method="get" accept-charset="utf-8">
+			<input type="text" name="phrase" placeholder="Phrase" required>
+			<input  class="btn-home" type="submit" value="Submit">			
+		</form>
+	</div>
+</body>
+</html>

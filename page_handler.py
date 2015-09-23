@@ -20,7 +20,13 @@ class Page_Handler():
     
     def get_lobby_html(self):
         return env.get_template('Lobby.html').render()
-    
+
+    def get_request_phrase_html(self):
+        return env.get_template('RequestPhrase.html').render()
+
+    def get_game_html(self, game_id):
+        return env.get_template('Game.html').render(game_id=game_id)
+
     def handle_login_request(self, usermail=None, password=None):
         result={'errors':[]}
         return json.dumps(result)
