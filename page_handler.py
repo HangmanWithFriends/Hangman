@@ -30,3 +30,19 @@ class Page_Handler():
     def handle_login_request(self, usermail=None, password=None):
         result={'errors':[]}
         return json.dumps(result)
+
+    def get_register_html(self):
+        return env.get_template('Register.html').render()
+
+    def handle_register_request(self, usermail=None, password=None, username=None):
+        result = {'errors':[]}
+        return json.dumps(result)
+
+    def get_guest_lobby_html(self):
+        return env.get_template('GuestLobby.html').render()
+    
+    def get_guest_request_phrase_html(self):
+        return env.get_template('GuestRequestPhrase.html').render()
+    
+    def get_guest_game_html(self, game_id):
+        return env.get_template('GuestGame.html').render(game_id=game_id)
