@@ -30,6 +30,11 @@ def start_service():
                 {
                     'tools.staticdir.on': True,
                     'tools.staticdir.dir': 'js'
+                },
+            '/img':
+                {
+                    'tools.staticdir.on': True,
+                    'tools.staticdir.dir': 'img'
                 }
     }
     
