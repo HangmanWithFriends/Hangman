@@ -129,6 +129,7 @@ header div{
 
 .chat{
 	height: 320px;
+	margin-top: 20px;
 }
 
 .chat .avatar{
@@ -160,8 +161,9 @@ header div{
 .chat .msg-list li{
 	display: block;
 	position: relative;
-	height: 66px;
+	height: 125px;
 	background-color: #fff;
+	padding-left: 20;
 }
 
 .chat .msg-list ul{
