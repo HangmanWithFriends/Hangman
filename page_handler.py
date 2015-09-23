@@ -21,3 +21,6 @@ class Page_Handler():
     
     def get_lobby_html(self):
         return env.get_template('Lobby.html').render()
+
+    def get_request_phrase_html(self):
+        return env.get_template('RequestPhrase.html').render()
