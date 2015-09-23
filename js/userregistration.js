@@ -12,8 +12,11 @@ $(function() {
     return re.test(pwd);
   }
 
-  $('#user-add-form').on('submit', function(event) { // form id
+  $('#register-form').on('submit', function(event) { // form id
+	  
+	event.preventDefault();
 
+	var name = $('#user-name-input').val(); // input id
     var email = $('#user-email-input').val(); // input id
     var pwd = $('#user-password-input').val(); // input id
 
@@ -32,23 +35,28 @@ $(function() {
     }
     $.ajax({
             type : 'POST',
-            url: 'login',
+            url: 'register',
             contentType: 'application/json',
             data: JSON.stringify({
                 usermail: email,
-                password: pwd
+                password: pwd,
+                username: name
             }),
             dataType: 'json'
         }).done(function(data) {
-            var d = data;
-            if(d.errors.length > 0){
-                showAlert('Username/password combination is wrong', 'danger');
-            }
-            else{
+			var d = data;
+			if(d.errors.length > 0){
+				showAlert('Username/password combination is wrong', 'danger');
+			}
+			else{
+				
+				window.location.href = "/lobby";
+			}
+			
+		}).fail(function() {
+			showAlert('Username/password combination is wrong.', 'danger');
+		});
 
-                window.location.href = "/lobby";
-            }
-
-  });
-});
+	    });
+    });
 
