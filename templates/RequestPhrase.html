@@ -30,9 +30,12 @@
 <body>
 	<div class="col-md-4 col-md-offset-4 Home">
 		<h2>Enter the Phrase For Your<br>Opponent to Guess</h2>
-		<form id="request_phrase-form" name="request_phrase" action="index_submit" method="get" accept-charset="utf-8">
+		<form id="request_phrase-form" name="request_phrase" action="/game/1" method="get" accept-charset="utf-8">
 			<input type="text" name="phrase" placeholder="Phrase" required>
-			<input  class="btn-home" type="submit" value="Submit">			
+		</form>
+		
+		<form id="test-form" name="test-form" action="/game/1" method="get" accept-charset="utf-8">
+		<button  class="btn-home" href="/game/1" type="submit" value="Submit">Submit</button>   
 		</form>
 	</div>
 </body>

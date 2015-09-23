@@ -50,6 +50,9 @@ def start_service():
     dispatcher.connect('get_request_phrase_page','/phrase',controller=page_handler, action='get_request_phrase_html',conditions=dict(method=['GET']))
     dispatcher.connect('handle_login','/login',controller=page_handler, action='handle_login_request',conditions=dict(method=['POST']))
     dispatcher.connect('get_game_page','/game/{game_id}',controller=page_handler, action='get_game_html',conditions=dict(method=['GET']))
+    dispatcher.connect('get_guest_lobby_page','/guestlobby',controller=page_handler, action='get_guest_lobby_html',conditions=dict(method=['GET']))
+    dispatcher.connect('get_guest_request_phrase_page','/guestphrase',controller=page_handler,action='get_guest_request_phrase_html',conditions=dict(method=['GET']))
+    dispatcher.connect('get_guest_game_page','/guestgame/{game_id}',controller=page_handler,action='get_guest_game_html',conditions=dict(method=['GET']))
     
     cherrypy.quickstart(app)
     
