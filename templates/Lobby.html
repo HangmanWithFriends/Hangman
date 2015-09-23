@@ -20,9 +20,20 @@
 	<div class="blue"style="height: 30px; margin-top:10px;"></div>
 	<div class="player-avatar">
 		<h3>Harry Potter</h3>
-		<img src="../img/harry.jpg"/>
+		<img class="dropdown-toggle" src="../img/harry.jpg" data-toggle="dropdown"/>
+		<ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+	      <li role="presentation"><a role="menuitem" tabindex="-1" href="/login">Logout</a></li>
+	      <li role="presentation"><a role="menuitem" tabindex="-1" href="/game/1">Back to Game</a></li>   
+	    </ul>
 	</div>
 </header>
+
+
+<script>
+$(document).ready(function(){
+    $(".dropdown-toggle").dropdown();
+});
+</script>
 	
 <body>
 	<div class="container">
@@ -64,7 +75,7 @@
 
 		<div class="col-md-4">
 			<h2 class="dblue-text">READY TO PLAY?</h2>
-			<a href="#"><div class="btn-home">Find a Game!</div></a>
+			<a href="/game/1"><div class="btn-home">Find a Game!</div></a>
 			<div class="friend-list">
 				<h2 class="dblue-text">YOUR FRIENDS:</h2>
 					<div class="blue">Friends:</div>
@@ -82,5 +93,7 @@
 			</div>
 		</div>
 	</div>
+	
+	
 </body>
 </html>

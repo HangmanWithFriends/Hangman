@@ -58,9 +58,17 @@ header div{
 	text-transform: uppercase;
 }
 
+/*.player-avatar a{
+	position: absolute;
+	bottom: -25px;
+	right: 22px;
+	font-size: 20px;
+}*/
+
 .player-avatar img{
 	height: 100%;
 	display:inline-block;
+	cursor: pointer;
 }
 
 #login-form ul, .game-list ul, .friend-list ul{
