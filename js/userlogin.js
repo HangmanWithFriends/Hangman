@@ -38,7 +38,7 @@ $(function() {
 	    $alert.slideDown();
 	  };
 	    
-	$('#sign-in-form').on('submit', function(event) {
+	$('#login-form').on('submit', function(event) {
 		
 		event.preventDefault();
 
@@ -55,10 +55,10 @@ $(function() {
 		/* Send the data to 'POST /users/login' to see if this username/password works */
 		$.ajax({
 			type : 'POST',
-			url: '/users/login',
+			url: 'login',
 			contentType: 'application/json',
 			data: JSON.stringify({
-				username: email,
+				usermail: email,
 				password: pwd
 			}),
 			dataType: 'json'
@@ -68,9 +68,8 @@ $(function() {
 				showAlert('Username/password combination is wrong', 'danger');
 			}
 			else{
-				var uid = d.uid;
 				
-				window.location.href = "/users/" + uid;
+				window.location.href = "/lobby";
 			}
 			
 		}).fail(function() {
