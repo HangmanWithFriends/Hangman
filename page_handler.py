@@ -48,14 +48,6 @@ class Page_Handler():
     def get_guest_game_html(self, gid):
         return env.get_template('GuestGame.html').render(gid=gid)
     
-    def get_dummy_game(self, gid):
-        result = {}
-        result["answer"] = "this is a test phrase"
-        result["incorrect_letters"] = ['u','b','c']
-        result["incorrect_words"] = ['wronge guess']
-        result["correct_letters"] = ['s','i','t','a']
-        return json.dumps(result)
-    
     def get_gameplay_html(self, gid, uid):
         '''
         This is the function that displays the actual game 
@@ -70,4 +62,3 @@ class Page_Handler():
         game_state = json.loads(game_state.content)
         return "Game info:<br>Answer: " + game_state["answer"] + "<br>Incorrect Letters:" + str(game_state["incorrect_letters"]) + "<br>Incorrect Phrases" + \
             str(game_state["incorrect_words"]) + "<br>Correct Letters" + str(game_state["correct_letters"])
-            

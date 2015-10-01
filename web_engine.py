@@ -7,7 +7,7 @@ house the dispatcher to handle HTTP(S) requests.
 import cherrypy
 import os
 from page_handler import Page_Handler
-
+from game_handler import Game_Handler
 
 def start_service():
     dispatcher = cherrypy.dispatch.RoutesDispatcher()
@@ -43,6 +43,7 @@ def start_service():
     app = cherrypy.tree.mount(None, config=conf)
     
     page_handler = Page_Handler()
+    game_handler = Game_Handler()
     
     dispatcher.connect('default_login','/',controller=page_handler,action='get_login_html',conditions=dict(method=['GET']))
     dispatcher.connect('get_login_page','/login',controller=page_handler, action='get_login_html',conditions=dict(method=['GET']))
@@ -55,10 +56,10 @@ def start_service():
     dispatcher.connect('get_guest_lobby_page','/guestlobby',controller=page_handler, action='get_guest_lobby_html',conditions=dict(method=['GET']))
     dispatcher.connect('get_guest_request_phrase_page','/guestphrase',controller=page_handler,action='get_guest_request_phrase_html',conditions=dict(method=['GET']))
     dispatcher.connect('get_guest_game_page','/guestgame/{gid}',controller=page_handler,action='get_guest_game_html',conditions=dict(method=['GET']))
-    dispatcher.connect('get_dummy_game_JSON', '/dummygame/{gid}',controller=page_handler,action='get_dummy_game',conditions=dict(method=['GET']))
+    dispatcher.connect('get_dummy_game_JSON', '/dummygame/{gid}',controller=game_handler,action='get_dummy_game',conditions=dict(method=['GET']))
     dispatcher.connect('get_gameplay_page', '/gameplay/{gid}/{uid}',controller=page_handler,action='get_gameplay_html',conditions=dict(method=['GET']))
     
     cherrypy.quickstart(app)
-    
+        
 if __name__ == '__main__':
     start_service()
