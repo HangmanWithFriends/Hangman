@@ -17,13 +17,13 @@ class Game_Handler():
         result["correct_letters"] = ['s','i','t','a']
         return json.dumps(result)
     
-    def handle_guess(game_dict, guess):
+    def handle_guess(self, game_dict, guess):
         if len(guess) == 1:
             self.guess_letter(game_dict, guess)
         elif len(guess) > 1:
             self.guess_phrase(game_dict, guess)
 
-    def guess_phrase(game_dict, phrase):
+    def guess_phrase(self, game_dict, phrase):
         if phrase not in self.guessed_phrases:
             if phrase == self.answer_string:
                 for letter in self.answer_string:
@@ -32,7 +32,7 @@ class Game_Handler():
                 self.incorrect_phrases.add(phrase)
         #else nothing changes
     
-    def guess_letter(game_dict, letter):
+    def guess_letter(self, game_dict, letter):
         if letter not in self.guessed_letters:
             if letter in answer_string:
              self.correct_letters.add(letter)
@@ -40,7 +40,7 @@ class Game_Handler():
                 self.incorrect_letters.add(letter)
         #else nothing chnages
 
-    def set_answer(game_dict, answer):
+    def set_answer(self, game_dict, answer):
     #don't allow answer to be reset, constructs to none
         if game_dict['answer']:
             return -1  #phrase already set 
@@ -50,14 +50,14 @@ class Game_Handler():
         game_dict['answer'] = answer
         return 0  #good phrase
 
-    def set_guesser_uid(game_dict, uid):
+    def set_guesser_uid(self, game_dict, uid):
         if self.guesser_uid == None:
             game_dict['guesser_uid'] = uid
             return 0
         else:
             return -1
 
-    def set_creator_uid(game_dict, uid):
+    def set_creator_uid(self, game_dict, uid):
         if game_dict['uid'] == None:
             game_dict['uid'] = uid
             return 0
