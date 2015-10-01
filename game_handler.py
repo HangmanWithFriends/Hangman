@@ -8,6 +8,9 @@ import json
 import requests
 
 class Game_Handler():
+    def __init__(self):
+        self.game_db = dict()
+        self.waiting_gids = list()
  
     def get_dummy_game(self, gid):
         result = {}
@@ -62,3 +65,43 @@ class Game_Handler():
             game_dict['uid'] = uid
             return 0
         return -1
+ 
+    def get_game(self, gid):
+
+        # Active Game
+        if gid in self.waiting_gids:
+            output = self.game_db[gid]
+        # Logic Error: No game with this gid
+        else:
+            output = {'result': 'Error', 'message': 'No player has requested this game'}
+
+        return json.dumps(output, encoding='latin-1')
+
+    def post_game_request(self):
+        # If there are players waiting for a game, choose a waiting gid
+        if not len(self.waiting_gids) is 0:
+            new_gid = self.waiting_gids[0]
+            self.waiting_gids.pop(0)
+            self.game_dict[new_gid] = {'answer': None, 'incorrect_letters': None, 'incorrect_words': None, 'correct_letters': None}
+
+        # Otherwise, choose a new gid and add it to the list of waiting gids
+        else:
+            new_gid = max(self.game_db.keys()) + 1
+            self.waiting_gids.append(new_gid)
+
+        output = {'gid': new_gid}
+        return json.dumps(output, encoding='latin-1')
+
+    def post_game_answer(self, gid):
+        data_in = cherrypy.request.body.read()
+        data_json = json.loads(data_in)
+
+        answer = data_json['answer']
+        stripped_answer = ''.join(answer.split())  # Answer without whitespace
+
+        if not answer is None:
+            if len(stripped_answer) in range(3, 31) and answer.isalpha():
+                self.game_db[gid]['answer'] = answer
+                output = {'result': 'Success', 'message': 'Your game will begin shortly!'}
+            else:
+                output = {'result': 'Failure', 'message': 'Your phrase must be between 3 and 35 alphabetical characters.'}
