@@ -2,17 +2,17 @@
 
 <html lang="en">
 <head>
-	<meta charset="utf-8">
+    <meta charset="utf-8">
 
-	<title>Hangman With Friends</title>
-	<meta name="description" content="Hangman With Friends">
+    <title>Hangman With Friends</title>
+    <meta name="description" content="Hangman With Friends">
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
-	<link rel="stylesheet" href="../css/style.css">
-	
-  	<link rel="stylesheet" href="../css/bootstrap.css">
-	<script src="../js/bootstrap.js"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <script src="../js/bootstrap.js"></script>
 </head>
 <header>
     <div class="blue" style="height: 60px"></div>
@@ -29,18 +29,24 @@
 </header>
 
 
-	
+    
 <body>
-	<div class="col-md-8">
-		<h2>Guess the Word</h2>
-		<div class="game">
-			<img src="../img/gallows.jpg" alt="Hangman Gallows">
-		</div>
-		<form>
-		    <input type="text" name="letterguess" placeholder="Guess a letter or the word here">
-		    <input  class="btn-home" type="submit" value="Guess">
-		</form>
-	</div>
-	
+    <div class="col-md-6 col-md-offset-2" > 
+
+        <div class="game">
+            <div class="header">
+                <h3>Guess the Word</h3>
+            </div>
+            <img src="../img/gallows.jpg" alt="Hangman Gallows">
+        
+            <div class="user-input">
+                <form>
+                    <input class="text-inline" type="text" name="letterguess" placeholder="Guess a letter or the word here">
+                    <input class="btn-inline" type="submit" value="Guess">
+                </form>
+            </div>
+        </div>
+    </div>
+    
 </body>
 </html>
