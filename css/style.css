@@ -42,6 +42,12 @@ header h1{
 header div{
 	z-index: 10;
 }
+
+footer{
+	margin-top: 20px;
+	height: 40px;
+	background-color: #0099CC;	
+}
 .player-avatar{
 	position: absolute;
 	right: 0;
@@ -81,7 +87,7 @@ header div{
 	text-align: center;
 }
 
-#login-form input, #register-form input, #request_phrase-form input{
+#login-form input, #register-form input, #request_phrase-form input, #settings-form input{
 	width: 100%;
 	margin-top: 10px;
 	font-size: 22px;
@@ -90,6 +96,19 @@ header div{
 .Home h2,.Home h3{
 	text-align: center;
 	color: #003366;
+}
+
+.btn{
+	margin-top: 20px;
+	font-size: 22px;
+	font-weight: bold;
+	text-align: center;
+	color:#fff;
+	background-color:#0099CC;
+	border-radius: 3px;
+	cursor: pointer;
+	padding-top: 10px;
+	padding-bottom: 10px;
 }
 
 .btn-home{
@@ -286,4 +305,12 @@ header div{
 	color: #fff;
 	font-weight: bold;
 	font-size: 22px;
+}
+
+#avatar-upload input{
+	display: inline-block;	
+}
+
+#avatar-upload img{
+	width: 128px;	
 }
