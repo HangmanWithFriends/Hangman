@@ -6,6 +6,7 @@ that want to get JSON responses regarding the game state.
 import os.path
 import json
 import requests
+import cherrypy
 
 class Game_Handler():
     def __init__(self):
@@ -38,7 +39,7 @@ class Game_Handler():
     def guess_letter(self, game_dict, letter):
         if letter not in self.guessed_letters:
             if letter in answer_string:
-             self.correct_letters.add(letter)
+                self.correct_letters.add(letter)
             else:
                 self.incorrect_letters.add(letter)
         #else nothing chnages
