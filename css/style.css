@@ -189,7 +189,7 @@ footer{
 .chat .msg-list ul{
 	padding: 0;
 }
-
+/*---------------------- Game -------------------------------*/
 .game{
 	height: 320px;
 	max-width: 470px;
@@ -210,7 +210,42 @@ footer{
 	padding-top: 20px;
 	padding-bottom: 20px;
 }
+.game .guessed-word{
+	width: 100%;
+	background-color: #fff;
+	text-align: center;
+}
+.game .guessed-word span{
+	font-size: 36px;
+	letter-spacing: 8px;
+}
+.game .gallows .character-box{
+	width: 100%;
+	background-color: #fff;
+}
+.game .gallows img{
+	width: 100%;	
+}
+.game .gallows .character-box ul{
+	list-style:none;
+	margin: 0;	
+}
+.game .gallows .character-box ul li{
+	display: inline-block;
+	color: #000;
+	text-transform: uppercase;
+	font-size: 32px;
+	padding-left: 8px;
+	padding-right: 8px;
+}
 
+.game .gallows .character-box ul .used{
+	color: gray;		
+}
+
+.game .gallows .character-box ul .wrong{
+	color: red;		
+}
 .game .user-input{
 	max-width: 470px;
 	width:100%;
