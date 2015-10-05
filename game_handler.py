@@ -8,7 +8,9 @@ import json
 import requests
 
 class Game_Handler():
- 
+    def __init__(self):
+        self.game_dict = {}
+
     def get_dummy_game(self, gid):
         result = {}
         result["answer"] = "this is a test phrase"
@@ -17,7 +19,7 @@ class Game_Handler():
         result["correct_letters"] = ['s','i','t','a']
         return json.dumps(result)
     
-    def handle_guess(self, game_dict, guess):
+    def post_guess(self, game_dict, guess):
         if len(guess) == 1:
             self.guess_letter(game_dict, guess)
         elif len(guess) > 1:
@@ -40,25 +42,25 @@ class Game_Handler():
                 self.incorrect_letters.add(letter)
         #else nothing chnages
 
-    def set_answer(self, game_dict, answer):
+    def set_answer(self, gid, answer):
     #don't allow answer to be reset, constructs to none
-        if game_dict['answer']:
+        if self.game_dict[gid]['answer']:
             return -1  #phrase already set 
         if len(answer) > 30 or len(answer) < 3:
             return -2  #phrase illegal length
     
-        game_dict['answer'] = answer
+        self.game_dict[gid]['answer'] = answer
         return 0  #good phrase
 
-    def set_guesser_uid(self, game_dict, uid):
-        if self.guesser_uid == None:
-            game_dict['guesser_uid'] = uid
+    def set_guesser_uid(self, gid, uid):
+        if self.game_dict[gid]['guesser_uid'] == None:
+            self.game_dict[gid]['guesser_uid'] = uid
             return 0
         else:
             return -1
 
-    def set_creator_uid(self, game_dict, uid):
-        if game_dict['uid'] == None:
-            game_dict['uid'] = uid
+    def set_creator_uid(self, gid, uid):
+        if self.game_dict[gid]['uid'] == None:
+            game_dict[gid]['uid'] = uid
             return 0
         return -1
