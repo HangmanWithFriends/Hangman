@@ -26,7 +26,9 @@ class Game_Handler():
             self.guess_letter(game_db, guess)
         elif len(guess) > 1:
             self.guess_phrase(game_db, guess)
-        return json.dumps({'result':'Success', 'errors':[]})
+
+        output ={'result':'Success', 'errors':[]}
+        return json.dumps(output,encoding='latin-1')
 
     def guess_phrase(self, gid, phrase):
         if phrase not in self.guessed_phrases:
@@ -71,7 +73,7 @@ class Game_Handler():
         output = {'gid': new_gid}
         return json.dumps(output, encoding='latin-1')
 
-    def post_game_answer(self, gid):
+    def post_game_prompt(self, gid):
         data_in = cherrypy.request.body.read()
         data_json = json.loads(data_in)
 
@@ -83,4 +85,5 @@ class Game_Handler():
                 self.game_db[gid]['answer'] = answer
                 output = {'result': 'Success', 'message': 'Your game will begin shortly!'}
             else:
-                output = {'result': 'Failure', 'message': 'Your phrase must be between 3 and 35 alphabetical characters.'}
+                output = {'result': 'Failure', 'message': 'Your phrase must be between 3 and 30 alphabetical characters.'}
+        return json.dumps(output, encoding='latin-1')
