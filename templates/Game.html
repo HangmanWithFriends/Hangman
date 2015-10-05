@@ -31,48 +31,64 @@
 
 	
 <body>
-	<div class="col-md-6 col-md-offset-1" >	
+	<div class="container">
+		<div class="col-md-6 col-md-offset-1" >	
 
-		<div class="game">
-			<div class="header">
-				<h3>Guess the Word</h3>
-			</div>
-			<img src="../img/gallows.jpg" alt="Hangman Gallows">
-		
-			<div class="user-input">
-				<form>
-					<input class="text-inline" type="text" name="letterguess" placeholder="Guess a letter or the word here">
-					<input class="btn-inline" type="submit" value="Guess">
-				</form>
+			<div class="game">
+				<div class="header">
+					<h3>Guess the Word</h3>
+				</div>
+				<div class="guessed-word">
+					<span>H______</span>
+				</div>				
+				<div class="gallows">
+					<img src="../img/gallows0.png" alt="Hangman Gallows">
+					<div class="character-box">
+						<ul>
+							<li>A</li>
+							<li class="wrong">B</li>
+							<li class="used">C</li>
+							<li>D</li>
+							<li>E</li>
+						
+						</ul>
+					</div>
+				</div>
+				<div class="user-input">
+					<form>
+						<input class="text-inline" type="text" name="letterguess" placeholder="Guess a letter or the word here">
+						<input class="btn-inline" type="submit" value="Guess">
+					</form>
+				</div>
 			</div>
 		</div>
-	</div>
-	
-	<div class="col-md-4">
-	    <div class="chat">
-			<div class="avatar">
-				<img src="../img/lordv.jpg"/>
-				<h3>Lord Voldemort</h3>	    
-			</div>
 
-			<div class="msg-list">
-				<ul>
-					<li>
-						<img src="../img/voldy_msg.jpg">
-					</li>
-	            
-	            	<li>
-	                    <img src="../img/harry_msg.jpg">
-	                <li>
-	            </ul>
-			</div>
+		<div class="col-md-4">
+			<div class="chat">
+				<div class="avatar">
+					<img src="../img/lordv.jpg"/>
+					<h3>Lord Voldemort</h3>	    
+				</div>
 
-			<div class="user-input">
-				<form>
-					<input class="text-inline" type="text" name="chatmsg" placeholder="Enter message here">
-					<input class="btn-inline" type="submit" value="Send">
-				</form>
-			</div>	
+				<div class="msg-list">
+					<ul>
+						<li>
+							<img src="../img/voldy_msg.jpg">
+						</li>
+
+						<li>
+							<img src="../img/harry_msg.jpg">
+						<li>
+					</ul>
+				</div>
+
+				<div class="user-input">
+					<form>
+						<input class="text-inline" type="text" name="chatmsg" placeholder="Enter message here">
+						<input class="btn-inline" type="submit" value="Send">
+					</form>
+				</div>	
+			</div>
 		</div>
 	</div>
 </body>
