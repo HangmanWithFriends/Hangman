@@ -100,10 +100,12 @@ class Game_Handler():
         waiting = str(j['waiting'])
         if (waiting == "True"): 
 #             return env.get_template('Wait.html').render(uid=uid,gid=str(j['gid']))
-            sleep(2)    # Wait 2 seconds and check if game exists
-            check_game = requests.get('http://localhost:8080/game/' + str(j['gid']))
-            game_resp = json.loads(check_game.content)
-            if(str(game_resp['result']) == "Error"): return "Game not ready!"
+            while(1):
+                check_game = requests.get('http://localhost:8080/game/' + str(j['gid']))
+                game_resp = json.loads(check_game.content)
+                if(str(game_resp['result']) == "Error"):
+                    sleep(2)    # Wait 2 seconds and check if game exists
+                elif(str(game_resp['result']) == "Success"): return "Game ready!"
         if (waiting == "False"):return "We're ready!"
         else: return "An error occurred"
 
