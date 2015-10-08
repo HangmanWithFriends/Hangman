@@ -25,28 +25,30 @@ class Game_Handler():
     
     def post_guess(self, gid, guess):
         if len(guess) == 1:
-            self.guess_letter(game_db, guess)
+            self.guess_letter(gid, guess)
         elif len(guess) > 1:
-            self.guess_phrase(game_db, guess)
+            self.guess_phrase(gid, guess)
 
         output ={'result':'Success', 'errors':[]}
         return json.dumps(output,encoding='latin-1')
 
     def guess_phrase(self, gid, phrase):
-        if phrase not in self.guessed_phrases:
-            if phrase == self.answer_string:
-                for letter in self.answer_string:
-                    self.correct_letters.add(letter)
+        game_dict = self.game_db[gid]
+        if phrase not in game_dict[guessed_phrases]:
+            if phrase == game_dict['answer']:
+                for letter in game_dict['correct_letters']:
+                    game_dict['correct_letters'].append(letter)
             else:
-                self.incorrect_phrases.add(phrase)
+                game_dict['incorrect_words'].append(phrase)
         #else nothing changes
     
     def guess_letter(self, gid, letter):
-        if letter not in self.guessed_letters:
-            if letter in answer_string:
-                self.correct_letters.add(letter)
+        game_dict = self.game_db[gid]
+        if letter not in game_dict['correct_letters'] and letter not in game_dict['incorrect_letters']:
+            if letter in game_dict['answer']:
+                game_dict['correct_letters'].append(letter)
             else:
-                self.incorrect_letters.add(letter)
+                game_dict['incorrect_letters'].append(letter)
         #else nothing chnages
 
     def get_game(self, gid):
@@ -57,7 +59,7 @@ class Game_Handler():
 
         # Logic Error: No active game with this gid
         else:
-            output = {'result': 'Error', 'message': 'This game was not requested by two players}
+            output = {'result': 'Error', 'message': 'This game was not requested by two players'}
 
         return json.dumps(output, encoding='latin-1')
 
@@ -69,7 +71,7 @@ class Game_Handler():
 
             (guesser_uid, creator_uid) = self.assign_player_roles(first_uid, uid)
 
-            self.game_db[new_gid] = {'answer': None, 'incorrect_letters': None, 'incorrect_words': None, 'correct_letters': None, 'guesser_uid' : guesser_uid, 'creator_uid':creator_uid}
+            self.game_db[new_gid] = {'answer': None, 'incorrect_letters': [], 'incorrect_words': [], 'correct_letters': [], 'guesser_uid' : guesser_uid, 'creator_uid':creator_uid}
 
             waiting = False
             is_creator = (creator_uid == uid)
