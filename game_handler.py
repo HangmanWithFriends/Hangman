@@ -59,7 +59,7 @@ class Game_Handler():
 
         # Logic Error: No active game with this gid
         else:
-            output = {'result': 'Error', 'message': 'This game was not requested by two players}
+            output = {'result': 'Error', 'message': 'This game was not requested by two players'}
 
         return json.dumps(output, encoding='latin-1')
 
