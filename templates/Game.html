@@ -45,13 +45,17 @@
 					<img src="../img/gallows0.png" alt="Hangman Gallows">
 					<div class="character-box">
 						<ul>
-							<li>A</li>
-							<li class="wrong">B</li>
-							<li class="used">C</li>
-							<li>D</li>
-							<li>E</li>
-						
-						</ul>
+                            <! All letters, class based on if its in correct or in incorrect >
+                            {% for letter in {{ alphabet }} %}
+                                {% if {{letter}} in {{game_dict['correct_letters']}} %}
+                                    <li class="used">{{letter}}</li>
+                                {% elif {{letter}} in {{game_dict['incorrect_letters']}} %}
+                                    <li class="wrong">{{letter}}</li>
+                                {% else %}
+                                    <li>{{letter}}</li>
+                                {% endif %}                                 
+                            {% endfor %}
+					    </ul>
 					</div>
 				</div>
 				<div class="user-input">
