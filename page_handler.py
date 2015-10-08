@@ -77,8 +77,7 @@ class Page_Handler():
 
         game_dict = json.loads(game_state.content)
         
-        game_dict = {'answer':"THIS IS A TEST", 'guesser_uid':"1", 'creator_uid':"2", "correct_letters":['H', 'I', 'S'], "incorrect_letters":['Z
-', 'P'], "incorrect_words"=["NICE TRY"]}
+        game_dict = {'answer':"THIS IS A TEST", 'guesser_uid':"1", 'creator_uid':"2", "correct_letters":['H', 'I', 'S'], "incorrect_letters":['Z', 'P'], "incorrect_words"=["NICE TRY"]}
         alphabet = list(string.ascii_uppercase)
 
         word_progress = []
