@@ -74,7 +74,7 @@ class Game_Handler():
         # Otherwise, choose a new gid and add it to the list of waiting gids
         else:
             new_gid = max(self.game_db.keys()) + 1
-            self.waiting_gids.append(new_gid)
+            self.waiting_gids.append((new_gid, uid))
 
         output = {'gid': new_gid}
         return json.dumps(output, encoding='latin-1')
