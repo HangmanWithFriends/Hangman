@@ -65,8 +65,8 @@
 					</div>
 				</div>
 				<div class="user-input">
-					<form id="guess-form">
-						<input class="text-inline" type="text" id="guess-input" placeholder="Guess a letter or the word here">
+					<form id="guess-form" action="/game/{{ uid }}/{{ gid }}" method="post">
+						<input name="guess" class="text-inline" type="text" id="guess-input" placeholder="Guess a letter or the word here">
 						<input class="btn-inline" type="submit" value="Guess">
 					</form>
 				</div>

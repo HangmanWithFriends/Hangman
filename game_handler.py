@@ -33,9 +33,8 @@ class Game_Handler():
         result["result"] = "Success"
         return json.dumps(result)
     
-    def post_guess(self, uid, gid):
-        data_in = cherrypy.request.body.read()
-        data_json = json.loads(data_in)
+    def post_guess(self, uid, gid, guess):
+        
 
         if(gid not in self.game_db):
             output = {'result':'Error', 'errors':["Game does not exist"]}
@@ -44,7 +43,7 @@ class Game_Handler():
         if(uid != self.game_db[gid]['guesser_uid']):
             output = {'result':'Error', 'errors':["Must be the guessing user to guess"]}
         
-        if not 'guess' in data_json:
+        if not guess:
             output = {'result':'Failure', 'message':"Incoming data not valid"}
             return json.dumps(output, encoding='latin-1')
 
@@ -52,17 +51,18 @@ class Game_Handler():
             output = {'result':'Failure', 'message':"Must be the guessing user to guess"}
             return json.dumps(output, encoding='latin-1')
 
-        guess = data_json['guess'].upper()
+        guess = guess.upper()
 
         if len(guess) is 1:
-            win = self.guess_letter(gid, guess)
+            self.guess_letter(gid, guess)
 
         elif len(guess) > 1:
-            win = self.guess_phrase(gid, guess)
+            self.guess_phrase(gid, guess)
 
         output ={'result':'Success', 'message': None}
 
-        return json.dumps(output,encoding='latin-1')
+#         return json.dumps(output,encoding='latin-1')
+        raise cherrypy.HTTPRedirect('/gameplay/' + str(uid) + '/' + str(gid))
 
     def guess_phrase(self, gid, phrase):
         if gid not in self.game_db:
@@ -70,14 +70,15 @@ class Game_Handler():
 
         game_dict = self.game_db[gid]
 
-        if not phrase in game_dict['guessed_phrases']:
+        if not phrase in game_dict['incorrect_words']:
             if phrase == game_dict['answer']:
                 for letter in phrase:
-                    game_dict['correct_letters'].append(letter)
-                return True
+                    if not letter in game_dict['correct_letters']:
+                        game_dict['correct_letters'].append(letter)
             else:
                 game_dict['incorrect_words'].append(phrase)
-                return False
+
+            self.check_win(game_dict, phrase)
     
     def guess_letter(self, gid, letter):
         game_dict = self.game_db[gid]
@@ -88,12 +89,25 @@ class Game_Handler():
         if not letter in correct_letters and not letter in incorrect_letters:
             if letter in answer:
                 game_dict['correct_letters'].append(letter)
-
-                if len(set(correct_letters.split())) is len(answer):
-                    return True
             else:
                 game_dict['incorrect_letters'].append(letter)
-                return False
+
+            self.check_win(game_dict, letter)
+
+    def check_win(self, game_dict, guess):
+        # Check if the guesser won
+        if len(guess) > 1:
+            if guess == game_dict['answer']:
+                game_dict['win'] = game_dict['guesser_uid']
+        else:
+            if len(set(game_dict['answer'])) is len(game_dict['correct_letters']):
+                game_dict['win'] = game_dict['guesser_uid']
+
+        # Check if the creator won
+        guesses_made = len(game_dict['incorrect_letters']) + len(game_dict['incorrect_words'])
+        if guesses_made >= 6:
+            game_dict['win'] = game_dict['creator_uid']
+
 
     def get_game(self, gid):
 
@@ -101,6 +115,8 @@ class Game_Handler():
         if str(gid) in self.game_db:
             output = self.game_db[gid]
             output['result'] = 'Success'
+            output['errors'] = []
+
 
         # Logic Error: No active game with this gid
         else:
@@ -133,22 +149,23 @@ class Game_Handler():
                             raise cherrypy.HTTPRedirect('/gameplay/' + str(uid) + '/' + str(j['gid']))
                     
         if (waiting == "False"):
-            check_game = requests.get('http://localhost:8080/game/' + str(j['gid']))
-            game_resp = json.loads(check_game.content)
-            if(str(game_resp['result']) == "Error"):
-                sleep(2)    # Wait 2 seconds and check if game exists
-            elif(str(game_resp['result']) == "Success"):
-                creator = str(game_resp['creator_uid'])
-                if creator == uid:
-                    raise cherrypy.HTTPRedirect('/phrase/' + str(uid) + '/' + str(j['gid']))
-                else:
-                    answer = str(game_resp['answer'])
-                    if answer == "None": answer = False
-                    if not answer:
-                        sleep(2)
-                        continue
+            while(1):
+                check_game = requests.get('http://localhost:8080/game/' + str(j['gid']))
+                game_resp = json.loads(check_game.content)
+                if(str(game_resp['result']) == "Error"):
+                    sleep(2)    # Wait 2 seconds and check if game exists
+                elif(str(game_resp['result']) == "Success"):
+                    creator = str(game_resp['creator_uid'])
+                    if creator == uid:
+                        raise cherrypy.HTTPRedirect('/phrase/' + str(uid) + '/' + str(j['gid']))
                     else:
-                        raise cherrypy.HTTPRedirect('/gameplay/' + str(uid) + '/' + str(j['gid']))
+                        answer = str(game_resp['answer'])
+                        if answer == "None": answer = False
+                        if not answer:
+                            sleep(2)
+                            continue
+                        else:
+                            raise cherrypy.HTTPRedirect('/gameplay/' + str(uid) + '/' + str(j['gid']))
         else: return "An error occurred"
 
     def post_game_request(self, uid):
@@ -165,7 +182,8 @@ class Game_Handler():
                 (guesser_uid, creator_uid) = self.assign_player_roles(first_uid, uid)
                 self.game_db[new_gid] = {'answer': None, 
                                          'incorrect_letters': [], 'incorrect_words': [], 'correct_letters': [], 
-                                         'guesser_uid' : guesser_uid, 'creator_uid':creator_uid}
+                                         'guesser_uid' : guesser_uid, 'creator_uid':creator_uid,
+                                         'win': None}
                 waiting = False
 
         # Otherwise, choose a new gid and add it to the list of waiting gids
@@ -178,22 +196,27 @@ class Game_Handler():
         output = {'gid': new_gid, 'waiting': waiting, 'errors':[]}
         return json.dumps(output, encoding='latin-1')
 
-    def post_game_prompt(self, uid, gid):
-        data_in = cherrypy.request.body.read()
-        data_json = json.loads(data_in)
+    def post_game_prompt(self, uid, gid, answer=None):
 
-        if 'answer' in data_json:
-            answer = data_json['answer'].upper()
-            stripped_answer = ''.join(answer.split())  # Answer without whitespace
+        if uid != self.game_db[gid]['creator_uid']:
+            output = {'result': 'Failure', 'message': "Must be the creating user to create prompt"}
+            return json.dumps(output, encoding='latin-1')
 
-            if not answer is None:
-                if len(stripped_answer) in range(3, 31) and answer.isalpha():
-                    self.game_db[gid]['answer'] = answer
-                    output = {'result': 'Success', 'message': 'Your game will begin shortly!'}
-                else:
-                    output = {'result': 'Failure', 'message': 'Your phrase must be between 3 and 30 alphabetical characters.'}
-        else:
+        if not answer:
             output = {'result': 'Failure', 'message': 'Incoming data insufficient'}
+            return json.dumps(output, encoding='latin-1')
+
+        answer = answer.upper()
+        stripped_answer = ''.join(answer.split())  # Answer without whitespace
+
+        if not answer is None:
+            if len(stripped_answer) in range(3, 31) and answer.isalpha():
+                self.game_db[gid]['answer'] = answer
+                output = {'result': 'Success', 'message': 'Your game will begin shortly!'}
+            else:
+                output = {'result': 'Failure', 'message': 'Your phrase must be between 3 and 30 alphabetical characters.'}
+        else:
+            output = {'result': 'Failure', 'message': 'Empty answer'}
 
         if not answer is None:
             if len(stripped_answer) in range(3, 31) and answer.isalpha():
