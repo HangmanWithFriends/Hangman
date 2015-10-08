@@ -78,8 +78,8 @@ class Page_Handler():
         game_state = requests.get('http://localhost:8080/game/'+str(gid))
  
         game_dict = json.loads(game_state.content)
-        if (len(game_dict['errors']) != 0):
-            return "Sorry, error"
+        if not len(game_dict['errors']) is 0:
+            return game_dict['errors']
          
         alphabet = list(string.ascii_uppercase)
 

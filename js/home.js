@@ -38,7 +38,7 @@ $(function() {
 			url: 'get-guest-uid'
 		}).done(function(data) {
 			var d = data;
-			var actual_json = JSON.parse(d)
+			var actual_json = JSON.parse(d);
 //			var uid = d.uid.toString();
 			console.log(actual_json.uid);
 			window.location.href = "/guestlobby/" + actual_json.uid;
