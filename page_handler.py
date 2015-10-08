@@ -80,14 +80,16 @@ class Page_Handler():
         game_dict = {'answer':"THIS IS A TEST", 'guesser_uid':"1", 'creator_uid':"2", "correct_letters":['H', 'I', 'S'], "incorrect_letters":['Z', 'P'], "incorrect_words":["NICE TRY"]}
         alphabet = list(string.ascii_uppercase)
 
-        word_progress = []
+        list_word_progress = []
         for letter in game_dict['answer']:
             if letter == ' ':
-                word_progress.append(' ')
+                list_word_progress.append(' ')
             elif letter in game_dict['correct_letters']:
-                word_progress.append(letter)
+                list_word_progress.append(letter)
             else:
-                word_progress.append("_")
+                list_word_progress.append("_")
+
+        word_progress = ''.join(list_word_progress)
 
         num_wrong = len(game_dict['incorrect_letters']) + len(game_dict['incorrect_words'])
         img_name = "../img/gallows"+str(num_wrong)+".png"
