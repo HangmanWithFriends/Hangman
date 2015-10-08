@@ -75,10 +75,11 @@ class Page_Handler():
         template page. 
         '''
         game_state = requests.get('http://localhost:8080/game/'+str(gid))
-
+ 
         game_dict = json.loads(game_state.content)
-        
-        game_dict = {'answer':"THIS IS A TEST", 'guesser_uid':"1", 'creator_uid':"2", "correct_letters":['H', 'I', 'S'], "incorrect_letters":['Z', 'P'], "incorrect_words":["NICE TRY"]}
+        if (len(game_dict['errors']) != 0):
+            return "Sorry, error"
+         
         alphabet = list(string.ascii_uppercase)
 
         list_word_progress = []
@@ -96,7 +97,7 @@ class Page_Handler():
         
         img_name = "/img/gallows"+str(num_wrong)+".png"
  
-        return env.get_template('Game.html').render(game_dict=game_dict, alphabet=alphabet, word_progress=word_progress, img_name=img_name)
+        return env.get_template('Game.html').render(game_dict=game_dict, alphabet=alphabet, word_progress=word_progress, img_name=img_name, gid=gid, uid=uid)
     
     def get_wait_html(self, uid, gid):
         return env.get_template('Wait.html').render(uid=uid, gid=gid)

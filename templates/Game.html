@@ -31,6 +31,12 @@
 
 	
 <body>
+    <div id="site-state-info" style="display:None">
+        <ul>
+            <li id=uid>{{ uid }}</li>
+            <li id=gid>{{ gid }}</li>
+        </ul>
+    </div>
 	<div class="container">
 		<div class="col-md-6 col-md-offset-1" >	
 
@@ -59,8 +65,8 @@
 					</div>
 				</div>
 				<div class="user-input">
-					<form>
-						<input class="text-inline" type="text" name="letterguess" placeholder="Guess a letter or the word here">
+					<form id="guess-form">
+						<input class="text-inline" type="text" id="guess-input" placeholder="Guess a letter or the word here">
 						<input class="btn-inline" type="submit" value="Guess">
 					</form>
 				</div>
@@ -95,6 +101,7 @@
 			</div>
 		</div>
 	</div>
-	
+
+    <script src="/js/gameplay.js"></script>
 </body>
 </html>
