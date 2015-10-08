@@ -23,9 +23,13 @@ class Game_Handler():
         result["correct_letters"] = ['s','i','t','a']
         return json.dumps(result)
     
-    def post_guess(self, gid):
+    def post_guess(self, uid, gid):
         data_in = cherrypy.request.body.read()
         data_json = json.loads(data_in)
+        
+        if(uid != self.game_db[gid]['guesser_uid']:
+            output = {'result':'Failure', 'errors':["Must be the guessing user to guess"]
+            return json.dumps(output, encoding='latin-1'))
 
         guess = data_json['guess']
         guess = guess.upper()
