@@ -95,6 +95,7 @@ class Game_Handler():
         data_json = json.loads(data_in)
 
         answer = data_json['answer']
+        answer = answer.upper()
         stripped_answer = ''.join(answer.split())  # Answer without whitespace
 
         if not answer is None:
