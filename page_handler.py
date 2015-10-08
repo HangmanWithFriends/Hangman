@@ -14,7 +14,10 @@ env = Environment(loader=FileSystemLoader(os.path.abspath(os.path.dirname(__file
 class Page_Handler():
     
     def __init__(self):
-        pass
+        self.users = {}
+        self.guest_users = {}
+        self.next_user = 1
+        self.next_guest_user = 1
     
     def get_login_html(self):
         return env.get_template('Home.html').render()
@@ -44,7 +47,7 @@ class Page_Handler():
         return env.get_template('GuestLobby.html').render(uid=uid);
     
     def get_guest_uid(self):
-        userid = 5
+        userid = "g" + str(self.next_guest_user)
         guest_info = {'uid' : userid}
         guest_info['errors'] = []
         return json.dumps(guest_info)
