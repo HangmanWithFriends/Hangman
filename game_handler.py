@@ -50,11 +50,12 @@ class Game_Handler():
     def get_game(self, gid):
 
         # Active Game
-        if gid in self.waiting_gids:
+        if gid in self.game_db:
             output = self.game_db[gid]
-        # Logic Error: No game with this gid
+
+        # Logic Error: No active game with this gid
         else:
-            output = {'result': 'Error', 'message': 'No player has requested this game'}
+            output = {'result': 'Error', 'message': 'This game was not requested by two players}
 
         return json.dumps(output, encoding='latin-1')
 
