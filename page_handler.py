@@ -42,8 +42,8 @@ class Page_Handler():
     def get_guest_lobby_html(self):
         return env.get_template('GuestLobby.html').render()
     
-    def get_guest_request_phrase_html(self):
-        return env.get_template('GuestRequestPhrase.html').render()
+    def get_guest_request_phrase_html(self, uid, gid):
+        return env.get_template('GuestRequestPhrase.html').render(uid=uid, gid=gid)
     
     def get_guest_game_html(self, gid):
         return env.get_template('GuestGame.html').render(gid=gid)

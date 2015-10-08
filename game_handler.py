@@ -71,12 +71,16 @@ class Game_Handler():
 
             self.game_db[new_gid] = {'answer': None, 'incorrect_letters': None, 'incorrect_words': None, 'correct_letters': None, 'guesser_uid' : guesser_uid, 'creator_uid':creator_uid}
 
+            waiting = False
+            is_creator = (creator_uid == uid)
+
         # Otherwise, choose a new gid and add it to the list of waiting gids
         else:
             new_gid = max(self.game_db.keys()) + 1
             self.waiting_gids.append((new_gid, uid))
+            waiting = True
 
-        output = {'gid': new_gid}
+        output = {'gid': new_gid, 'waiting': waiting}
         return json.dumps(output, encoding='latin-1')
 
     def post_game_prompt(self, gid):
