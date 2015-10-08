@@ -14,6 +14,7 @@ class Game_Handler():
         random.seed()
         self.game_db = dict()
         self.waiting_gids = list()
+        self.next_gid = 1
  
     def get_dummy_game(self, gid):
         result = {}
@@ -63,7 +64,7 @@ class Game_Handler():
     def get_game(self, gid):
 
         # Active Game
-        if gid in self.game_db:
+        if str(gid) in self.game_db:
             output = self.game_db[gid]
 
         # Logic Error: No active game with this gid
@@ -71,23 +72,31 @@ class Game_Handler():
             output = {'result': 'Error', 'message': 'This game was not requested by two players'}
 
         return json.dumps(output, encoding='latin-1')
+    
+    def get_game_request(self, uid):
+        request_state = requests.post('http://localhost:8080/game/' + str(uid) + '/request')
+        resp_json = json.loads(request_state.content)
+        return resp_json['waiting']
 
     def post_game_request(self, uid):
         # If there are players waiting for a game, choose a waiting gid
         if not len(self.waiting_gids) is 0:
             (new_gid, first_uid) = self.waiting_gids[0]
             self.waiting_gids.pop(0)
+            
+            print(str(new_gid) + str(first_uid))
 
             (guesser_uid, creator_uid) = self.assign_player_roles(first_uid, uid)
 
-            self.game_db[new_gid] = {'answer': None, 'incorrect_letters': [], 'incorrect_words': [], 'correct_letters': [], 'guesser_uid' : guesser_uid, 'creator_uid':creator_uid}
+            self.game_db[str(new_gid)] = {'answer': None, 'incorrect_letters': [], 'incorrect_words': [], 'correct_letters': [], 'guesser_uid' : guesser_uid, 'creator_uid':creator_uid}
 
             waiting = False
             is_creator = (creator_uid == uid)
 
         # Otherwise, choose a new gid and add it to the list of waiting gids
         else:
-            new_gid = max(self.game_db.keys()) + 1
+            new_gid = self.next_gid
+            self.next_gid += 1
             self.waiting_gids.append((new_gid, uid))
             waiting = True
 
@@ -118,3 +127,4 @@ class Game_Handler():
             guesser_uid = uid2
             creator_uid = uid1
 
+        return (guesser_uid, creator_uid)
