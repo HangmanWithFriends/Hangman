@@ -8,6 +8,11 @@ import json
 import requests
 import cherrypy
 import random
+from jinja2 import Environment, FileSystemLoader
+from time import sleep
+
+env = Environment(loader=FileSystemLoader(os.path.abspath(os.path.dirname(__file__))+'/templates/'))
+
 
 class Game_Handler():
     def __init__(self):
@@ -75,8 +80,16 @@ class Game_Handler():
     
     def get_game_request(self, uid):
         request_state = requests.post('http://localhost:8080/game/' + str(uid) + '/request')
-        resp_json = json.loads(request_state.content)
-        return resp_json['waiting']
+        j = json.loads(request_state.content)
+        waiting = str(j['waiting'])
+        if (waiting == "True"): 
+#             return env.get_template('Wait.html').render(uid=uid,gid=str(j['gid']))
+            sleep(2)    # Wait 2 seconds and check if game exists
+            check_game = requests.get('http://localhost:8080/game/' + str(j['gid']))
+            game_resp = json.loads(check_game.content)
+            if(str(game_resp['result']) == "Error"): return "Game not ready!"
+        if (waiting == "False"):return "We're ready!"
+        else: return "An error occurred"
 
     def post_game_request(self, uid):
         # If there are players waiting for a game, choose a waiting gid

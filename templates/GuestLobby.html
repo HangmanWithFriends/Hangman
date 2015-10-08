@@ -75,13 +75,15 @@ $(document).ready(function(){
 
 		<div class="col-md-4">
 			<h2 class="dblue-text">READY TO PLAY?</h2>
-			<form name="request-guest-game" action="/game/{{ uid }}/request" method="get" accept-charset="utf-8">
+			<form id="request-guest-game" name="request-guest-game" action="/game/{{ uid }}/request" method="get" accept-charset="utf-8">
+			<div class="wait-for-game"></div>
             <input class="btn-home" type="submit" value="Find a Game!">
             </form>
 			
 		</div>
 	</div>
 	
+	<script src="/js/guestlobby.js"></script>
 	
 </body>
 </html>
