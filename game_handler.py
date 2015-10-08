@@ -24,48 +24,64 @@ class Game_Handler():
         result["correct_letters"] = ['s','i','t','a']
         return json.dumps(result)
     
-    def post_guess(self, uid, gid, letterguess):
-        '''data_in = cherrypy.request.body.read()
-        data_json = json.loads(data_in)'''
-        
-        if(uid != self.game_db[gid]['guesser_uid']):
-            output = {'result':'Failure', 'errors':["Must be the guessing user to guess"]}
+    def post_guess(self, uid, gid):
+        data_in = cherrypy.request.body.read()
+        data_json = json.loads(data_in)
+
+        if not 'guess' in data_json:
+            output = {'result':'Failure', 'message':"Incoming data not valid"}
             return json.dumps(output, encoding='latin-1')
 
-        guess = data_json['guess']
-        guess = guess.upper()
-        if len(guess) == 1:
-            self.guess_letter(gid, guess)
-        elif len(guess) > 1:
-            self.guess_phrase(gid, guess)
+        if uid != self.game_db[gid]['guesser_uid']:
+            output = {'result':'Failure', 'message':"Must be the guessing user to guess"}
+            return json.dumps(output, encoding='latin-1')
 
-        output ={'result':'Success', 'errors':[]}
+        guess = data_json['guess'].upper()
+
+        if len(guess) is 1:
+            win = self.guess_letter(gid, guess)
+
+        elif len(guess) > 1:
+            win = self.guess_phrase(gid, guess)
+
+        output ={'result':'Success', 'message': None}
+
         return json.dumps(output,encoding='latin-1')
 
     def guess_phrase(self, gid, phrase):
         game_dict = self.game_db[gid]
-        if phrase not in game_dict[guessed_phrases]:
+
+        if not phrase in game_dict['guessed_phrases']:
             if phrase == game_dict['answer']:
-                for letter in game_dict['correct_letters']:
+                for letter in phrase:
                     game_dict['correct_letters'].append(letter)
+                return True
             else:
                 game_dict['incorrect_words'].append(phrase)
-        #else nothing changes
+                return False
     
     def guess_letter(self, gid, letter):
         game_dict = self.game_db[gid]
-        if letter not in game_dict['correct_letters'] and letter not in game_dict['incorrect_letters']:
-            if letter in game_dict['answer']:
+        answer = game_dict['answer']
+        correct_letters = game_dict['correct_letters']
+        incorrect_letters = game_dict['incorrect_letters']
+
+        if not letter in correct_letters and not letter in incorrect_letters:
+            if letter in answer:
                 game_dict['correct_letters'].append(letter)
+
+                if len(set(correct_letters.split())) is len(answer):
+                    return True
             else:
                 game_dict['incorrect_letters'].append(letter)
-        #else nothing chnages
+                return False
 
     def get_game(self, gid):
 
         # Active Game
         if str(gid) in self.game_db:
             output = self.game_db[gid]
+            output['result'] = 'Success'
 
         # Logic Error: No active game with this gid
         else:
@@ -80,6 +96,7 @@ class Game_Handler():
 
     def post_game_request(self, uid):
         waiting = True # whether or not we need to wait for a second player
+        uid = str(uid)
 
         # If there are players waiting for a game, choose a waiting gid
         if not len(self.waiting_gids) is 0:
@@ -96,7 +113,7 @@ class Game_Handler():
 
         # Otherwise, choose a new gid and add it to the list of waiting gids
         else:
-            new_gid = self.next_gid
+            new_gid = str(self.next_gid)
             self.next_gid += 1
             self.waiting_gids.append((new_gid, uid))
             waiting = True
@@ -107,7 +124,7 @@ class Game_Handler():
     def post_game_prompt(self, uid, gid):
         data_in = cherrypy.request.body.read()
         data_json = json.loads(data_in)
-        
+
         if 'answer' in data_json:
             answer = data_json['answer'].upper()
             stripped_answer = ''.join(answer.split())  # Answer without whitespace
