@@ -68,40 +68,46 @@ class Game_Handler():
         return json.dumps(output, encoding='latin-1')
 
     def post_game_request(self, uid):
+        waiting = True # whether or not we need to wait for a second player
+
         # If there are players waiting for a game, choose a waiting gid
         if not len(self.waiting_gids) is 0:
             (new_gid, first_uid) = self.waiting_gids[0]
-            self.waiting_gids.pop(0)
 
-            (guesser_uid, creator_uid) = self.assign_player_roles(first_uid, uid)
-
-            self.game_db[new_gid] = {'answer': None, 'incorrect_letters': [], 'incorrect_words': [], 'correct_letters': [], 'guesser_uid' : guesser_uid, 'creator_uid':creator_uid}
-
-            waiting = False
-            is_creator = (creator_uid == uid)
+            # Make sure this uid isn't just requesting the same game twice
+            if first_uid != uid:
+                self.waiting_gids.pop(0)
+                (guesser_uid, creator_uid) = self.assign_player_roles(first_uid, uid)
+                self.game_db[new_gid] = {'answer': None, 
+                                         'incorrect_letters': [], 'incorrect_words': [], 'correct_letters': [], 
+                                         'guesser_uid' : guesser_uid, 'creator_uid':creator_uid}
+                waiting = False
 
         # Otherwise, choose a new gid and add it to the list of waiting gids
         else:
-            new_gid = max(self.game_db.keys()) + 1
-            self.waiting_gids.append((new_gid, uid))
+            self.waiting_gids.append((self.next_gid, uid))
             waiting = True
 
         output = {'gid': new_gid, 'waiting': waiting}
         return json.dumps(output, encoding='latin-1')
 
-    def post_game_prompt(self, gid):
+    def post_game_prompt(self, uid, gid):
         data_in = cherrypy.request.body.read()
         data_json = json.loads(data_in)
 
-        answer = data_json['answer']
-        stripped_answer = ''.join(answer.split())  # Answer without whitespace
+        if 'answer' in data_json:
+            answer = data_json['answer']
+            stripped_answer = ''.join(answer.split())  # Answer without whitespace
 
-        if not answer is None:
-            if len(stripped_answer) in range(3, 31) and answer.isalpha():
-                self.game_db[gid]['answer'] = answer
-                output = {'result': 'Success', 'message': 'Your game will begin shortly!'}
-            else:
-                output = {'result': 'Failure', 'message': 'Your phrase must be between 3 and 30 alphabetical characters.'}
+            if not answer is None:
+                if len(stripped_answer) in range(3, 31) and answer.isalpha():
+                    self.game_db[gid]['answer'] = answer
+                    output = {'result': 'Success', 'message': 'Your game will begin shortly!'}
+                else:
+                    output = {'result': 'Failure', 'message': 'Your phrase must be between 3 and 30 alphabetical characters.'}
+        else:
+            output = {'result': 'Failure', 'message': 'Incoming data insufficient'}
+
         return json.dumps(output, encoding='latin-1')
 
     def assign_player_roles(self, uid1, uid2):
