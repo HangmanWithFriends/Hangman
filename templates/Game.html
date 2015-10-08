@@ -39,14 +39,13 @@
 					<h3>Guess the Word</h3>
 				</div>
 				<div class="guessed-word">
-					<span>{{ wordprogress }}</span>
+					<span>{{ word_progress }}</span>
 				</div>				
 				<div class="gallows">
-					<img src="{{ imgname }}" alt="Hangman Gallows">
+					<img src={{ img_name }} alt="Hangman Gallows">
 					<div class="character-box">
 						<ul>
-                            <!-- All letters, class based on if its in correct or in incorrect 
-							{{ alphabet }}
+                            <!-- All letters, class based on if its in correct or in incorrect -->
                             {% for letter in alphabet %}
                                 {% if letter in game_dict['correct_letters'] %}
                                     <li class="used">{{ letter }}</li>
@@ -55,7 +54,7 @@
                                 {% else %}
                                     <li>{{ letter }}</li>
                                 {% endif %}                                 
-                            {% endfor %}-->
+                            {% endfor %}
 					    </ul>
 					</div>
 				</div>

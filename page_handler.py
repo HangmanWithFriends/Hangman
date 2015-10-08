@@ -91,9 +91,11 @@ class Page_Handler():
                 list_word_progress.append("_")
 
         word_progress = ''.join(list_word_progress)
-
+        
         num_wrong = len(game_dict['incorrect_letters']) + len(game_dict['incorrect_words'])
         
+        img_name = "/img/gallows"+str(num_wrong)+".png"
+ 
         return env.get_template('Game.html').render(game_dict=game_dict, alphabet=alphabet, word_progress=word_progress, img_name=img_name)
     
     def get_wait_html(self, uid, gid):
