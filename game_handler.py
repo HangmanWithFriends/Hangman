@@ -117,7 +117,6 @@ class Game_Handler():
             output['result'] = 'Success'
             output['errors'] = []
 
-
         # Logic Error: No active game with this gid
         else:
             output = {'result': 'Error', 'errors': ['This is not an active game id.']}
