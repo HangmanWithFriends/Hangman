@@ -39,10 +39,10 @@ class Game_Handler():
         guess = data_json['guess'].upper()
 
         if len(guess) is 1:
-            win = self.guess_letter(gid, guess)
+            self.guess_letter(gid, guess)
 
         elif len(guess) > 1:
-            win = self.guess_phrase(gid, guess)
+            self.guess_phrase(gid, guess)
 
         output ={'result':'Success', 'message': None}
 
@@ -51,14 +51,14 @@ class Game_Handler():
     def guess_phrase(self, gid, phrase):
         game_dict = self.game_db[gid]
 
-        if not phrase in game_dict['guessed_phrases']:
+        if not phrase in game_dict['incorrect_words']:
             if phrase == game_dict['answer']:
                 for letter in phrase:
-                    game_dict['correct_letters'].append(letter)
-                return True
+                    if not letter in game_dict['correct_letters']:
+                        game_dict['correct_letters'].append(letter)
+                game_dict['win'] = True
             else:
                 game_dict['incorrect_words'].append(phrase)
-                return False
     
     def guess_letter(self, gid, letter):
         game_dict = self.game_db[gid]
@@ -70,11 +70,11 @@ class Game_Handler():
             if letter in answer:
                 game_dict['correct_letters'].append(letter)
 
-                if len(set(correct_letters.split())) is len(answer):
-                    return True
+                if len(set(answer)) is len(correct_letters):
+
+                    game_dict['win'] = True
             else:
                 game_dict['incorrect_letters'].append(letter)
-                return False
 
     def get_game(self, gid):
 
@@ -108,7 +108,8 @@ class Game_Handler():
                 (guesser_uid, creator_uid) = self.assign_player_roles(first_uid, uid)
                 self.game_db[new_gid] = {'answer': None, 
                                          'incorrect_letters': [], 'incorrect_words': [], 'correct_letters': [], 
-                                         'guesser_uid' : guesser_uid, 'creator_uid':creator_uid}
+                                         'guesser_uid' : guesser_uid, 'creator_uid':creator_uid,
+                                         'win': False}
                 waiting = False
 
         # Otherwise, choose a new gid and add it to the list of waiting gids
@@ -125,18 +126,25 @@ class Game_Handler():
         data_in = cherrypy.request.body.read()
         data_json = json.loads(data_in)
 
-        if 'answer' in data_json:
-            answer = data_json['answer'].upper()
-            stripped_answer = ''.join(answer.split())  # Answer without whitespace
+        if uid != self.game_db[gid]['creator_uid']:
+            output = {'result': 'Failure', 'message': "Must be the creating user to create prompt"}
+            return json.dumps(output, encoding='latin-1')
 
-            if not answer is None:
-                if len(stripped_answer) in range(3, 31) and answer.isalpha():
-                    self.game_db[gid]['answer'] = answer
-                    output = {'result': 'Success', 'message': 'Your game will begin shortly!'}
-                else:
-                    output = {'result': 'Failure', 'message': 'Your phrase must be between 3 and 30 alphabetical characters.'}
-        else:
+        if not 'answer' in data_json:
             output = {'result': 'Failure', 'message': 'Incoming data insufficient'}
+            return json.dumps(output, encoding='latin-1')
+
+        answer = data_json['answer'].upper()
+        stripped_answer = ''.join(answer.split())  # Answer without whitespace
+
+        if not answer is None:
+            if len(stripped_answer) in range(3, 31) and answer.isalpha():
+                self.game_db[gid]['answer'] = answer
+                output = {'result': 'Success', 'message': 'Your game will begin shortly!'}
+            else:
+                output = {'result': 'Failure', 'message': 'Your phrase must be between 3 and 30 alphabetical characters.'}
+        else:
+            output = {'result': 'Failure', 'message': 'Empty answer'}
 
         return json.dumps(output, encoding='latin-1')
 
