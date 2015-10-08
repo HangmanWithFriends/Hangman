@@ -19,14 +19,14 @@ class Page_Handler():
     def get_login_html(self):
         return env.get_template('Home.html').render()
     
-    def get_lobby_html(self):
-        return env.get_template('Lobby.html').render()
+    def get_lobby_html(self, uid):
+        return env.get_template('Lobby.html').render(uid=uid)
 
-    def get_request_phrase_html(self):
-        return env.get_template('RequestPhrase.html').render()
+    def get_request_phrase_html(self, uid, gid):
+        return env.get_template('RequestPhrase.html').render(uid=uid, gid=gid)
 
-    def get_game_html(self, game_id):
-        return env.get_template('Game.html').render(game_id=game_id)
+    def get_game_html(self, uid, gid):
+        return env.get_template('Game.html').render(uid=uid, gid=gid)
 
     def handle_login_request(self, usermail=None, password=None):
         result={'errors':[]}
@@ -39,16 +39,16 @@ class Page_Handler():
         result = {'errors':[]}
         return json.dumps(result)
 
-    def get_guest_lobby_html(self):
-        return env.get_template('GuestLobby.html').render()
+    def get_guest_lobby_html(self, uid):
+        return env.get_template('GuestLobby.html').render(uid=uid)
     
     def get_guest_request_phrase_html(self, uid, gid):
         return env.get_template('GuestRequestPhrase.html').render(uid=uid, gid=gid)
     
-    def get_guest_game_html(self, gid):
-        return env.get_template('GuestGame.html').render(gid=gid)
+    def get_guest_game_html(self, uid, gid):
+        return env.get_template('GuestGame.html').render(uid=uid, gid=gid)
     
-    def get_gameplay_html(self, gid, uid):
+    def get_gameplay_html(self, uid, gid):
         '''
         This is the function that displays the actual game 
         to the user. What the user sees is dependent on the 
@@ -62,3 +62,7 @@ class Page_Handler():
         game_state = json.loads(game_state.content)
         return "Game info:<br>Answer: " + game_state["answer"] + "<br>Incorrect Letters:" + str(game_state["incorrect_letters"]) + "<br>Incorrect Phrases" + \
             str(game_state["incorrect_words"]) + "<br>Correct Letters" + str(game_state["correct_letters"])
+
+    def get_wait_html(self, uid, gid):
+        return env.get_template('Wait.html').render(uid=uid, gid=gid)
+    
