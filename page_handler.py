@@ -97,6 +97,10 @@ class Page_Handler():
         num_wrong = len(game_dict['incorrect_letters']) + len(game_dict['incorrect_words'])
         
         img_name = "/img/gallows"+str(num_wrong)+".png"
+        
+        if(str(uid) == str(game_dict['creator_uid'])):
+            return env.get_template('SpectatorGame.html').render(game_dict=game_dict, alphabet=alphabet, word_progress=word_progress, img_name=img_name, gid=gid, uid=uid)
+
  
         return env.get_template('Game.html').render(game_dict=game_dict, alphabet=alphabet, word_progress=word_progress, img_name=img_name, gid=gid, uid=uid)
     

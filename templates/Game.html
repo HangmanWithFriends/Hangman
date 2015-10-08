@@ -54,11 +54,11 @@
                             <!-- All letters, class based on if its in correct or in incorrect -->
                             {% for letter in alphabet %}
                                 {% if letter in game_dict['correct_letters'] %}
-                                    <li class="used">{{ letter }}</li>
+                                    <li id="used-letters" class="used {{ letter }}">{{ letter }}</li>
                                 {% elif letter in game_dict['incorrect_letters'] %}
-                                    <li class="wrong">{{ letter }}</li>
+                                    <li id="wrong-letters" class="wrong {{ letter }}">{{ letter }}</li>
                                 {% else %}
-                                    <li>{{ letter }}</li>
+                                    <li class="{{ letter }}">{{ letter }}</li>
                                 {% endif %}                                 
                             {% endfor %}
 					    </ul>
