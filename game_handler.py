@@ -38,16 +38,25 @@ class Game_Handler():
         
         if(uid != self.game_db[gid]['guesser_uid']):
             output = {'result':'Error', 'errors':["Must be the guessing user to guess"]}
+        
+        if not 'guess' in data_json:
+            output = {'result':'Failure', 'message':"Incoming data not valid"}
             return json.dumps(output, encoding='latin-1')
 
-        guess = data_json['guess']
-        guess = guess.upper()
-        if len(guess) == 1:
-            self.guess_letter(gid, guess)
-        elif len(guess) > 1:
-            self.guess_phrase(gid, guess)
+        if uid != self.game_db[gid]['guesser_uid']:
+            output = {'result':'Failure', 'message':"Must be the guessing user to guess"}
+            return json.dumps(output, encoding='latin-1')
 
-        output ={'result':'Success', 'errors':[]}
+        guess = data_json['guess'].upper()
+
+        if len(guess) is 1:
+            win = self.guess_letter(gid, guess)
+
+        elif len(guess) > 1:
+            win = self.guess_phrase(gid, guess)
+
+        output ={'result':'Success', 'message': None}
+
         return json.dumps(output,encoding='latin-1')
 
     def guess_phrase(self, gid, phrase):
@@ -55,28 +64,38 @@ class Game_Handler():
             return json.dumps({'result':'Error', 'errors':["Game does not exist"]})
 
         game_dict = self.game_db[gid]
-        if phrase not in game_dict[guessed_phrases]:
+
+        if not phrase in game_dict['guessed_phrases']:
             if phrase == game_dict['answer']:
-                for letter in game_dict['correct_letters']:
+                for letter in phrase:
                     game_dict['correct_letters'].append(letter)
+                return True
             else:
                 game_dict['incorrect_words'].append(phrase)
-        #else nothing changes
+                return False
     
     def guess_letter(self, gid, letter):
         game_dict = self.game_db[gid]
-        if letter not in game_dict['correct_letters'] and letter not in game_dict['incorrect_letters']:
-            if letter in game_dict['answer']:
+        answer = game_dict['answer']
+        correct_letters = game_dict['correct_letters']
+        incorrect_letters = game_dict['incorrect_letters']
+
+        if not letter in correct_letters and not letter in incorrect_letters:
+            if letter in answer:
                 game_dict['correct_letters'].append(letter)
+
+                if len(set(correct_letters.split())) is len(answer):
+                    return True
             else:
                 game_dict['incorrect_letters'].append(letter)
-        #else nothing chnages
+                return False
 
     def get_game(self, gid):
 
         # Active Game
         if str(gid) in self.game_db:
             output = self.game_db[gid]
+            output['result'] = 'Success'
 
         # Logic Error: No active game with this gid
         else:
@@ -90,23 +109,25 @@ class Game_Handler():
         return resp_json['waiting']
 
     def post_game_request(self, uid):
+        waiting = True # whether or not we need to wait for a second player
+        uid = str(uid)
+
         # If there are players waiting for a game, choose a waiting gid
         if not len(self.waiting_gids) is 0:
             (new_gid, first_uid) = self.waiting_gids[0]
-            self.waiting_gids.pop(0)
-            
-            print(str(new_gid) + str(first_uid))
 
-            (guesser_uid, creator_uid) = self.assign_player_roles(first_uid, uid)
-
-            self.game_db[str(new_gid)] = {'answer': None, 'incorrect_letters': [], 'incorrect_words': [], 'correct_letters': [], 'guesser_uid' : guesser_uid, 'creator_uid':creator_uid}
-
-            waiting = False
-            is_creator = (creator_uid == uid)
+            # Make sure this uid isn't just requesting the same game twice
+            if first_uid != uid:
+                self.waiting_gids.pop(0)
+                (guesser_uid, creator_uid) = self.assign_player_roles(first_uid, uid)
+                self.game_db[new_gid] = {'answer': None, 
+                                         'incorrect_letters': [], 'incorrect_words': [], 'correct_letters': [], 
+                                         'guesser_uid' : guesser_uid, 'creator_uid':creator_uid}
+                waiting = False
 
         # Otherwise, choose a new gid and add it to the list of waiting gids
         else:
-            new_gid = self.next_gid
+            new_gid = str(self.next_gid)
             self.next_gid += 1
             self.waiting_gids.append((new_gid, uid))
             waiting = True
@@ -114,13 +135,22 @@ class Game_Handler():
         output = {'gid': new_gid, 'waiting': waiting, 'errors':[]}
         return json.dumps(output, encoding='latin-1')
 
-    def post_game_prompt(self, gid):
+    def post_game_prompt(self, uid, gid):
         data_in = cherrypy.request.body.read()
         data_json = json.loads(data_in)
 
-        answer = data_json['answer']
-        answer = answer.upper()
-        stripped_answer = ''.join(answer.split())  # Answer without whitespace
+        if 'answer' in data_json:
+            answer = data_json['answer'].upper()
+            stripped_answer = ''.join(answer.split())  # Answer without whitespace
+
+            if not answer is None:
+                if len(stripped_answer) in range(3, 31) and answer.isalpha():
+                    self.game_db[gid]['answer'] = answer
+                    output = {'result': 'Success', 'message': 'Your game will begin shortly!'}
+                else:
+                    output = {'result': 'Failure', 'message': 'Your phrase must be between 3 and 30 alphabetical characters.'}
+        else:
+            output = {'result': 'Failure', 'message': 'Incoming data insufficient'}
 
         if not answer is None:
             if len(stripped_answer) in range(3, 31) and answer.isalpha():
