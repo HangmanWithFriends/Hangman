@@ -75,9 +75,10 @@ class Game_Handler():
                 for letter in phrase:
                     if not letter in game_dict['correct_letters']:
                         game_dict['correct_letters'].append(letter)
-                game_dict['win'] = True
             else:
                 game_dict['incorrect_words'].append(phrase)
+
+            self.check_win(game_dict, phrase)
     
     def guess_letter(self, gid, letter):
         game_dict = self.game_db[gid]
@@ -88,12 +89,25 @@ class Game_Handler():
         if not letter in correct_letters and not letter in incorrect_letters:
             if letter in answer:
                 game_dict['correct_letters'].append(letter)
-
-                if len(set(answer)) is len(correct_letters):
-
-                    game_dict['win'] = True
             else:
                 game_dict['incorrect_letters'].append(letter)
+
+            self.check_win(game_dict, letter)
+
+    def check_win(self, game_dict, guess):
+        # Check if the guesser won
+        if len(guess) > 1:
+            if guess == game_dict['answer']:
+                game_dict['win'] = game_dict['guesser_uid']
+        else:
+            if len(set(game_dict['answer'])) is len(game_dict['correct_letters']):
+                game_dict['win'] = game_dict['guesser_uid']
+
+        # Check if the creator won
+        guesses_made = len(game_dict['incorrect_letters']) + len(game_dict['incorrect_words'])
+        if guesses_made >= 6:
+            game_dict['win'] = game_dict['creator_uid']
+
 
     def get_game(self, gid):
 
@@ -138,7 +152,7 @@ class Game_Handler():
                 self.game_db[new_gid] = {'answer': None, 
                                          'incorrect_letters': [], 'incorrect_words': [], 'correct_letters': [], 
                                          'guesser_uid' : guesser_uid, 'creator_uid':creator_uid,
-                                         'win': False}
+                                         'win': None}
                 waiting = False
 
         # Otherwise, choose a new gid and add it to the list of waiting gids
