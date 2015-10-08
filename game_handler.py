@@ -23,7 +23,11 @@ class Game_Handler():
         result["correct_letters"] = ['s','i','t','a']
         return json.dumps(result)
     
-    def post_guess(self, gid, guess):
+    def post_guess(self, gid):
+        data_in = cherrypy.request.body.read()
+        data_json = json.loads(data_in)
+
+        guess = data_json['guess']
         if len(guess) == 1:
             self.guess_letter(gid, guess)
         elif len(guess) > 1:
