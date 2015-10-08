@@ -9,6 +9,7 @@ from jinja2 import Environment, FileSystemLoader
 import json
 import requests
 import string
+import cherrypy
 
 env = Environment(loader=FileSystemLoader(os.path.abspath(os.path.dirname(__file__))+'/templates/'))
 

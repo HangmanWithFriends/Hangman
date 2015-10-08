@@ -119,8 +119,36 @@ class Game_Handler():
                 game_resp = json.loads(check_game.content)
                 if(str(game_resp['result']) == "Error"):
                     sleep(2)    # Wait 2 seconds and check if game exists
-                elif(str(game_resp['result']) == "Success"): return "Game ready!"
-        if (waiting == "False"):return "We're ready!"
+                elif(str(game_resp['result']) == "Success"):
+                    creator = str(game_resp['creator_uid'])
+                    if creator == uid:
+                        raise cherrypy.HTTPRedirect('/phrase/' + str(uid) + '/' + str(j['gid']))
+                    else:
+                        answer = str(game_resp['answer'])
+                        if answer == "None": answer = False
+                        if not answer:
+                            sleep(2)
+                            continue
+                        else:
+                            raise cherrypy.HTTPRedirect('/gameplay/' + str(uid) + '/' + str(j['gid']))
+                    
+        if (waiting == "False"):
+            check_game = requests.get('http://localhost:8080/game/' + str(j['gid']))
+            game_resp = json.loads(check_game.content)
+            if(str(game_resp['result']) == "Error"):
+                sleep(2)    # Wait 2 seconds and check if game exists
+            elif(str(game_resp['result']) == "Success"):
+                creator = str(game_resp['creator_uid'])
+                if creator == uid:
+                    raise cherrypy.HTTPRedirect('/phrase/' + str(uid) + '/' + str(j['gid']))
+                else:
+                    answer = str(game_resp['answer'])
+                    if answer == "None": answer = False
+                    if not answer:
+                        sleep(2)
+                        continue
+                    else:
+                        raise cherrypy.HTTPRedirect('/gameplay/' + str(uid) + '/' + str(j['gid']))
         else: return "An error occurred"
 
     def post_game_request(self, uid):
