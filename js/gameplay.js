@@ -42,12 +42,12 @@ $(function() {
             window.location.href = "/guestlobby/"+uid;
         }
         else if(win_uid == guess_uid){
-            message = "Your opponent correctly guessed your phrase.";
+            message = "Your opponent got loose from noose. You lose!";
             window.alert(message);
             window.location.href = "/guestlobby/"+uid;
         }
         else if(win_uid == creator_uid){
-            message = "You failed ot guess your opponent's phrase.";
+            message = "You died.";
             window.alert(message);
             window.location.href = "/guestlobby/"+uid;
         }
