@@ -7,9 +7,11 @@ import os.path
 import json
 import requests
 import cherrypy
+import random
 
 class Game_Handler():
     def __init__(self):
+        random.seed()
         self.game_db = dict()
         self.waiting_gids = list()
  
@@ -58,12 +60,15 @@ class Game_Handler():
 
         return json.dumps(output, encoding='latin-1')
 
-    def post_game_request(self):
+    def post_game_request(self, uid):
         # If there are players waiting for a game, choose a waiting gid
         if not len(self.waiting_gids) is 0:
-            new_gid = self.waiting_gids[0]
+            (new_gid, first_uid) = self.waiting_gids[0]
             self.waiting_gids.pop(0)
-            self.game_db[new_gid] = {'answer': None, 'incorrect_letters': None, 'incorrect_words': None, 'correct_letters': None}
+
+            (guesser_uid, creator_uid) = self.assign_player_roles(first_uid, uid)
+
+            self.game_db[new_gid] = {'answer': None, 'incorrect_letters': None, 'incorrect_words': None, 'correct_letters': None, 'guesser_uid' : guesser_uid, 'creator_uid':creator_uid}
 
         # Otherwise, choose a new gid and add it to the list of waiting gids
         else:
@@ -87,3 +92,12 @@ class Game_Handler():
             else:
                 output = {'result': 'Failure', 'message': 'Your phrase must be between 3 and 30 alphabetical characters.'}
         return json.dumps(output, encoding='latin-1')
+
+    def assign_player_roles(self, uid1, uid2):
+        if random.randint(0,1) == 0:
+            guesser_uid = uid1
+            creator_uid = uid2
+        else:
+            guesser_uid = uid2
+            creator_uid = uid1
+
