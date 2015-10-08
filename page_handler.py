@@ -14,8 +14,7 @@ env = Environment(loader=FileSystemLoader(os.path.abspath(os.path.dirname(__file
 class Page_Handler():
     
     def __init__(self):
-        self.users = {}
-        self.guest_users = {}
+        self.all_users = {}
         self.next_user = 1
         self.next_guest_user = 1
     
@@ -48,6 +47,8 @@ class Page_Handler():
     
     def get_guest_uid(self):
         userid = "g" + str(self.next_guest_user)
+        self.all_users[userid] = {"name" : "guest"}
+        self.next_guest_user += 1
         guest_info = {'uid' : userid}
         guest_info['errors'] = []
         return json.dumps(guest_info)
