@@ -28,6 +28,7 @@ class Game_Handler():
         data_json = json.loads(data_in)
 
         guess = data_json['guess']
+        guess = guess.upper()
         if len(guess) == 1:
             self.guess_letter(gid, guess)
         elif len(guess) > 1:
