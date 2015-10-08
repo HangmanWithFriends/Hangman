@@ -27,9 +27,9 @@ class Game_Handler():
         data_in = cherrypy.request.body.read()
         data_json = json.loads(data_in)
         
-        if(uid != self.game_db[gid]['guesser_uid']:
-            output = {'result':'Failure', 'errors':["Must be the guessing user to guess"]
-            return json.dumps(output, encoding='latin-1'))
+        if(uid != self.game_db[gid]['guesser_uid']):
+            output = {'result':'Failure', 'errors':["Must be the guessing user to guess"]}
+            return json.dumps(output, encoding='latin-1')
 
         guess = data_json['guess']
         guess = guess.upper()
