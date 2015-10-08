@@ -40,7 +40,19 @@ class Page_Handler():
         return json.dumps(result)
 
     def get_guest_lobby_html(self):
+        userid = 5
+        guest_info = {'uid' : userid}
+        return json.dumps(guest_info)
         return env.get_template('GuestLobby.html').render()
+    
+    def get_guest_lobby_with_uid(self, uid):
+        return env.get_template('GuestLobby.html').render(uid=uid);
+    
+    def get_guest_uid(self):
+        userid = 5
+        guest_info = {'uid' : userid}
+        guest_info['errors'] = []
+        return json.dumps(guest_info)
     
     def get_guest_request_phrase_html(self):
         return env.get_template('GuestRequestPhrase.html').render()
