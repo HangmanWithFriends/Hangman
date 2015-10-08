@@ -14,6 +14,7 @@ class Game_Handler():
         random.seed()
         self.game_db = dict()
         self.waiting_gids = list()
+        self.next_gid = 1
  
     def get_dummy_game(self, gid):
         result = {}
@@ -23,11 +24,16 @@ class Game_Handler():
         result["correct_letters"] = ['s','i','t','a']
         return json.dumps(result)
     
-    def post_guess(self, gid):
-        data_in = cherrypy.request.body.read()
-        data_json = json.loads(data_in)
+    def post_guess(self, uid, gid, letterguess):
+        '''data_in = cherrypy.request.body.read()
+        data_json = json.loads(data_in)'''
+        
+        if(uid != self.game_db[gid]['guesser_uid']):
+            output = {'result':'Failure', 'errors':["Must be the guessing user to guess"]}
+            return json.dumps(output, encoding='latin-1')
 
         guess = data_json['guess']
+        guess = guess.upper()
         if len(guess) == 1:
             self.guess_letter(gid, guess)
         elif len(guess) > 1:
@@ -58,7 +64,7 @@ class Game_Handler():
     def get_game(self, gid):
 
         # Active Game
-        if gid in self.game_db:
+        if str(gid) in self.game_db:
             output = self.game_db[gid]
 
         # Logic Error: No active game with this gid
@@ -66,6 +72,11 @@ class Game_Handler():
             output = {'result': 'Error', 'message': 'This game was not requested by two players'}
 
         return json.dumps(output, encoding='latin-1')
+    
+    def get_game_request(self, uid):
+        request_state = requests.post('http://localhost:8080/game/' + str(uid) + '/request')
+        resp_json = json.loads(request_state.content)
+        return resp_json['waiting']
 
     def post_game_request(self, uid):
         waiting = True # whether or not we need to wait for a second player
@@ -85,7 +96,9 @@ class Game_Handler():
 
         # Otherwise, choose a new gid and add it to the list of waiting gids
         else:
-            self.waiting_gids.append((self.next_gid, uid))
+            new_gid = self.next_gid
+            self.next_gid += 1
+            self.waiting_gids.append((new_gid, uid))
             waiting = True
 
         output = {'gid': new_gid, 'waiting': waiting}
@@ -94,9 +107,9 @@ class Game_Handler():
     def post_game_prompt(self, uid, gid):
         data_in = cherrypy.request.body.read()
         data_json = json.loads(data_in)
-
+        
         if 'answer' in data_json:
-            answer = data_json['answer']
+            answer = data_json['answer'].upper()
             stripped_answer = ''.join(answer.split())  # Answer without whitespace
 
             if not answer is None:
@@ -118,3 +131,4 @@ class Game_Handler():
             guesser_uid = uid2
             creator_uid = uid1
 
+        return (guesser_uid, creator_uid)

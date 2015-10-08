@@ -50,7 +50,7 @@ def start_service():
     dispatcher.connect('get_lobby_page','/lobby/{uid}',controller=page_handler, action='get_lobby_html',conditions=dict(method=['GET']))
     dispatcher.connect('get_request_phrase_page','/phrase/{uid}/{gid}',controller=page_handler, action='get_request_phrase_html',conditions=dict(method=['GET']))
     dispatcher.connect('handle_login','/login',controller=page_handler, action='handle_login_request',conditions=dict(method=['POST']))
-    dispatcher.connect('get_game_page','/gameplay/{uid}/{gid}',controller=page_handler, action='get_game_html',conditions=dict(method=['GET']))
+    #dispatcher.connect('get_game_page','/gameplay/{uid}/{gid}/other',controller=page_handler, action='get_game_html',conditions=dict(method=['GET']))
     dispatcher.connect('get_register_page', '/register', controller=page_handler, action='get_register_html',conditions=dict(method=['GET']))
     dispatcher.connect('handle_register','/register',controller=page_handler, action='handle_register_request',conditions=dict(method=['POST']))
     dispatcher.connect('get_guest_lobby_page','/guestlobby/{uid}',controller=page_handler, action='get_guest_lobby_html',conditions=dict(method=['GET']))
@@ -64,6 +64,7 @@ def start_service():
     
     dispatcher.connect('post_game_prompt', '/game/{uid}/prompt/{gid}',controller=game_handler,action='post_game_prompt',conditions=dict(method=['POST']))
     dispatcher.connect('post_game_request', '/game/{uid}/request',controller=game_handler,action='post_game_request',conditions=dict(method=['POST']))
+    dispatcher.connect('get_game_request','/game/{uid}/request',controller=game_handler, action='get_game_request',conditions=dict(method=['GET']))
     dispatcher.connect('post_guess_JSON', '/game/{uid}/{gid}', controller=game_handler,action='post_guess',conditions=dict(method=['POST']))
     dispatcher.connect('get_wait_page', '/gameplay/{uid}/wait/{gid}', controller=page_handler, action='get_wait_html', conditions=dict(method=['GET']))
     

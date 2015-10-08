@@ -8,14 +8,14 @@ import os.path
 from jinja2 import Environment, FileSystemLoader
 import json
 import requests
+import string
 
 env = Environment(loader=FileSystemLoader(os.path.abspath(os.path.dirname(__file__))+'/templates/'))
 
 class Page_Handler():
     
     def __init__(self):
-        self.users = {}
-        self.guest_users = {}
+        self.all_users = {}
         self.next_user = 1
         self.next_guest_user = 1
     
@@ -48,6 +48,8 @@ class Page_Handler():
     
     def get_guest_uid(self):
         userid = "g" + str(self.next_guest_user)
+        self.all_users[userid] = {"name" : "guest"}
+        self.next_guest_user += 1
         guest_info = {'uid' : userid}
         guest_info['errors'] = []
         return json.dumps(guest_info)
@@ -72,11 +74,30 @@ class Page_Handler():
         do some backend work and then send that info to a HTML 
         template page. 
         '''
-        game_state = requests.get('http://localhost:8080/dummygame/1')
-        game_state = json.loads(game_state.content)
-        return "Game info:<br>Answer: " + game_state["answer"] + "<br>Incorrect Letters:" + str(game_state["incorrect_letters"]) + "<br>Incorrect Phrases" + \
-            str(game_state["incorrect_words"]) + "<br>Correct Letters" + str(game_state["correct_letters"])
+        game_state = requests.get('http://localhost:8080/game/'+str(gid))
 
+        game_dict = json.loads(game_state.content)
+        
+        game_dict = {'answer':"THIS IS A TEST", 'guesser_uid':"1", 'creator_uid':"2", "correct_letters":['H', 'I', 'S'], "incorrect_letters":['Z', 'P'], "incorrect_words":["NICE TRY"]}
+        alphabet = list(string.ascii_uppercase)
+
+        list_word_progress = []
+        for letter in game_dict['answer']:
+            if letter == ' ':
+                list_word_progress.append(' ')
+            elif letter in game_dict['correct_letters']:
+                list_word_progress.append(letter)
+            else:
+                list_word_progress.append("_")
+
+        word_progress = ''.join(list_word_progress)
+        
+        num_wrong = len(game_dict['incorrect_letters']) + len(game_dict['incorrect_words'])
+        
+        img_name = "/img/gallows"+str(num_wrong)+".png"
+ 
+        return env.get_template('Game.html').render(game_dict=game_dict, alphabet=alphabet, word_progress=word_progress, img_name=img_name)
+    
     def get_wait_html(self, uid, gid):
         return env.get_template('Wait.html').render(uid=uid, gid=gid)
     
