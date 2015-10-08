@@ -54,11 +54,12 @@ class Game_Handler():
     def get_game(self, gid):
 
         # Active Game
-        if gid in self.waiting_gids:
+        if gid in self.game_db:
             output = self.game_db[gid]
-        # Logic Error: No game with this gid
+
+        # Logic Error: No active game with this gid
         else:
-            output = {'result': 'Error', 'message': 'No player has requested this game'}
+            output = {'result': 'Error', 'message': 'This game was not requested by two players}
 
         return json.dumps(output, encoding='latin-1')
 
@@ -75,7 +76,7 @@ class Game_Handler():
         # Otherwise, choose a new gid and add it to the list of waiting gids
         else:
             new_gid = max(self.game_db.keys()) + 1
-            self.waiting_gids.append(new_gid)
+            self.waiting_gids.append((new_gid, uid))
 
         output = {'gid': new_gid}
         return json.dumps(output, encoding='latin-1')
