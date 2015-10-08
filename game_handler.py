@@ -115,6 +115,8 @@ class Game_Handler():
         if str(gid) in self.game_db:
             output = self.game_db[gid]
             output['result'] = 'Success'
+            output['errors'] = []
+
 
         # Logic Error: No active game with this gid
         else:
