@@ -24,11 +24,16 @@ class Game_Handler():
         result["correct_letters"] = ['s','i','t','a']
         return json.dumps(result)
     
-    def post_guess(self, gid):
+    def post_guess(self, uid, gid):
         data_in = cherrypy.request.body.read()
         data_json = json.loads(data_in)
+        
+        if(uid != self.game_db[gid]['guesser_uid']):
+            output = {'result':'Failure', 'errors':["Must be the guessing user to guess"]}
+            return json.dumps(output, encoding='latin-1')
 
         guess = data_json['guess']
+        guess = guess.upper()
         if len(guess) == 1:
             self.guess_letter(gid, guess)
         elif len(guess) > 1:
@@ -103,6 +108,7 @@ class Game_Handler():
         data_json = json.loads(data_in)
 
         answer = data_json['answer']
+        answer = answer.upper()
         stripped_answer = ''.join(answer.split())  # Answer without whitespace
 
         if not answer is None:
