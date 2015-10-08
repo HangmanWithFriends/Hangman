@@ -76,9 +76,22 @@ class Page_Handler():
         game_state = requests.get('http://localhost:8080/game/'+str(gid))
 
         game_dict = json.loads(game_state.content)
+
         alphabet = list(string.ascii_uppercase)
 
-        return env.get_template('Game.html').render(game_dict=game_dict, alphabet=alphabet)
+        word_progress = []
+        for letter in game_dict['answer']:
+            if letter == ' ':
+                word_progress.append(' ')
+            elif letter in game_dict['correct_letters']:
+                word_progress.append(letter)
+            else:
+                word_progress.append("_")
+
+        num_wrong = len(game_dict['incorrect_letters']) + len(game_dict['incorrect_words'])
+        img_name = "../img/gallows"+str(num_wrong)+".png"
+        
+        return env.get_template('game.html').render(game_dict=game_dict, alphabet=alphabet, word_progress=word_progress, img_name=img_name)
     
     def get_wait_html(self, uid, gid):
         return env.get_template('Wait.html').render(uid=uid, gid=gid)
