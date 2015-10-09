@@ -223,6 +223,7 @@ class Game_Handler():
                 output = {'result': 'Success', 'message': 'Your game will begin shortly!'}
             else:
                 output = {'result': 'Error', 'message': 'Your phrase must be between 3 and 30 alphabetical characters.'}
+        raise cherrypy.HTTPRedirect('/gameplay/' + str(uid) + '/' + str(gid))
         return json.dumps(output, encoding='latin-1')
 
     def assign_player_roles(self, uid1, uid2):
