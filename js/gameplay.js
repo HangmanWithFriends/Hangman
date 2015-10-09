@@ -2,34 +2,19 @@ $(function() {
     var uid_element = document.getElementById("uid");
     var gid_element = document.getElementById("gid");
 
-    var uid = uid_element.innerHTML;//$('#uid').val();
-    var gid = gid_element.innerHTML;//$('#gid').val();
+    var uid = uid_element.innerHTML;
+    var gid = gid_element.innerHTML;
 
     $.ajax({
         type : 'GET',
         url : '/game/'+ gid,
         contentType: 'application/json',
     }).done(function(data){
-        console.log("before vars");
-
-        console.log(gid);
-        console.log(uid);
-
-
         var djson = JSON.parse(data);
-        console.log("after vars 2");
         var win_uid = djson.win;
-        console.log("after vars 3");
-
         var guess_uid = djson.guesser_uid;
-        console.log("after vars 4");
-
         var creator_uid = djson.creator_uid;
-        console.log("after vars 5");
-
         var message = "";
-
-        
 
         if(win_uid == uid){
             if(uid == guess_uid){
