@@ -1,21 +1,28 @@
-var myInterval = setInterval(function(){ window.location.href = poll_updates(); }, 1000);
+var uid_element = document.getElementById("uid");
+var gid_element = document.getElementById("gid");
+var uid = uid_element.innerHTML;
+var gid = gid_element.innerHTML;
+var myInterval = 0;
+var right_letters = [];
+var wrong_letters = [];
+var wrong_phrases = [];
+var new_right_letters = [];
+var new_wrong_letters = [];
+var new_wrong_phrases = [];
 
-function poll_updates(){
-    var uid_element = document.getElementById("uid");
-    var gid_element = document.getElementById("gid");
-
-    var uid = uid_element.innerHTML;
-    var gid = gid_element.innerHTML;
-    console.log(gid);
-    $.ajax({
+$.ajax({
         type : 'GET',
         url : '/game/'+ gid,
         contentType: 'application/json',
 	}).done(function(data) {
-		var d_json = JSON.parse(data);
+		var djson = JSON.parse(data);
+        right_letters = djson.correct_letters;
+        wrong_letters = djson.incorrect_letters;
+        wrong_phrases = djson.incorrect_words;
         var win_uid = djson.win;
         var guess_uid = djson.guesser_uid;
         var creator_uid = djson.creator_uid;
+ 
         var message = "";
 
         if(win_uid == uid){
@@ -41,7 +48,33 @@ function poll_updates(){
             window.alert(message);
             window.location.href = "/guestlobby/"+uid;  
         }
-    })
+        else{
+            myInterval = setInterval(function(){ poll_updates(); }, 3000);
+        }
 
-	window.location.href="/gameplay/" + uid + "/" + gid;
+});
+
+function poll_updates(){
+    $.ajax({
+        type : 'GET',
+        url : '/game/'+ gid,
+        contentType: 'application/json',
+	}).done(function(data) {
+        console.log("in done");
+		var djson = JSON.parse(data);
+        new_right_letters = djson.correct_letters;
+        new_wrong_letters = djson.incorrect_letters;
+        new_wrong_phrases = djson.incorrect_words;
+    });
+
+    if(new_right_letters.length != right_letters.length){
+    	window.location.href="/gameplay/" + uid + "/" + gid;
+    }
+    if(new_wrong_letters.length != wrong_letters.length){
+    	window.location.href="/gameplay/" + uid + "/" + gid;
+    }
+    if(new_wrong_phrases.length != wrong_phrases.legnth){
+    	window.location.href="/gameplay/" + uid + "/" + gid;
+    }
+        
 }
