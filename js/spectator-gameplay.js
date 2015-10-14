@@ -3,6 +3,8 @@ var gid_element = document.getElementById("gid");
 var uid = uid_element.innerHTML;
 var gid = gid_element.innerHTML;
 var myInterval = 0;
+var old_djson = null
+var new_djson = null
 var right_letters = [];
 var wrong_letters = [];
 var wrong_phrases = [];
@@ -15,14 +17,10 @@ $.ajax({
         url : '/game/'+ gid,
         contentType: 'application/json',
 	}).done(function(data) {
-		var djson = JSON.parse(data);
-        right_letters = djson.correct_letters;
-        wrong_letters = djson.incorrect_letters;
-        wrong_phrases = djson.incorrect_words;
-        var win_uid = djson.win;
-        var guess_uid = djson.guesser_uid;
-        var creator_uid = djson.creator_uid;
- 
+		old_djson = JSON.parse(data);
+        var win_uid = old_djson.win;
+        var guess_uid = old_djson.guesser_uid;
+        var creator_uid = old_djson.creator_uid;
         var message = "";
 
         if(win_uid == uid){
@@ -61,20 +59,33 @@ function poll_updates(){
         contentType: 'application/json',
 	}).done(function(data) {
         console.log("in done");
-		var djson = JSON.parse(data);
-        new_right_letters = djson.correct_letters;
-        new_wrong_letters = djson.incorrect_letters;
-        new_wrong_phrases = djson.incorrect_words;
-    });
+		new_djson = JSON.parse(data);
 
-    if(new_right_letters.length != right_letters.length){
-    	window.location.href="/gameplay/" + uid + "/" + gid;
-    }
-    if(new_wrong_letters.length != wrong_letters.length){
-    	window.location.href="/gameplay/" + uid + "/" + gid;
-    }
-    if(new_wrong_phrases.length != wrong_phrases.legnth){
-    	window.location.href="/gameplay/" + uid + "/" + gid;
-    }
-        
+
+        console.log(new_djson.correct_letters)
+        console.log(old_djson.correct_letters)
+
+        console.log(new_djson.incorrect_letters)
+        console.log(old_djson.incorrect_letters)
+
+        console.log(new_djson.incorrect_words)
+        console.log(old_djson.incorrect_words)
+
+        if(new_djson.correct_letters.length != old_djson.correct_letters.length){
+            console.log('correct_letters\n')
+
+            window.location.href="/gameplay/" + uid + "/" + gid;
+        }
+        if(new_djson.incorrect_letters.length != old_djson.incorrect_letters.length){
+            console.log('incorrect_letters\n')
+
+
+            window.location.href="/gameplay/" + uid + "/" + gid;
+        }
+        if(new_djson.incorrect_words.length != old_djson.incorrect_words.length){
+            console.log('incorrect_words\n')
+
+            window.location.href="/gameplay/" + uid + "/" + gid;
+        }
+    });        
 }
