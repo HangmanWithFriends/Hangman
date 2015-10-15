@@ -29,7 +29,7 @@
 
 <body>
 	<div class="col-md-4 col-md-offset-4 Home">
-		<h2>Enter the Phrase For Your<br>Opponent to Guess</h2>
+		<h2>Enter the Phrase For <br>{{ guesser_name }} to Guess</h2>
 		<form id="request_phrase-form" name="request_phrase" action="/game/{{ uid }}/prompt/{{ gid }}" method="post" accept-charset="utf-8">
 			<input type="text" name="answer" placeholder="Phrase" required>
 			<button  class="btn-home" type="submit" value="Submit">Submit</button>

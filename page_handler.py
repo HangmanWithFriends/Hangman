@@ -22,10 +22,12 @@ class Page_Handler():
         return env.get_template('Home.html').render()
     
     def get_lobby_html(self, uid):
-        return env.get_template('Lobby.html').render(uid=uid)
+        display_name = "New Guest " + str(uid)
+        return env.get_template('Lobby.html').render(uid=uid, display_name=display_name)
 
     def get_request_phrase_html(self, uid, gid):
-        return env.get_template('RequestPhrase.html').render(uid=uid, gid=gid)
+        guesser_name = "Guesser"
+        return env.get_template('RequestPhrase.html').render(uid=uid, gid=gid, guesser_name=guesser_name)
 
     def get_game_html(self, uid, gid):
         return env.get_template('Game.html').render(uid=uid, gid=gid)
@@ -34,7 +36,8 @@ class Page_Handler():
         return env.get_template('Register.html').render()
 
     def get_guest_lobby_with_uid(self, uid):
-        return env.get_template('GuestLobby.html').render(uid=uid);
+        display_name = "New Guest " + str(uid)
+        return env.get_template('GuestLobby.html').render(uid=uid, display_name = display_name);
     
     def get_guest_uid(self):
         userid = "g" + str(self.next_guest_user)
@@ -48,7 +51,8 @@ class Page_Handler():
         return env.get_template('GuestRequestPhrase.html').render()
 
     def get_guest_lobby_html(self, uid):
-        return env.get_template('GuestLobby.html').render(uid=uid)
+        display_name = "New Guest " + str(uid)
+        return env.get_template('GuestLobby.html').render(uid=uid,display_name=display_name)
     
     
     def get_guest_game_html(self, uid, gid):
@@ -87,11 +91,15 @@ class Page_Handler():
         
         img_name = "/img/gallows"+str(num_wrong)+".png"
         
+        #These would be the users display names
+        creator_name = "Creator"
+        guesser_name = "Guesser"
+		
         if(str(uid) == str(game_dict['creator_uid'])):
-            return env.get_template('SpectatorGame.html').render(game_dict=game_dict, alphabet=alphabet, word_progress=word_progress, img_name=img_name, gid=gid, uid=uid)
+            return env.get_template('SpectatorGame.html').render(game_dict=game_dict, alphabet=alphabet, word_progress=word_progress, img_name=img_name, gid=gid, uid=uid, guesser_name = guesser_name, creator_name = creator_name)
 
  
-        return env.get_template('Game.html').render(game_dict=game_dict, alphabet=alphabet, word_progress=word_progress, img_name=img_name, gid=gid, uid=uid)
+        return env.get_template('Game.html').render(game_dict=game_dict, alphabet=alphabet, word_progress=word_progress, img_name=img_name, gid=gid, uid=uid, guesser_name = guesser_name, creator_name = creator_name)
     
     def get_wait_html(self, uid, gid):
         return env.get_template('Wait.html').render(uid=uid, gid=gid)

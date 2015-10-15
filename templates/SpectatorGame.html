@@ -16,10 +16,10 @@
 </head>
 <header>
     <div class="blue" style="height: 60px"></div>
-    <a href="#"><h1>HANGMAN With Friends {{test}}</h1></a>
+    <a href="#"><h1>HANGMAN With Friends</h1></a>
     <div class="blue"style="height: 30px; margin-top:10px;"></div>
     <div class="player-avatar">
-        <h3>Guest</h3>
+        <h3>{{ creator_name }}</h3>
         <img class="dropdown-toggle" src="/img/unknown.png" data-toggle="dropdown"/>
         <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
           <li role="presentation"><a role="menuitem" tabindex="-1" href="/login">Logout</a></li>
@@ -39,7 +39,7 @@
     </div>
     <div class="container">
         <div class="col-md-6 col-md-offset-1" > 
-
+			<h3> Your are playing against {{ guesser_name }}.</h3>
             <div class="game">
                 <div class="header">
                     <h3>Guess the Word</h3>
