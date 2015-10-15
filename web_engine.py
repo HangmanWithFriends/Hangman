@@ -43,7 +43,7 @@ def start_service():
     cherrypy.config.update(conf)
     app = cherrypy.tree.mount(None, config=conf)
     
-    db = { 'games':{}, 'users':{} }
+    db = { 'games':{}, 'users':{}, 'emails_to_uids':{} }
     page_handler = Page_Handler(db)
     game_handler = Game_Handler(db)
     account_handler = Account_Handler(db)
