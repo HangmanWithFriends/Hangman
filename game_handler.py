@@ -15,9 +15,10 @@ env = Environment(loader=FileSystemLoader(os.path.abspath(os.path.dirname(__file
 
 
 class Game_Handler():
-    def __init__(self):
+    def __init__(self, db):
         random.seed()
-        self.game_db = dict()
+        self.db = db
+        self.games_table = db['games']
         self.waiting_gids = list()
         self.next_gid = 1
  
@@ -36,18 +37,18 @@ class Game_Handler():
     def post_guess(self, uid, gid, guess):
         
 
-        if(gid not in self.game_db):
+        if(gid not in self.games_table):
             output = {'result':'Error', 'errors':["Game does not exist"]}
             return json.dumps(output, encoding='latin-1')
         
-        if(uid != self.game_db[gid]['guesser_uid']):
+        if(uid != self.games_table[gid]['guesser_uid']):
             output = {'result':'Error', 'errors':["Must be the guessing user to guess"]}
         
         if not guess:
             output = {'result':'Failure', 'message':"Incoming data not valid"}
             return json.dumps(output, encoding='latin-1')
 
-        if uid != self.game_db[gid]['guesser_uid']:
+        if uid != self.games_table[gid]['guesser_uid']:
             output = {'result':'Failure', 'message':"Must be the guessing user to guess"}
             return json.dumps(output, encoding='latin-1')
 
@@ -65,10 +66,10 @@ class Game_Handler():
         raise cherrypy.HTTPRedirect('/gameplay/' + str(uid) + '/' + str(gid))
 
     def guess_phrase(self, gid, phrase):
-        if gid not in self.game_db:
+        if gid not in self.games_table:
             return json.dumps({'result':'Error', 'errors':["Game does not exist"]})
 
-        game_dict = self.game_db[gid]
+        game_dict = self.games_table[gid]
 
         if not phrase in game_dict['incorrect_words']:
             if phrase == game_dict['answer']:
@@ -81,7 +82,7 @@ class Game_Handler():
             self.check_win(game_dict, phrase)
     
     def guess_letter(self, gid, letter):
-        game_dict = self.game_db[gid]
+        game_dict = self.games_table[gid]
         answer = game_dict['answer']
         correct_letters = game_dict['correct_letters']
         incorrect_letters = game_dict['incorrect_letters']
@@ -112,8 +113,8 @@ class Game_Handler():
     def get_game(self, gid):
 
         # Active Game
-        if str(gid) in self.game_db:
-            output = self.game_db[gid]
+        if str(gid) in self.games_table:
+            output = self.games_table[gid]
             output['result'] = 'Success'
             output['errors'] = []
 
@@ -179,7 +180,7 @@ class Game_Handler():
             if first_uid != uid:
                 self.waiting_gids.pop(0)
                 (guesser_uid, creator_uid) = self.assign_player_roles(first_uid, uid)
-                self.game_db[new_gid] = {'answer': None, 
+                self.games_table[new_gid] = {'answer': None, 
                                          'incorrect_letters': [], 'incorrect_words': [], 'correct_letters': [], 
                                          'guesser_uid' : guesser_uid, 'creator_uid':creator_uid,
                                          'win': None}
@@ -197,7 +198,7 @@ class Game_Handler():
 
     def post_game_prompt(self, uid, gid, answer=None):
 
-        if uid != self.game_db[gid]['creator_uid']:
+        if uid != self.games_table[gid]['creator_uid']:
             output = {'result': 'Failure', 'message': "Must be the creating user to create prompt"}
             return json.dumps(output, encoding='latin-1')
 
@@ -210,7 +211,7 @@ class Game_Handler():
 
         if not answer is None:
             if len(stripped_answer) in range(3, 31) and answer.isalpha():
-                self.game_db[gid]['answer'] = answer
+                self.games_table[gid]['answer'] = answer
                 output = {'result': 'Success', 'message': 'Your game will begin shortly!'}
             else:
                 output = {'result': 'Failure', 'message': 'Your phrase must be between 3 and 30 alphabetical characters.'}
@@ -219,7 +220,7 @@ class Game_Handler():
 
         if not answer is None:
             if len(stripped_answer) in range(3, 31) and answer.isalpha():
-                self.game_db[gid]['answer'] = answer
+                self.games_table[gid]['answer'] = answer
                 output = {'result': 'Success', 'message': 'Your game will begin shortly!'}
             else:
                 output = {'result': 'Error', 'message': 'Your phrase must be between 3 and 30 alphabetical characters.'}

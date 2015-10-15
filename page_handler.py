@@ -15,11 +15,9 @@ env = Environment(loader=FileSystemLoader(os.path.abspath(os.path.dirname(__file
 
 class Page_Handler():
     
-    def __init__(self):
-        self.all_users = {}
-        self.next_user = 1
-        self.next_guest_user = 1
-    
+    def __init__(self, db):
+        self.db = db
+        
     def get_login_html(self):
         return env.get_template('Home.html').render()
     
@@ -32,18 +30,9 @@ class Page_Handler():
     def get_game_html(self, uid, gid):
         return env.get_template('Game.html').render(uid=uid, gid=gid)
 
-    def handle_login_request(self, usermail=None, password=None):
-        result={'errors':[]}
-        return json.dumps(result)
-
     def get_register_html(self):
         return env.get_template('Register.html').render()
 
-    def handle_register_request(self, usermail=None, password=None, username=None):
-        result = {'errors':[]}
-        return json.dumps(result)
-
-    
     def get_guest_lobby_with_uid(self, uid):
         return env.get_template('GuestLobby.html').render(uid=uid);
     
