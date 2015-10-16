@@ -54,7 +54,10 @@ class Page_Handler():
         return env.get_template('GuestRequestPhrase.html').render()
 
     def get_guest_lobby_html(self, uid):
-        display_name = "New Guest " + str(uid)
+        display_name = self.users[uid]["username"]
+        avatar = "../img/unknown.png"
+        if uid in self.users.keys() and 'g' not in uid:                    
+            return env.get_template('Lobby.html').render(uid=uid, display_name=display_name, avatar=avatar)   
         return env.get_template('GuestLobby.html').render(uid=uid,display_name=display_name)
     
     
