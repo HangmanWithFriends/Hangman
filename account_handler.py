@@ -68,7 +68,7 @@ class Account_Handler():
         else:
             new_uid = self.find_next_user_id()
             self.emails_to_uids[usermail] = new_uid
-            self.users[new_uid] = {"usermail": usermail, 
+            self.users[str(new_uid)] = {"usermail": usermail, 
                                     "hashed_pass": hashed_pass,
                                     "username": username}
 
