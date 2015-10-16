@@ -23,18 +23,42 @@ $(function() {
             else{
                 message = "Your opponent failed to guess your word!";
             }
+            var regex = /^[1-9]+$/;
+            console.log(regex.test(uid))
+            
             window.alert(message);
-            window.location.href = "/guestlobby/"+uid;
+            if regex.test(uid):
+                console.log(uid)
+                window.location.href = "/lobby/"+uid;
+            else:
+                window.location.href = "/guestlobby/"+uid;
         }
         else if(win_uid == guess_uid){
+            var regex = /^[1-9]+$/;
+            console.log(regex.test(uid))
+
             message = "Your opponent got loose from noose. You lose!";
             window.alert(message);
-            window.location.href = "/guestlobby/"+uid;
+            if regex.test(uid):
+                console.log(uid)
+
+                window.location.href = "/lobby/"+uid;
+            else:
+                window.location.href = "/guestlobby/"+uid;
         }
         else if(win_uid == creator_uid){
+            var regex = /^[1-9]+$/;
+            console.log(regex.test(uid))
+
             message = "You died.";
             window.alert(message);
-            window.location.href = "/guestlobby/"+uid;
+            
+            if regex.test(uid):
+                console.log(uid)
+
+                window.location.href = "/lobby/"+uid;
+            else:
+                window.location.href = "/guestlobby/"+uid;
         }
     })
 });
