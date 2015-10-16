@@ -29,7 +29,8 @@ class Page_Handler():
         return env.get_template('Lobby.html').render(uid=uid, display_name=display_name, avatar=avatar)
 
     def get_request_phrase_html(self, uid, gid):
-        guesser_name = self.users[uid]['username']
+        guesser_uid = self.db['games'][int(gid)]['guesser_uid']
+        guesser_name = self.users[guesser_uid]['username']
         return env.get_template('RequestPhrase.html').render(uid=uid, gid=gid, guesser_name=guesser_name)
 
     def get_game_html(self, uid, gid):
