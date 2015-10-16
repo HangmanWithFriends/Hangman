@@ -2,7 +2,7 @@ $(function() {
 	$('#guest-login').on('submit', function(event) {
 		
 		event.preventDefault();
-		
+	
 		/* Send the data to 'GET /guestlobby' to receive a uid */
 		$.ajax({
 			type : 'GET',
