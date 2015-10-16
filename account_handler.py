@@ -67,7 +67,7 @@ class Account_Handler():
             result = {'errors':['Email already in use'], 'result':None}
         else:
             new_uid = self.find_next_user_id()
-            self.emails_to_uids[usermail] = new_uid
+            self.emails_to_uids[usermail] = str(new_uid)
             self.users[str(new_uid)] = {"usermail": usermail, 
                                     "hashed_pass": hashed_pass,
                                     "username": username}

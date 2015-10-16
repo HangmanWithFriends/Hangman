@@ -67,7 +67,8 @@ class Page_Handler():
         template page. 
         
         '''
-        
+        '''
+        gid = int(gid)
         game_state = requests.get('http://localhost:8080/game/'+str(gid))
  
         game_dict = json.loads(game_state.content)
@@ -75,11 +76,13 @@ class Page_Handler():
             return game_dict['errors']
         
         '''
+
+        gid = int(gid)
         if gid not in self.db['games']:
                 return ['This is not an active game id.']
 
         game_dict = self.db['games'][gid]
-        '''
+        
         alphabet = list(string.ascii_uppercase)
 
         list_word_progress = []
@@ -105,10 +108,10 @@ class Page_Handler():
         
 		
         if(str(uid) == str(game_dict['creator_uid'])):
-            return env.get_template('SpectatorGame.html').render(game_dict=game_dict, alphabet=alphabet, word_progress=word_progress, img_name=img_name, gid=gid, uid=uid, guesser_name = guesser_name, creator_name = creator_name)
+            return env.get_template('SpectatorGame.html').render(game_dict=game_dict, alphabet=alphabet, word_progress=word_progress, img_name=img_name, gid=str(gid), uid=uid, guesser_name = guesser_name, creator_name = creator_name)
 
  
-        return env.get_template('Game.html').render(game_dict=game_dict, alphabet=alphabet, word_progress=word_progress, img_name=img_name, gid=gid, uid=uid, guesser_name = guesser_name, creator_name = creator_name)
+        return env.get_template('Game.html').render(game_dict=game_dict, alphabet=alphabet, word_progress=word_progress, img_name=img_name, gid=str(gid), uid=uid, guesser_name = guesser_name, creator_name = creator_name)
     
     def get_wait_html(self, uid, gid):
         return env.get_template('Wait.html').render(uid=uid, gid=gid)
