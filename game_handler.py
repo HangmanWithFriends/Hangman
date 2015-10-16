@@ -115,7 +115,7 @@ class Game_Handler():
     def get_game(self, gid):
 
         # Active Game
-        if str(gid) in self.games_table:
+        if gid in self.games_table:
             output = self.games_table[gid]
             output['result'] = 'Success'
             output['errors'] = []
@@ -129,7 +129,7 @@ class Game_Handler():
     def get_game_request(self, uid):
         request_state = self.post_game_request(uid)
         waiting = request_state['waiting']
-        gid = str(request_state['gid'])
+        gid = request_state['gid']
 
         #if waiting: 
         while(1):
@@ -146,7 +146,7 @@ class Game_Handler():
                         sleep(2)
                         continue
                     else:
-                        raise cherrypy.HTTPRedirect('/gameplay/' + str(uid) + '/' + gid)
+                        raise cherrypy.HTTPRedirect('/gameplay/' + str(uid) + '/' + str(gid))
         '''            
         if not waiting:
             while(1):

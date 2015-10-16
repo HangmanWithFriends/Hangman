@@ -29,11 +29,13 @@ class Page_Handler():
         return env.get_template('Lobby.html').render(uid=uid, display_name=display_name, avatar=avatar)
 
     def get_request_phrase_html(self, uid, gid):
+        gid = int(gid)
         guesser_name = self.users[uid]['name']
-        return env.get_template('RequestPhrase.html').render(uid=uid, gid=gid, guesser_name=guesser_name)
+        return env.get_template('RequestPhrase.html').render(uid=uid, gid=str(gid), guesser_name=guesser_name)
 
     def get_game_html(self, uid, gid):
-        return env.get_template('Game.html').render(uid=uid, gid=gid)
+        gid = int(gid)
+        return env.get_template('Game.html').render(uid=uid, gid=str(gid))
 
     def get_register_html(self):
         return env.get_template('Register.html').render()
@@ -59,7 +61,8 @@ class Page_Handler():
     
     
     def get_guest_game_html(self, uid, gid):
-        return env.get_template('GuestGame.html').render(uid=uid, gid=gid)
+        gid = int(gid)
+        return env.get_template('GuestGame.html').render(uid=uid, gid=str(gid))
     
     def get_gameplay_html(self, uid, gid):
         '''
