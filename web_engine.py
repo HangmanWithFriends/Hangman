@@ -3,14 +3,30 @@ This is the main file to run from the command line
 to start up the CherryPy webserver. This will also 
 house the dispatcher to handle HTTP(S) requests.
 '''
-
+import thread
+import pickle
 import cherrypy
 import os
+import time
+import copy
 from page_handler import Page_Handler
 from game_handler import Game_Handler
 from account_handler import Account_Handler
 
+def auto_save(db):
+    old_db = copy.deepcopy(db)
+
+    while True:
+        time.sleep(5)
+
+        # If a change has been made to the database, pickle it
+        if old_db != db:
+            f = 'HangmanUsers.pickle'
+            pickle.dump(db, file(f, 'w'))
+            old_db = copy.deepcopy(db)
+
 def start_service():
+
     dispatcher = cherrypy.dispatch.RoutesDispatcher()
     conf = {'global': 
                 {
@@ -43,10 +59,17 @@ def start_service():
     cherrypy.config.update(conf)
     app = cherrypy.tree.mount(None, config=conf)
     
-    db = { 'games':{}, 'users':{}, 'emails_to_uids':{} }
+    if os.path.isfile('HangmanUsers.pickle'):
+        print 'loading db'
+        db = pickle.load(file('HangmanUsers.pickle'))
+    else:
+        db = { 'games':{}, 'users':{}, 'emails_to_uids':{} }
+
     page_handler = Page_Handler(db)
     game_handler = Game_Handler(db)
     account_handler = Account_Handler(db)
+
+    thread.start_new_thread(auto_save, (db,))
     
     dispatcher.connect('default_login','/',controller=page_handler,action='get_login_html',conditions=dict(method=['GET']))
     dispatcher.connect('get_login_page','/login',controller=page_handler, action='get_login_html',conditions=dict(method=['GET']))
