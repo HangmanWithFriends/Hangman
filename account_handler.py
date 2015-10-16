@@ -89,11 +89,17 @@ class Account_Handler():
             to_return = self.next_registered_user
             self.next_registered_user += 1
             return to_return
-        elif len(self.users) is 0:
-            self.next_registered_user = 2
-            return 1
         else:
-            to_return = max(self.users, key=int) + 1
+            to_return = 0
+            for uid in self.users:
+                try:
+                    intuid = int(uid)
+                    if to_return < intuid:
+                        to_return = intuid
+                except:
+                    pass
+
+            to_return += 1
             self.next_registered_user = to_return + 1
             return to_return
 
