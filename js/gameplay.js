@@ -15,7 +15,13 @@ $(function() {
         var guess_uid = djson.guesser_uid;
         var creator_uid = djson.creator_uid;
         var message = "";
+        var redirect_location = "/lobby/" + uid;
 
+        if(uid.charAt(0) == 'g')
+        {
+            var redirect_location = "/guestlobby/"+uid;
+        } 
+        
         if(win_uid == uid){
             if(uid == guess_uid){
                 message = "You correctly guessed the phrase!";
@@ -24,17 +30,17 @@ $(function() {
                 message = "Your opponent failed to guess your word!";
             }
             window.alert(message);
-            window.location.href = "/guestlobby/"+uid;
+            window.location.href = redirect_locaiton; 
         }
         else if(win_uid == guess_uid){
             message = "Your opponent got loose from noose. You lose!";
             window.alert(message);
-            window.location.href = "/guestlobby/"+uid;
+            window.location.href = redirect_location;
         }
         else if(win_uid == creator_uid){
             message = "You died.";
             window.alert(message);
-            window.location.href = "/guestlobby/"+uid;
+            window.location.href = redirect_location;
         }
     })
 });
