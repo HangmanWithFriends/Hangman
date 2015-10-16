@@ -44,18 +44,11 @@ $(function() {
 
 		var pwd = $('#user-password-input').val();
 		var email = $('#user-email-input').val();
-
-		if(isValidPassword(pwd)) {
-		    $('#password-error').hide();
-		} else {
-		    $('#password-error').text('Password has to be 9 or more characters, and contain at least 1 upper case, 1 lower case, and 1 number.').show();
-		    event.preventDefault();
-		}
 		
 		/* Send the data to 'POST /users/login' to see if this username/password works */
 		$.ajax({
 			type : 'POST',
-			url: 'login',
+			url: '/login',
 			contentType: 'application/json',
 			data: JSON.stringify({
 				usermail: email,
@@ -68,8 +61,9 @@ $(function() {
 				showAlert('Username/password combination is wrong', 'danger');
 			}
 			else{
-				
-				window.location.href = "/lobby";
+				// Get user id
+				var uid = d.result
+				window.location.href = "/lobby/" + uid;
 			}
 			
 		}).fail(function() {

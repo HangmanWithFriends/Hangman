@@ -9,6 +9,7 @@ import os.path
 import json
 import string
 import cherrypy
+import hashlib
 
 class Account_Handler():
     
@@ -17,8 +18,11 @@ class Account_Handler():
         self.emails_to_uids = db['emails_to_uids']
         self.users = db['users']
         #take max of list of existing users joined with the list containing 0, will be 1 for new db
-        self.registered_user = self.find_next_user_id()
+        self.next_registered_user = None
         self.next_guest_user = 1
+
+        self.find_next_user_id()
+
     
     def handle_login_request(self, usermail=None, password=None):
         result={'result':"Success", 'errors':[]}
@@ -31,14 +35,32 @@ class Account_Handler():
             if hashed_incoming != expected_hash:
                 result['result'] = "Error"
                 result['errors'].append("Invalid email/password combination")
+            else:
+                result['result'] = self.emails_to_uids[usermail]
+                result['errors'] = []
 
         return json.dumps(result)
 
     def handle_register_request(self, usermail=None, password=None, username=None):
+
         #TODO jhamilt5: update both self.users with all info and uid key
         #and also update self.emails_to_uids with key usermail and value uid
-        hashed_pass = self.hash_pwd(password)
-        result = {'errors':[]}
+        cl = cherrypy.request.headers['Content-Length']
+        data_json = cherrypy.request.body.read(int(cl))
+        data = json.loads(data_json)
+
+        pwd = data["password"]
+        usermail = data["usermail"]
+        hashed_pass = self.hash_pwd(pwd)
+        username = data["username"]
+        new_uid = self.find_next_user_id()
+
+        self.users[new_uid] = {"usermail": usermail, 
+                                "hashed_pass": hashed_pass,
+                                "username": username}
+        self.emails_to_uids[usermail] = new_uid
+
+        result = {'errors':[], 'result':new_uid}
         return json.dumps(result)
    
     def get_guest_uid(self):
@@ -51,9 +73,18 @@ class Account_Handler():
 
     #Looks at any existing uids in the self.db[users] and returns the highest + 1
     def find_next_user_id(self):
-        to_return = self.next_registered_user
-        self.next_registered_user += 1
-        return to_return
+        if self.next_registered_user:
+            to_return = self.next_registered_user
+            self.next_registered_user += 1
+            return to_return
+        elif len(self.users) is 0:
+            self.next_registered_user = 2
+            return 1
+        else:
+            to_return = max(self.users, key=int) + 1
+            self.next_registered_user = to_return + 1
+            return to_return
 
-    def hash_pwd(pwd):
-        return md5.new(pwd).digest()
+    def hash_pwd(self, pwd):
+        hashed = hashlib.sha224(pwd).hexdigest()
+        return hashed
