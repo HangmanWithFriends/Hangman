@@ -30,7 +30,7 @@ class Page_Handler():
 
     def get_request_phrase_html(self, uid, gid):
         gid = int(gid)
-        guesser_name = self.users[uid]['name']
+        guesser_name = self.users[uid]['username']
         return env.get_template('RequestPhrase.html').render(uid=uid, gid=str(gid), guesser_name=guesser_name)
 
     def get_game_html(self, uid, gid):
@@ -43,14 +43,6 @@ class Page_Handler():
     def get_guest_lobby_with_uid(self, uid):
         display_name = "New Guest " + str(uid)
         return env.get_template('GuestLobby.html').render(uid=uid, display_name = display_name);
-    
-    def get_guest_uid(self):
-        userid = "g" + str(self.next_guest_user)
-        self.all_users[userid] = {"name" : "guest"}
-        self.next_guest_user += 1
-        guest_info = {'uid' : userid}
-        guest_info['errors'] = []
-        return json.dumps(guest_info)
     
     def get_guest_request_phrase_html(self):
         return env.get_template('GuestRequestPhrase.html').render()
@@ -108,8 +100,8 @@ class Page_Handler():
         #These would be the users display names
         creator_uid = self.db['games'][gid]['creator_uid']
         guesser_uid = self.db['games'][gid]['guesser_uid']
-        creator_name = self.db['users'][creator_uid]['name']
-        guesser_name = self.db['users'][guesser_uid]['name']
+        creator_name = self.db['users'][creator_uid]['username']
+        guesser_name = self.db['users'][guesser_uid]['username']
         
 		
         if(str(uid) == str(game_dict['creator_uid'])):

@@ -78,7 +78,7 @@ class Account_Handler():
    
     def get_guest_uid(self):
         userid = "g" + str(self.next_guest_user)
-        self.users[userid] = {"name" : "Guest_" + str(self.next_guest_user)}
+        self.users[userid] = {"username" : "Guest_" + str(self.next_guest_user)}
         self.next_guest_user += 1
         guest_info = {'uid' : userid}
         guest_info['errors'] = []
