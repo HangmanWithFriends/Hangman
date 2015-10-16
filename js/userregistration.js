@@ -76,7 +76,9 @@ $(function() {
           console.log('done posting');
           var d = data;
           if(d.errors.length > 0){
-            document.getElementById("errorbox").innerHTML = "Registration unsuccessful";
+            var err_message = d.errors[0]
+            console.log(err_message)
+            document.getElementById("errorbox").innerHTML = err_message;
           }
           else{
             var uid = d.result;
