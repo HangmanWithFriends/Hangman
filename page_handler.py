@@ -95,8 +95,11 @@ class Page_Handler():
         img_name = "/img/gallows"+str(num_wrong)+".png"
         
         #These would be the users display names
-        creator_name = "Creator"
-        guesser_name = "Guesser"
+        creator_uid = self.db['games'][gid]['creator_uid']
+        guesser_uid = self.db['games'][gid]['guesser_uid']
+        creator_name = self.db['users'][creator_uid]['name']
+        guesser_name = self.db['users'][guesser_uid]['name']
+        
 		
         if(str(uid) == str(game_dict['creator_uid'])):
             return env.get_template('SpectatorGame.html').render(game_dict=game_dict, alphabet=alphabet, word_progress=word_progress, img_name=img_name, gid=gid, uid=uid, guesser_name = guesser_name, creator_name = creator_name)
