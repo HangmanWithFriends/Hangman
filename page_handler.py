@@ -29,9 +29,9 @@ class Page_Handler():
         return env.get_template('Lobby.html').render(uid=uid, display_name=display_name, avatar=avatar)
 
     def get_request_phrase_html(self, uid, gid):
-        gid = int(gid)
-        guesser_name = self.users[uid]['username']
-        return env.get_template('RequestPhrase.html').render(uid=uid, gid=str(gid), guesser_name=guesser_name)
+        guesser_uid = self.db['games'][int(gid)]['guesser_uid']
+        guesser_name = self.users[guesser_uid]['username']
+        return env.get_template('RequestPhrase.html').render(uid=uid, gid=gid, guesser_name=guesser_name)
 
     def get_game_html(self, uid, gid):
         gid = int(gid)
@@ -48,7 +48,10 @@ class Page_Handler():
         return env.get_template('GuestRequestPhrase.html').render()
 
     def get_guest_lobby_html(self, uid):
-        display_name = "New Guest " + str(uid)
+        display_name = self.users[uid]["username"]
+        avatar = "../img/unknown.png"
+        if uid in self.users.keys() and 'g' not in uid:                    
+            return env.get_template('Lobby.html').render(uid=uid, display_name=display_name, avatar=avatar)   
         return env.get_template('GuestLobby.html').render(uid=uid,display_name=display_name)
     
     
