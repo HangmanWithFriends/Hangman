@@ -53,10 +53,10 @@ $(function() {
   }
 
   if(!isPasswordMatch(pwd, pwd_confirm)) {
-    $('#user-password-input').val('')
-    $('#user-password-confirm-input').val('')
-    document.register.password.focus()
-    document.getElementById("errorbox").innerHTML = "Passwords don't match"
+    $('#user-password-input').val('');
+    $('#user-password-confirm-input').val('');
+    document.register.password.focus();
+    document.getElementById("errorbox").innerHTML = "Passwords don't match";
     event.preventDefault();
     post = false;
   }
@@ -64,7 +64,7 @@ $(function() {
   if(post){
     $.ajax({
           type : 'POST',
-          url: 'register',
+          url: '/register',
           contentType: 'application/json',
           data: JSON.stringify({
               usermail: email,
@@ -76,14 +76,16 @@ $(function() {
           console.log('done posting');
           var d = data;
           if(d.errors.length > 0){
-            showAlert('Username/password combination is wrong', 'danger');
+            var err_message = d.errors[0]
+            console.log(err_message)
+            document.getElementById("errorbox").innerHTML = err_message;
           }
           else{
-            
-            window.location.href = "/lobby/1";
+            var uid = d.result;
+            window.location.href = "/lobby/" + uid;
           } 
       }).fail(function() {
-          showAlert('Username/password combination is wrong.', 'danger');
+          document.getElementById("errorbox").innerHTML = "Registration unsuccessful";
       });
   }
 

@@ -13,7 +13,7 @@ $(function() {
 		/* Send the data to 'POST /login' to see if this username/password works */
 		$.ajax({
 			type : 'POST',
-			url: 'login',
+			url: '/login',
 			contentType: 'application/json',
 			data: JSON.stringify({
 				usermail: email,
@@ -21,13 +21,14 @@ $(function() {
 			}),
 			dataType: 'json'
 		}).done(function(data) {
-			var actual_data = JSON.parse(data);
-			if(acutal_data.errors.length > 0){
+			var d = data;
+			if(d.errors.length > 0){
 				window.alert('Username/password combination is wrong');
 			}
 			else{
-                window.alert("Success")
-				window.location.href = "/lobby/"+acutal_data.uid.toString()
+				// Get user id
+				var uid = d.result
+				window.location.href = "/lobby/" + uid;
 			}
 			
 		}).fail(function() {

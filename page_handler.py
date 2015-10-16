@@ -17,13 +17,16 @@ class Page_Handler():
     
     def __init__(self, db):
         self.db = db
+        self.emails_to_uids = db['emails_to_uids']
+        self.users = db['users']
         
     def get_login_html(self):
         return env.get_template('Home.html').render()
     
     def get_lobby_html(self, uid):
-        display_name = "New Guest " + str(uid)
-        return env.get_template('Lobby.html').render(uid=uid, display_name=display_name)
+        display_name = self.users[int(uid)]["username"]
+        avatar = "../img/unknown.png"
+        return env.get_template('Lobby.html').render(uid=uid, display_name=display_name, avatar=avatar)
 
     def get_request_phrase_html(self, uid, gid):
         guesser_name = "Guesser"
