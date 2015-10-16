@@ -53,14 +53,18 @@ class Account_Handler():
         usermail = data["usermail"]
         hashed_pass = self.hash_pwd(pwd)
         username = data["username"]
-        new_uid = self.find_next_user_id()
 
-        self.users[new_uid] = {"usermail": usermail, 
-                                "hashed_pass": hashed_pass,
-                                "username": username}
-        self.emails_to_uids[usermail] = new_uid
+        if usermail in self.emails_to_uids:
+            result = {'errors':['Email already in use'], 'result':None}
+        else:
+            new_uid = self.find_next_user_id()
+            self.emails_to_uids[usermail] = new_uid
+            self.users[new_uid] = {"usermail": usermail, 
+                                    "hashed_pass": hashed_pass,
+                                    "username": username}
 
-        result = {'errors':[], 'result':new_uid}
+            result = {'errors':[], 'result':new_uid}
+            
         return json.dumps(result)
    
     def get_guest_uid(self):
