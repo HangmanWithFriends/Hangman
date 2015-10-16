@@ -24,12 +24,12 @@ class Page_Handler():
         return env.get_template('Home.html').render()
     
     def get_lobby_html(self, uid):
-        display_name = self.users[int(uid)]["username"]
+        display_name = self.users[uid]["username"]
         avatar = "../img/unknown.png"
         return env.get_template('Lobby.html').render(uid=uid, display_name=display_name, avatar=avatar)
 
     def get_request_phrase_html(self, uid, gid):
-        guesser_name = "Guesser"
+        guesser_name = self.users[uid]['name']
         return env.get_template('RequestPhrase.html').render(uid=uid, gid=gid, guesser_name=guesser_name)
 
     def get_game_html(self, uid, gid):
@@ -70,13 +70,21 @@ class Page_Handler():
         the correct game info to display to the user. It will 
         do some backend work and then send that info to a HTML 
         template page. 
+        
         '''
+        
         game_state = requests.get('http://localhost:8080/game/'+str(gid))
  
         game_dict = json.loads(game_state.content)
         if not len(game_dict['errors']) is 0:
             return game_dict['errors']
-         
+        
+        '''
+        if gid not in self.db['games']:
+                return ['This is not an active game id.']
+
+        game_dict = self.db['games'][gid]
+        '''
         alphabet = list(string.ascii_uppercase)
 
         list_word_progress = []

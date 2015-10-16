@@ -21,6 +21,8 @@ class Game_Handler():
         self.games_table = db['games']
         self.waiting_gids = list()
         self.next_gid = 1
+
+        self.find_next_game_id()
  
     def get_dummy_game(self, gid):
         result = {}
@@ -125,17 +127,32 @@ class Game_Handler():
         return json.dumps(output, encoding='latin-1')
     
     def get_game_request(self, uid):
-        request_state = requests.post('http://localhost:8080/game/' + str(uid) + '/request')
-        j = json.loads(request_state.content)
-        waiting = str(j['waiting'])
-        if (waiting == "True"): 
-#             return env.get_template('Wait.html').render(uid=uid,gid=str(j['gid']))
+        request_state = self.post_game_request(uid)
+        waiting = request_state['waiting']
+        gid = str(request_state['gid'])
+
+        #if waiting: 
+        while(1):
+            if gid not in self.games_table:
+                sleep(2)    # Wait 2 seconds and check if game exists
+            else:
+                creator = self.games_table[gid]['creator_uid']
+                if creator == uid:
+                    raise cherrypy.HTTPRedirect('/phrase/' + str(uid) + '/' + gid)
+                else:
+                    answer = self.games_table[gid]['answer']
+                    #if answer == "None": answer = False
+                    if not answer:
+                        sleep(2)
+                        continue
+                    else:
+                        raise cherrypy.HTTPRedirect('/gameplay/' + str(uid) + '/' + gid)
+        '''            
+        if not waiting:
             while(1):
-                check_game = requests.get('http://localhost:8080/game/' + str(j['gid']))
-                game_resp = json.loads(check_game.content)
-                if(str(game_resp['result']) == "Error"):
+                if gid not in self.games_table:
                     sleep(2)    # Wait 2 seconds and check if game exists
-                elif(str(game_resp['result']) == "Success"):
+                else:
                     creator = str(game_resp['creator_uid'])
                     if creator == uid:
                         raise cherrypy.HTTPRedirect('/phrase/' + str(uid) + '/' + str(j['gid']))
@@ -147,26 +164,9 @@ class Game_Handler():
                             continue
                         else:
                             raise cherrypy.HTTPRedirect('/gameplay/' + str(uid) + '/' + str(j['gid']))
-                    
-        if (waiting == "False"):
-            while(1):
-                check_game = requests.get('http://localhost:8080/game/' + str(j['gid']))
-                game_resp = json.loads(check_game.content)
-                if(str(game_resp['result']) == "Error"):
-                    sleep(2)    # Wait 2 seconds and check if game exists
-                elif(str(game_resp['result']) == "Success"):
-                    creator = str(game_resp['creator_uid'])
-                    if creator == uid:
-                        raise cherrypy.HTTPRedirect('/phrase/' + str(uid) + '/' + str(j['gid']))
-                    else:
-                        answer = str(game_resp['answer'])
-                        if answer == "None": answer = False
-                        if not answer:
-                            sleep(2)
-                            continue
-                        else:
-                            raise cherrypy.HTTPRedirect('/gameplay/' + str(uid) + '/' + str(j['gid']))
+        
         else: return "An error occurred"
+        '''
 
     def post_game_request(self, uid):
         waiting = True # whether or not we need to wait for a second player
@@ -194,7 +194,7 @@ class Game_Handler():
             waiting = True
 
         output = {'gid': new_gid, 'waiting': waiting, 'errors':[]}
-        return json.dumps(output, encoding='latin-1')
+        return output #json.dumps(output, encoding='latin-1')
 
     def post_game_prompt(self, uid, gid, answer=None):
 
@@ -236,3 +236,6 @@ class Game_Handler():
             creator_uid = uid1
 
         return (guesser_uid, creator_uid)
+
+    def find_next_game_id(self):
+        return max(self.games_table, key=int)

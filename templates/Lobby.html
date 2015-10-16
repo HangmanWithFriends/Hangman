@@ -75,7 +75,8 @@ $(document).ready(function(){
 
 		<div class="col-md-4">
 			<h2 class="dblue-text">READY TO PLAY?</h2>
-			<form name="Signup" action="/game/{uid}/request" method="post" accept-charset="utf-8">
+			<form id="request-game" name="request-game" action="/game/{uid}/request" method="post" accept-charset="utf-8">
+			<div class="wait-for-game"></div>
             <input class="btn-home" type="submit" value="Find a Game!">
             </form>
 			<div class="friend-list">
@@ -96,6 +97,7 @@ $(document).ready(function(){
 		</div>
 	</div>
 	
-	
+	<script src="/js/lobby.js"></script>
+
 </body>
 </html>
