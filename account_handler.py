@@ -72,7 +72,9 @@ class Account_Handler():
                                     "hashed_pass": hashed_pass,
                                     "username": username,
                                     "friends": [],
-                                    "incoming_friend_requests": []
+                                    "incoming_friend_requests": [],
+                                    "outgoing_friend_requests": [],
+                                    "profile_image" : None
                                     }
 
             result = {'errors':[], 'result':new_uid}

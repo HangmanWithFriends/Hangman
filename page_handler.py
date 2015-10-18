@@ -19,6 +19,8 @@ class Page_Handler():
         self.db = db
         self.emails_to_uids = db['emails_to_uids']
         self.users = db['users']
+        self.default_image_name = "unknown.jpg"
+        self.images_path = os.path.abspath(os.path.dirname(__file__)) + '/img/'
         
     def get_login_html(self):
         return env.get_template('Home.html').render()
@@ -63,21 +65,9 @@ class Page_Handler():
         '''
         This is the function that displays the actual game 
         to the user. What the user sees is dependent on the 
-        uid supplied (creator/guesser/invalid user). This is 
-        a wrapper function of sorts that uses the API to get 
-        the correct game info to display to the user. It will 
+        uid supplied (creator/guesser/invalid user). It will 
         do some backend work and then send that info to a HTML 
         template page. 
-        
-        '''
-        '''
-        gid = int(gid)
-        game_state = requests.get('http://localhost:8080/game/'+str(gid))
- 
-        game_dict = json.loads(game_state.content)
-        if not len(game_dict['errors']) is 0:
-            return game_dict['errors']
-        
         '''
 
         gid = int(gid)
@@ -118,4 +108,26 @@ class Page_Handler():
     
     def get_wait_html(self, uid, gid):
         return env.get_template('Wait.html').render(uid=uid, gid=gid)
+   
+    def get_friend_info_tuples_from_uid(self, uid):
+        if uid not in self.db['users']:
+            return []
+
+        friend_uids = self.users[uid]['friends']
+        friends_tuples_list = []
+        for f_uid in friends_uids:
+            friends_tuples_list.append(f_uid, self.users[f_uid]['username'], self.get_image_name_from_uid(f_uid))
+
+        return friends_tuples_list
     
+    def get_image_name_from_uid(self, uid):
+        image_name = self.default_image_name
+        if uid not in self.db['users']:
+            return image_name
+        
+        if self.users[uid]['profile_image'] != None:
+            #now ensure image is where it needs to be
+            if os.path.isfile(self.images_path+self.users[uid]['profile_image']):
+                image_name = self.users[uid]['profile_image']
+
+        return image_name
