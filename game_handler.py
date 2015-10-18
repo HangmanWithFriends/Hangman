@@ -142,27 +142,7 @@ class Game_Handler():
                         continue
                     else:
                         raise cherrypy.HTTPRedirect('/gameplay/' + str(uid) + '/' + str(gid))
-        '''            
-        if not waiting:
-            while(1):
-                if gid not in self.games_table:
-                    sleep(2)    # Wait 2 seconds and check if game exists
-                else:
-                    creator = str(game_resp['creator_uid'])
-                    if creator == uid:
-                        raise cherrypy.HTTPRedirect('/phrase/' + str(uid) + '/' + str(j['gid']))
-                    else:
-                        answer = str(game_resp['answer'])
-                        if answer == "None": answer = False
-                        if not answer:
-                            sleep(2)
-                            continue
-                        else:
-                            raise cherrypy.HTTPRedirect('/gameplay/' + str(uid) + '/' + str(j['gid']))
         
-        else: return "An error occurred"
-        '''
-
     def post_game_request(self, uid):
         waiting = True # whether or not we need to wait for a second player
         uid = str(uid)
