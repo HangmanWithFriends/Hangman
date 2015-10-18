@@ -20,7 +20,7 @@ class Game_Handler():
         self.db = db
         self.games_table = db['games']
         self.waiting_gids = list()
-        self.next_gid = self.find_next_game_id()
+        self.next_int_gid = self.find_next_game_id()
  
     def get_dummy_game(self, gid):
         result = {}
@@ -35,8 +35,6 @@ class Game_Handler():
         return json.dumps(result)
     
     def post_guess(self, uid, gid, guess):
-        gid = int(gid)        
-
         if(gid not in self.games_table):
             output = {'result':'Error', 'errors':["Game does not exist"]}
             return json.dumps(output, encoding='latin-1')
@@ -66,7 +64,6 @@ class Game_Handler():
         raise cherrypy.HTTPRedirect('/gameplay/' + str(uid) + '/' + str(gid))
 
     def guess_phrase(self, gid, phrase):
-        gid = int(gid)
         if gid not in self.games_table:
             return json.dumps({'result':'Error', 'errors':["Game does not exist"]})
 
@@ -83,7 +80,6 @@ class Game_Handler():
             self.check_win(game_dict, phrase)
     
     def guess_letter(self, gid, letter):
-        gid = int(gid)
         game_dict = self.games_table[gid]
         answer = game_dict['answer']
         correct_letters = game_dict['correct_letters']
@@ -113,7 +109,6 @@ class Game_Handler():
 
 
     def get_game(self, gid):
-        gid = int(gid)
         # Active Game
         if gid in self.games_table:
             output = self.games_table[gid]
@@ -188,8 +183,8 @@ class Game_Handler():
 
         # Otherwise, choose a new gid and add it to the list of waiting gids
         else:
-            new_gid = self.next_gid
-            self.next_gid += 1
+            new_gid = str(self.next_int_gid)
+            self.next_int_gid += 1
             self.waiting_gids.append((new_gid, uid))
             waiting = True
 
@@ -197,7 +192,6 @@ class Game_Handler():
         return output #json.dumps(output, encoding='latin-1')
 
     def post_game_prompt(self, uid, gid, answer=None):
-        gid = int(gid)
         if uid != self.games_table[gid]['creator_uid']:
             output = {'result': 'Failure', 'message': "Must be the creating user to create prompt"}
             return json.dumps(output, encoding='latin-1')
