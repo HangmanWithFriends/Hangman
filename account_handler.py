@@ -70,12 +70,15 @@ class Account_Handler():
             self.emails_to_uids[usermail] = str(new_uid)
             self.users[str(new_uid)] = {"usermail": usermail, 
                                     "hashed_pass": hashed_pass,
-                                    "username": username}
+                                    "username": username,
+                                    "friends": [],
+                                    "incoming_friend_requests": []
+                                    }
 
             result = {'errors':[], 'result':new_uid}
             
         return json.dumps(result)
-   
+
     def get_guest_uid(self):
         userid = "g" + str(self.next_guest_user)
         self.users[userid] = {"username" : "Guest_" + str(self.next_guest_user)}
@@ -102,6 +105,103 @@ class Account_Handler():
             to_return += 1
             self.next_registered_user = to_return + 1
             return to_return
+
+    def handle_new_friend_request(self, uid):
+        cl = cherrypy.request.headers['Content-Length']
+        data_json = cherrypy.request.body.read(int(cl))
+        incoming_data = json.loads(data_json)
+        is_friends = False
+
+        if 'uid_requested' not in incoming_data:
+            return json.dumps({"result":"Error", "errors" : ["Request must contain a 'uid_requested' key-value pair"]})
+
+        uid_requested = incoming_data['uid_requested']
+        if uid_requested not in self.users:
+            return json.dumps({"result":"Error", "errors" : ["Friend requested uid is unknown to database"]})
+
+        if uid not in self.users:
+            return json.dumps({"result":"Error", "errors" : ["Request made by unknown user"]})
+
+        #See if the uid being requested has already requested the uid requesting
+        if uid_requested in self.users[uid]['incoming_friend_requests']:
+            self.make_friends(uid, uid_requested)
+            self.remove_pairs_pending_requests(uid, uid_requested)
+            is_friends = True
+        else:
+            self.users[uid_requested]['incoming_friend_requests'].append(uid)
+            self.users[uid]['outgoing_friends_requests'].append(uid_requested)
+
+        return json.dumps({"result":"Success", "is_friends" : is_friends, "errors":[]})
+
+    def handle_friend_request_reponse(self, uid):
+        cl = cherrypy.request.headers['Content-Length']
+        data_json = cherrypy.request.body.read(int(cl))
+        incoming_data = json.loads(data_json)
+        requester_uid = None
+        is_accepted = None
+
+        if 'requester_uid' not in incoming_data:
+            return json.dumps({"result":"Error", "errors" : ["Request must contain a 'requester_uid' key-value pair"]})
+        else:
+            requster_uid = incoming_data['reqeuster_uid']
+
+        if requester_uid not in self.users:
+            return json.dumps({"result":"Error", "errors" : ["Requester uid is unknown to database"]})
+
+        if 'is_accepted' not in incoming_data:
+            return json.dumps({"result":"Error", "errors" : ["Request must contain a 'is_accepted' key-value pair"]})
+        else:
+            try:
+                is_accepted = bool(incoming_data['is_accepted'])
+            except:
+                return json.dumps({"result":"Error", "errors" : ["The value of 'is_accepted' must be of type boolean"]})
+
+        if uid not in self.users:
+            return json.dumps({"result":"Error", "errors" : ["Post for friend request response made by unknown user"]})
+
+        if is_accepted:
+            self.make_friends(uid, requester_uid)
+
+        self.remove_pairs_pending_requests(uid, requester_uid)
+
+    def handle_friend_delete(self, uid):
+        cl = cherrypy.request.headers['Content-Length']
+        data_json = cherrypy.request.body.read(int(cl))
+        incoming_data = json.loads(data_json)
+        uid_to_delete = None
+
+        if 'uid_to_delete' not in incoming_data:
+            return json.dumps({"result" : "Error", "errors" : ["Request must contain a 'uid_to_delete' key-value pair"]})
+        else:
+            uid_to_delete = incoming_data['uid_to_delete']
+
+        if uid not in self.users:
+            return json.dumps({"result" : "Error", "errors" : ["Requester uid is unknown to database"]})
+
+        self.delete_friendship(uid, uid_to_delete)
+        self.remove_pairs_pending_requests(uid, uid_to_delete)
+        return json.dumps({"result" : "Success", "errors" : []})
+
+
+    def make_friends(self, uid1, uid2):
+        self.users[uid1]['friends'].append(uid2)
+        self.users[requester_uid2]['friends'].append(uid1)
+
+    def delete_friendship(self, uid1, uid2):
+        if uid2 in self.users[uid1]['friends']:
+            self.users[uid1]['friends'].remove(uid2)
+        if uid1 in self.users[uid2]['friends']:
+            self.users[uid2]['friends'].remove(uid1)
+
+    def remove_pairs_pending_requests(self, uid1, uid2):
+        if uid2 in self.users[uid1]['incoming_friend_requests']:
+            self.users[uid1]['incoming_friend_requests'].remove(uid2)
+        if uid2 in self.users[uid1]['outgoing_friend_requests']:
+            self.users[uid1]['outgoing_friend_requests'].remove(uid2)
+        if uid1 in self.users[uid2]['incoming_friend_requests']:
+            self.users[uid2]['incominig_friend_requests'].remove(uid1)
+        if uid1 in self.users[uid2]['outgoing_friend_requests']:
+            self.users[uid2]['outgoing_friend_requests'].remove(uid1)
 
     def hash_pwd(self, pwd):
         hashed = hashlib.sha224(pwd).hexdigest()
