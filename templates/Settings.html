@@ -19,8 +19,8 @@
 	<a href="#"><h1>HANGMAN With Friends</h1></a>
 	<div class="blue"style="height: 30px; margin-top:10px;"></div>
 	<div class="player-avatar">
-		<h3>Harry Potter</h3>
-		<img class="dropdown-toggle" src="../img/harry.jpg" data-toggle="dropdown"/>
+		<h3>{{ display_name }}</h3>
+		<img class="dropdown-toggle" src={{ avatar }} data-toggle="dropdown"/>
 		<ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
 	      <li role="presentation"><a role="menuitem" tabindex="-1" href="/login">Logout</a></li>
 	      <li role="presentation"><a role="menuitem" tabindex="-1" href="/game/1">Back to Game</a></li>   
@@ -36,27 +36,34 @@ $(document).ready(function(){
 </script>
 	
 <body>
+	<div id="site-state-info" style="display:None">
+        <ul>
+            <li id="uid">{{ uid }}</li>
+			<li id="old_email">{{ email }}</li>
+        </ul>
+    </div>
 	<div class="container">
 		<div class="col-md-8 col-md-offset-2">
 			<h2 class="dblue-text">Settings</h2>
-			
-			<form id="avatar-upload"action="/upload/avatar" method="post" enctype="multipart/form-data">
-				<img src="../img/harry.jpg"/>
+			<div id="errorbox"></div>
+			<form id="avatar-upload" action="/upload/avatar" method="post" enctype="multipart/form-data">
+				<img src={{ avatar }} />
 				<input type="file" name="fileToUpload" id="fileToUpload">
 				<input  class="btn" type="submit" value="Upload Avatar" name="submit">
 			</form>
-			<form name="Settings" id="settings-form"action="/phrase" method="get" accept-charset="utf-8">
-				<input type="text" id="user-name-input" name="username" placeholder="Username" value={{username}} required>
+			<form name="Settings" id="settings-form" method="post" accept-charset="utf-8">
+				<input type="text" id="user-name-input" name="username" placeholder="Username" value= {{ display_name }} required>
             	<br>
-				<input type="email" id="user-email-input" name="usermail" placeholder="Email Address" value={{email}} required>
+				<input type="email" id="user-email-input" name="usermail" placeholder="Email Address" value={{ email }} required>
             	<br>
 				<input type="password" id="user-password-input" name="password" placeholder="Password" required>
-				<input type="password" id="user-password-input" name="new-password" placeholder="New Password">
-				<input type="password" id="user-password-input" name="new-password-confirm" placeholder="Confirm Password">
+				<input type="password" id="user-new-password-input" name="newpassword" placeholder="New Password">
+				<input type="password" id="user-new-password-confirm-input" name="new-password-confirm" placeholder="Confirm Password">
             	<input class="btn" type="submit" value="Save">
             </form>
 		</div>
-	</div>	
+	</div>
+	<script src="/js/settings.js"></script>
 </body>
 </html>
 <footer></footer>

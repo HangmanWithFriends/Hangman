@@ -23,6 +23,7 @@
 		<img class="dropdown-toggle" src={{ avatar }} data-toggle="dropdown"/>
 		<ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
 	      <li role="presentation"><a role="menuitem" tabindex="-1" href="/login">Logout</a></li>
+		   <li role="presentation"><a role="menuitem" tabindex="-1" href="/settings/{{ uid }}">Settings</a></li>
 	      <li role="presentation"><a role="menuitem" tabindex="-1" href="/game/1">Back to Game</a></li>   
 	    </ul>
 	</div>
@@ -83,15 +84,10 @@ $(document).ready(function(){
 				<h2 class="dblue-text">YOUR FRIENDS:</h2>
 					<div class="blue">Friends:</div>
 				<ul>
-					<li>Natalie Sanders</li>
-					<li>Ryan Boccabella</li>
-					<li>Jesse Hamilton</li>
-					<li>Norman Morales</li>
-					<li>Paul McBurney</li>
-					<li>Ron Weasly</li>
-					<li>Hermione Granger</li>
-					<li>Albus Dumbledore</li>
-					<li>Dobby</li>
+					<!-- Get all friedns and populate the list -->
+					{% for friend in friends %}
+						<li>{{ friend }}</li>     
+					{% endfor %}
 				</ul>
 			</div>
 		</div>

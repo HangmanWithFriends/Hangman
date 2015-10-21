@@ -19,7 +19,7 @@ class Page_Handler():
         self.db = db
         self.emails_to_uids = db['emails_to_uids']
         self.users = db['users']
-        self.default_image_name = "unknown.jpg"
+        self.default_image_name = "unknown.png"
         self.images_path = os.path.abspath(os.path.dirname(__file__)) + '/img/'
         
     def get_login_html(self):
@@ -28,7 +28,9 @@ class Page_Handler():
     def get_lobby_html(self, uid):
         display_name = self.users[uid]["username"]
         avatar = "../img/unknown.png"
-        return env.get_template('Lobby.html').render(uid=uid, display_name=display_name, avatar=avatar)
+        friends = self.get_friend_info_tuples_from_uid(uid)
+		
+        return env.get_template('Lobby.html').render(uid=uid, display_name=display_name, avatar=avatar, friends=friends)
 
     def get_request_phrase_html(self, uid, gid):
         guesser_uid = self.db['games'][int(gid)]['guesser_uid']
@@ -108,12 +110,19 @@ class Page_Handler():
     
     def get_wait_html(self, uid, gid):
         return env.get_template('Wait.html').render(uid=uid, gid=gid)
+    
+    def get_settings_html(self, uid):
+        display_name = self.users[uid]["username"]
+        avatar = "/img/" + self.get_image_name_from_uid(uid)
+        email = self.users[uid]["usermail"]
+        
+        return env.get_template('Settings.html').render(uid=uid, display_name=display_name, avatar=avatar, email=email)
    
     def get_friend_info_tuples_from_uid(self, uid):
         if uid not in self.db['users']:
             return []
 
-        friend_uids = self.users[uid]['friends']
+        friends_uids = self.users[uid]['friends']
         friends_tuples_list = []
         for f_uid in friends_uids:
             friends_tuples_list.append(f_uid, self.users[f_uid]['username'], self.get_image_name_from_uid(f_uid))

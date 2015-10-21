@@ -183,7 +183,52 @@ class Account_Handler():
         self.delete_friendship(uid, uid_to_delete)
         self.remove_pairs_pending_requests(uid, uid_to_delete)
         return json.dumps({"result" : "Success", "errors" : []})
+    
+    def update_settings_request(self,uid):
+        result={'result':"Success", 'errors':[]}
+        
+        cl = cherrypy.request.headers['Content-Length']
+        data_json = cherrypy.request.body.read(int(cl))
+        incoming_data = json.loads(data_json)
+        if 'usermail' not in incoming_data:
+            result = {'result':'Error', 'errors':["'usermail' is a required field in updating settings post"]}
+            return json.dumps(result)
+        if 'password' not in incoming_data:
+            result = {'result':'Error', 'errors':["'password' is a required field in updating settings post"]}
+            return json.dumps(result)
+        
+        if 'username' not in incoming_data:
+            result = {'result':'Error', 'errors':["'username' is a required field in updating settings post"]}
+            return json.dumps(result)
+        
+        
+        else:
+            expected_hash = self.users[uid]['hashed_pass']
+            hashed_incoming = self.hash_pwd(incoming_data['password']) 
+            if hashed_incoming != expected_hash:
+                result['result'] = "Error"
+                result['errors'].append("Invalid password")
+            else:
+                if incoming_data['usermail'] in self.emails_to_uids and incoming_data['usermail'] != incoming_data['old_usermail']:
+                    result = {'result':'Error', 'errors':["email is already in use"]}
+                    return json.dumps(result)   
+                else:    
+                    result['result'] = uid                                      
+                    self.users[uid]["username"] = incoming_data['username']
 
+                    if incoming_data['usermail'] != incoming_data['old_usermail']:
+                        self.users[uid]["usermail"] = incoming_data['usermail']
+                        self.emails_to_uids[incoming_data['usermail']] = str(uid)              
+                        del self.emails_to_uids[incoming_data['old_usermail']]
+                        
+                    if incoming_data['newpassword'] != '':
+                        hashed_pass = self.hash_pwd(incoming_data['newpassword']) 
+                        self.users[uid]["hashed_pass"] = hashed_pass
+
+                    result['errors'] = []
+
+        return json.dumps(result)
+    
 
     def make_friends(self, uid1, uid2):
         self.users[uid1]['friends'].append(uid2)
