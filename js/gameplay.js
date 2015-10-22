@@ -30,7 +30,7 @@ $(function() {
                 message = "Your opponent failed to guess your word!";
             }
             window.alert(message);
-            window.location.href = redirect_locaiton; 
+            window.location.href = redirect_location; 
         }
         else if(win_uid == guess_uid){
             message = "Your opponent got loose from noose. You lose!";

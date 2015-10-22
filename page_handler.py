@@ -38,7 +38,7 @@ class Page_Handler():
         return env.get_template('RequestPhrase.html').render(uid=uid, gid=gid, guesser_name=guesser_name)
 
     def get_game_html(self, uid, gid):
-        return env.get_template('Game.html').render(uid=uid, gid=str(gid))
+        return env.get_template('Game.html').render(uid=uid, gid=gid)
 
     def get_register_html(self):
         return env.get_template('Register.html').render()
@@ -59,7 +59,7 @@ class Page_Handler():
     
     
     def get_guest_game_html(self, uid, gid):
-        return env.get_template('GuestGame.html').render(uid=uid, gid=str(gid))
+        return env.get_template('GuestGame.html').render(uid=uid, gid=gid)
     
     def get_gameplay_html(self, uid, gid):
         '''

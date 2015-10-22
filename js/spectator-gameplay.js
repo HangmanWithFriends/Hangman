@@ -22,7 +22,13 @@ $.ajax({
         var guess_uid = old_djson.guesser_uid;
         var creator_uid = old_djson.creator_uid;
         var message = "";
+        var redirect_location = "/lobby/" + uid;
 
+        if(uid.charAt(0) == 'g')
+        {
+            var redirect_location = "/guestlobby/"+uid;
+        } 
+        
         if(win_uid == uid){
             if(uid == guess_uid){
                 message = "You correctly guessed the phrase!";
@@ -30,26 +36,22 @@ $.ajax({
             else{
                 message = "Your opponent failed to guess your word!";
             }
-            clearInterval(myInterval);
             window.alert(message);
-            window.location.href = "/guestlobby/"+uid;
+            window.location.href = redirect_locaiton; 
         }
         else if(win_uid == guess_uid){
-            message = "Your opponent got loose from the noose. You lose!";
-	        clearInterval(myInterval);
+            message = "Your opponent got loose from noose. You lose!";
             window.alert(message);
-            window.location.href = "/guestlobby/"+uid;
+            window.location.href = redirect_location;
         }
         else if(win_uid == creator_uid){
             message = "You died.";
-	        clearInterval(myInterval);
             window.alert(message);
-            window.location.href = "/guestlobby/"+uid;  
+            window.location.href = redirect_location;
         }
         else{
             myInterval = setInterval(function(){ poll_updates(); }, 3000);
         }
-
 });
 
 function poll_updates(){
