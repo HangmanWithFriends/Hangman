@@ -215,4 +215,4 @@ class Game_Handler():
         if len(self.games_table) is 0:
             return 1
         else:
-            return max(self.games_table, key=int) + 1
+            return max(int(x) for x in self.games_table)

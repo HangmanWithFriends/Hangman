@@ -33,12 +33,11 @@ class Page_Handler():
         return env.get_template('Lobby.html').render(uid=uid, display_name=display_name, avatar=avatar, friends=friends)
 
     def get_request_phrase_html(self, uid, gid):
-        guesser_uid = self.db['games'][int(gid)]['guesser_uid']
+        guesser_uid = self.db['games'][gid]['guesser_uid']
         guesser_name = self.users[guesser_uid]['username']
         return env.get_template('RequestPhrase.html').render(uid=uid, gid=gid, guesser_name=guesser_name)
 
     def get_game_html(self, uid, gid):
-        gid = int(gid)
         return env.get_template('Game.html').render(uid=uid, gid=str(gid))
 
     def get_register_html(self):
@@ -60,7 +59,6 @@ class Page_Handler():
     
     
     def get_guest_game_html(self, uid, gid):
-        gid = int(gid)
         return env.get_template('GuestGame.html').render(uid=uid, gid=str(gid))
     
     def get_gameplay_html(self, uid, gid):
@@ -72,7 +70,6 @@ class Page_Handler():
         template page. 
         '''
 
-        gid = int(gid)
         if gid not in self.db['games']:
                 return ['This is not an active game id.']
 
