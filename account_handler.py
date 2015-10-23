@@ -130,8 +130,10 @@ class Account_Handler():
             self.remove_pairs_pending_requests(uid, uid_requested)
             is_friends = True
         else:
-            self.users[uid_requested]['incoming_friend_requests'].append(uid)
-            self.users[uid]['outgoing_friends_requests'].append(uid_requested)
+            if uid not in self.users[uid_requested]['incoming_friend_requests']:
+                self.users[uid_requested]['incoming_friend_requests'].append(uid)
+            if uid_requested not in self.users[uid]['incoming_friend_requests']:
+                self.users[uid]['outgoing_friend_requests'].append(uid_requested)
 
         return json.dumps({"result":"Success", "is_friends" : is_friends, "errors":[]})
 
