@@ -20,9 +20,7 @@ class Account_Handler():
         #take max of list of existing users joined with the list containing 0, will be 1 for new db
         self.next_registered_user = None
         self.next_guest_user = 1
-
         self.find_next_user_id()
-
     
     def handle_login_request(self):
         result={'result':"Success", 'errors':[]}
@@ -230,7 +228,6 @@ class Account_Handler():
                     result['errors'] = []
 
         return json.dumps(result)
-    
 
     def make_friends(self, uid1, uid2):
         self.users[uid1]['friends'].append(uid2)
