@@ -27,10 +27,10 @@ class Page_Handler():
     
     def get_lobby_html(self, uid):
         display_name = self.users[uid]["username"]
-        avatar = "../img/unknown.png"
+        avatar = self.images_path + self.get_image_name_from_uid(uid)
         friends = self.get_friend_info_tuples_from_uid(uid)
-		
-        return env.get_template('Lobby.html').render(uid=uid, display_name=display_name, avatar=avatar, friends=friends)
+        num_requests = len(self.users[uid]['incoming_friend_requests'])
+        return env.get_template('Lobby.html').render(uid=uid, display_name=display_name, avatar=avatar, friends=friends, num_requests=num_requests)
 
     def get_request_phrase_html(self, uid, gid):
         guesser_uid = self.db['games'][gid]['guesser_uid']
@@ -110,7 +110,7 @@ class Page_Handler():
     
     def get_settings_html(self, uid):
         display_name = self.users[uid]["username"]
-        avatar = "/img/" + self.get_image_name_from_uid(uid)
+        avatar = self.images_path + self.get_image_name_from_uid(uid)
         email = self.users[uid]["usermail"]
         
         return env.get_template('Settings.html').render(uid=uid, display_name=display_name, avatar=avatar, email=email)
