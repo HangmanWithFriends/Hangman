@@ -20,7 +20,7 @@ class Page_Handler():
         self.emails_to_uids = db['emails_to_uids']
         self.users = db['users']
         self.default_image_name = "unknown.png"
-        self.images_path = os.path.abspath(os.path.dirname(__file__)) + '/img/'
+        self.images_path = '/img/'
         
     def get_login_html(self):
         return env.get_template('Home.html').render()
@@ -52,7 +52,7 @@ class Page_Handler():
 
     def get_guest_lobby_html(self, uid):
         display_name = self.users[uid]["username"]
-        avatar = "../img/unknown.png"
+        avatar = self.images_path + self.default_image_name 
         if uid in self.users.keys() and 'g' not in uid:                    
             return env.get_template('Lobby.html').render(uid=uid, display_name=display_name, avatar=avatar)   
         return env.get_template('GuestLobby.html').render(uid=uid,display_name=display_name)
@@ -122,7 +122,7 @@ class Page_Handler():
         friends_uids = self.users[uid]['friends']
         friends_tuples_list = []
         for f_uid in friends_uids:
-            friends_tuples_list.append(f_uid, self.users[f_uid]['username'], self.get_image_name_from_uid(f_uid))
+            friends_tuples_list.append(f_uid, self.users[f_uid]['username'], self.images_path+self.get_image_name_from_uid(f_uid))
 
         return friends_tuples_list
     
