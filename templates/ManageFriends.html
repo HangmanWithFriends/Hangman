@@ -1,0 +1,102 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+
+	<title>Hangman With Friends</title>
+	<meta name="description" content="Hangman With Friends">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	
+  	<link rel="stylesheet" href="../css/bootstrap.css">
+	<script src="../js/bootstrap.js"></script>
+	
+	<link rel="stylesheet" href="../css/style.css">
+</head>
+<header>
+	<div class="blue" style="height: 60px"></div>
+	<a href="#"><h1>HANGMAN With Friends</h1></a>
+	<div class="blue"style="height: 30px; margin-top:10px;"></div>
+	<div class="player-avatar">
+		<h3>{{ display_name }}</h3>
+		<img class="dropdown-toggle" src={{ avatar }} data-toggle="dropdown"/>
+		<ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+	      <li role="presentation"><a role="menuitem" tabindex="-1" href="/login">Logout</a></li>
+		  <li role="presentation"><a role="menuitem" tabindex="-1" href="/manage_friends/{{ uid }}">Find Friends ({{ num_requests }})</a></li>
+		  <li role="presentation"><a role="menuitem" tabindex="-1" href="/settings/{{ uid }}">Settings</a></li>
+	      <li role="presentation"><a role="menuitem" tabindex="-1" href="/game/1">Back to Game</a></li>   
+	    </ul>
+	</div>
+</header>
+
+
+<script>
+$(document).ready(function(){
+    $(".dropdown-toggle").dropdown();
+});
+</script>
+	
+<body>
+	<div class="container">
+		<div class="col-md-6">
+			<h2 class="dblue-text">FIND YOUR FRIENDS!</h2>
+            <div> HTML FORM GOES HERE </div>
+			<div class="search-results-list">
+				<ul>
+                    {% for search_result in search_results %}
+					    <li>
+                            <table>
+                                <tr>
+                                    <td rowspan="2"><img class="avatar" src="{{ search_result['profile_image'] }}"/></td>
+                                    <td rowspan="2">{{ search_result['username'] }}</td>
+                                    <td rowspan="2">{{ search_result['usermail'] }}</td>
+                                    <td><button href="/friends/{{ uid }}/make_request/{{ search_result['uid'] }}">Accept</button></td>
+                                </tr>
+                                <tr>
+                                    <td><<button href="/friends/{{ uid }}/make_request/{{ search_result['uid'] }}">Accept</button></td>
+                                </tr>
+                            </table>
+					    </li>
+                    {% endfor %}
+				</ul>
+			</div>
+		</div>
+
+		<div class="col-md-6">
+			<h2 class="dblue-text">YOUR PENDING REQUESTS:</h2>
+		    <div class="incoming-requests-list">
+				<ul>
+					<!-- Get all friends and populate the list -->
+					{% for request in pending_requests %}
+                        <li>
+                            <div class="avatar"><img class="avatar" src="{{ request['profile_image'] }}"/></div>
+                            <table>
+                                <tr>
+                                    <td>{{ request['username'] }}</td>
+                                    <td>{{ request['usermail'] }}</td>
+                                    <td><button href="/friends/{{ uid }}/make_request/{{ request['uid'] }}">Accept</button></td>
+                                    <td><button style="float: right;" href="/friends/{{ uid }}/make_request/{{ request['uid'] }}">Decline</button></td>
+                                </tr>
+                            </table>
+					    </li>
+					<!--<li>
+						    <div class="avatar"><img src="{{ request['profile_image'] }}"/></div>
+                            <p>{{ request['username'] }}</p>
+                            <p>{{ request['usermail'] }}</p>
+                            <div class="col-3">
+                                <button href="/friends/{{ uid }}/respond_request/{{ request['uid'] }}/accept">Accept</button>
+                                <br>
+                                <button href="/friends/{{ uid }}/respond_request/{{ request['uid'] }}/decline">Decline</button>
+                            </div>
+					    </li>-->
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<!-- <script src="/js/manage_friends.js"></script> -->
+
+</body>
+</html>
