@@ -135,7 +135,7 @@ class Page_Handler():
             search_results_info_dicts_list.append(self.get_info_dict_from_uid(search_result_uid))
 
         uid_info = self.get_info_dict_from_uid(uid)
-        return env.get_template('ManageFriends.html').render(uid=uid, display_name=uid_info['username'], avatar=uid_info['profile_image'], pending_requests=pending_requests_info_dicts_list, search_results=search_results_info_dicts_list, search_string=search_string)
+        return env.get_template('ManageFriends.html').render(uid=uid, display_name=uid_info['username'], avatar=uid_info['profile_image'], num_requests = len(pending_requests_info_dicts_list), pending_requests=pending_requests_info_dicts_list, search_results=search_results_info_dicts_list, search_string=search_string)
 
     def get_friend_info_dicts_from_uid(self, uid):
         if uid not in self.db['users']:
