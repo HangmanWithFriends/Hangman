@@ -81,10 +81,15 @@ class Account_Handler():
 
     def get_guest_uid(self):
         userid = "g" + str(self.next_guest_user)
-        self.users[userid] = {"username" : "Guest_" + str(self.next_guest_user)}
+        self.users[userid] = {"username" : "Guest_" + str(self.next_guest_user),
+                              "hashed_pass" : None,
+                              "usermail" : None,
+                              "friends" : None,
+                              "incoming_friend_requests" : None,
+                              "outgoing_friend_requests" : None,
+                              "profile_image" : None}
         self.next_guest_user += 1
-        guest_info = {'uid' : userid}
-        guest_info['errors'] = []
+        guest_info = {'uid' : userid, 'errors': []}
         return json.dumps(guest_info)
     
     def find_next_user_id(self):
@@ -135,7 +140,7 @@ class Account_Handler():
 
         return json.dumps({"result":"Success", "is_friends" : is_friends, "errors":[]})
 
-    def handle_friend_request_reponse(self, uid):
+    def handle_friend_request_response(self, uid):
         cl = cherrypy.request.headers['Content-Length']
         data_json = cherrypy.request.body.read(int(cl))
         incoming_data = json.loads(data_json)
@@ -145,7 +150,7 @@ class Account_Handler():
         if 'requester_uid' not in incoming_data:
             return json.dumps({"result":"Error", "errors" : ["Request must contain a 'requester_uid' key-value pair"]})
         else:
-            requster_uid = incoming_data['reqeuster_uid']
+            requester_uid = incoming_data['requester_uid']
 
         if requester_uid not in self.users:
             return json.dumps({"result":"Error", "errors" : ["Requester uid is unknown to database"]})
@@ -161,10 +166,11 @@ class Account_Handler():
         if uid not in self.users:
             return json.dumps({"result":"Error", "errors" : ["Post for friend request response made by unknown user"]})
 
-        if is_accepted:
+        if is_accepted and (requster_uid in self.users[uid]['incoming_friend_requests']) and (uid in self.users[requester_uid]['outgoing_friend_requests']):
             self.make_friends(uid, requester_uid)
 
         self.remove_pairs_pending_requests(uid, requester_uid)
+        return json.dumps({"result":"Success", "errors": []})
 
     def handle_friend_delete(self, uid):
         cl = cherrypy.request.headers['Content-Length']
@@ -230,8 +236,10 @@ class Account_Handler():
         return json.dumps(result)
 
     def make_friends(self, uid1, uid2):
-        self.users[uid1]['friends'].append(uid2)
-        self.users[requester_uid2]['friends'].append(uid1)
+        if uid2 not in self.users[uid1]['friends']:
+            self.users[uid1]['friends'].append(uid2)
+        if uid1 not in self.users[uid2]['friends']:
+            self.users[uid2]['friends'].append(uid1)
 
     def delete_friendship(self, uid1, uid2):
         if uid2 in self.users[uid1]['friends']:
