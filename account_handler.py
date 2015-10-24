@@ -111,16 +111,9 @@ class Account_Handler():
             self.next_registered_user = to_return + 1
             return to_return
 
-    def handle_new_friend_request(self, uid):
-        cl = cherrypy.request.headers['Content-Length']
-        data_json = cherrypy.request.body.read(int(cl))
-        incoming_data = json.loads(data_json)
+    def handle_new_friend_request(self, uid, uid_requested):
         is_friends = False
 
-        if 'uid_requested' not in incoming_data:
-            return json.dumps({"result":"Error", "errors" : ["Request must contain a 'uid_requested' key-value pair"]})
-
-        uid_requested = incoming_data['uid_requested']
         if uid_requested not in self.users:
             return json.dumps({"result":"Error", "errors" : ["Friend requested uid is unknown to database"]})
 
@@ -135,33 +128,19 @@ class Account_Handler():
         else:
             if uid not in self.users[uid_requested]['incoming_friend_requests']:
                 self.users[uid_requested]['incoming_friend_requests'].append(uid)
-            if uid_requested not in self.users[uid]['incoming_friend_requests']:
+            if uid_requested not in self.users[uid]['outgoing_friend_requests']:
                 self.users[uid]['outgoing_friend_requests'].append(uid_requested)
 
         return json.dumps({"result":"Success", "is_friends" : is_friends, "errors":[]})
 
-    def handle_friend_request_response(self, uid):
-        cl = cherrypy.request.headers['Content-Length']
-        data_json = cherrypy.request.body.read(int(cl))
-        incoming_data = json.loads(data_json)
-        requester_uid = None
-        is_accepted = None
-
-        if 'requester_uid' not in incoming_data:
-            return json.dumps({"result":"Error", "errors" : ["Request must contain a 'requester_uid' key-value pair"]})
-        else:
-            requester_uid = incoming_data['requester_uid']
-
+    def handle_friend_request_response(self, uid, requester_uid, response):
+        #if response = "decline" is assumed
+        is_accepted = False   
+        if response == "accept":
+            is_accepted = True
+        
         if requester_uid not in self.users:
             return json.dumps({"result":"Error", "errors" : ["Requester uid is unknown to database"]})
-
-        if 'is_accepted' not in incoming_data:
-            return json.dumps({"result":"Error", "errors" : ["Request must contain a 'is_accepted' key-value pair"]})
-        else:
-            try:
-                is_accepted = bool(incoming_data['is_accepted'])
-            except:
-                return json.dumps({"result":"Error", "errors" : ["The value of 'is_accepted' must be of type boolean"]})
 
         if uid not in self.users:
             return json.dumps({"result":"Error", "errors" : ["Post for friend request response made by unknown user"]})
