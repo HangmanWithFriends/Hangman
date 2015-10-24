@@ -122,20 +122,20 @@ class Page_Handler():
         return self.get_friends_management_html(uid, search_string)
 
     def get_friends_management_html(self, uid, search_string=None):
-        search_results_list = []
-        pending_requests_list = []
+        search_results_info_dicts_list = []
+        pending_requests_info_dicts_list = []
 
-        search_results = self.search_for_friends(search_string) 
+        search_result_uids = self.search_for_friends(uid, search_string) 
         pending_request_uids = self.users[uid]['incoming_friend_requests']
 
-        for pending_request_uid in pending_requests_uids:
+        for pending_request_uid in pending_request_uids:
             pending_requests_info_dicts_list.append(self.get_info_dict_from_uid(pending_request_uid))
         
         for search_result_uid in search_result_uids:
-            search_result_info_dicts_list.append(self.get_info_dict_from_uid(search_result_uid))
+            search_results_info_dicts_list.append(self.get_info_dict_from_uid(search_result_uid))
 
         uid_info = self.get_info_dict_from_uid(uid)
-        return env.get_template('ManageFriends.html').render(uid=uid, display_name=uid_info['username'], avatar=uid_info['profile_image'], pending_requests=pending_requests_info_dicts, search_results=search_result_info_dicts, search_string=search_string)
+        return env.get_template('ManageFriends.html').render(uid=uid, display_name=uid_info['username'], avatar=uid_info['profile_image'], pending_requests=pending_requests_info_dicts_list, search_results=search_results_info_dicts_list, search_string=search_string)
 
     def get_friend_info_dicts_from_uid(self, uid):
         if uid not in self.db['users']:
@@ -168,6 +168,9 @@ class Page_Handler():
 
     
     def search_for_friends(self, uid, search_string):
+        if not search_string:
+            return []
+
         return_uids = set()
        
         words = search_string.split("\s")
