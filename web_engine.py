@@ -89,6 +89,8 @@ def connect_page_handler_dispatches(dispatcher, page_handler):
     dispatcher.connect('get_gameplay_page', '/gameplay/{uid}/{gid}',controller=page_handler,action='get_gameplay_html',conditions=dict(method=['GET']))
     dispatcher.connect('get_wait_page', '/gameplay/{uid}/wait/{gid}', controller=page_handler, action='get_wait_html', conditions=dict(method=['GET']))
     dispatcher.connect('get_settings_page', '/settings/{uid}', controller=page_handler, action='get_settings_html', conditions=dict(method=['GET']))
+    dispatcher.connect('get_manage_friends_html', '/manage_friends/{uid}',controller=page_handler, action='get_friends_management_html', conditions=dict(method=['GET']))
+    dispatcher.connect('handle_manage_friends_search_html', '/manage_friends/{uid}',controller=page_handler, action='handle_friends_management_search_html', conditions=dict(method=['POST']))
 
 def connect_game_handler_dispatches(dispatcher, game_handler):
     dispatcher.connect('get_dummy_game_JSON', '/dummygame/{gid}',controller=game_handler,action='get_dummy_game',conditions=dict(method=['GET']))
@@ -103,8 +105,9 @@ def connect_account_handler_dispatches(dispatcher, account_handler):
     dispatcher.connect('handle_register','/register',controller=account_handler, action='handle_register_request',conditions=dict(method=['POST']))
     dispatcher.connect('get_guest_uid','/get-guest-uid',controller=account_handler,action='get_guest_uid',conditions=dict(method=['GET']))
     dispatcher.connect('update_settings', '/settings/{uid}', controller=account_handler, action='update_settings_request', conditions=dict(method=['POST']))
-    #dispatcher.connect('handle_new_friend_request', '/friends/{uid}/search',controller=account_handler, action='handle_new_friend_request', conditions=dict(method=['POST'])
-    #dispatcher.connect('handle_friend_request_response', '/friends/{uid}/requests',controller=account_handler, action='handle_friend_request_response', conditions=dict(method=['POST']))
-    #dispatcher.connect('handle_friend_delete', '/friends/{uid}/delete',controller=account_handler, action='handle_friend_delete', conditions=dict(method=['POST']))
+    dispatcher.connect('handle_new_friend_request', '/manage_friends/{uid}/make_request',controller=account_handler, action='handle_new_friend_request', conditions=dict(method=['POST']))
+    dispatcher.connect('handle_friend_request_response', '/manage_friends/{uid}/respond_request',controller=account_handler, action='handle_friend_request_response', conditions=dict(method=['POST']))
+    dispatcher.connect('handle_friend_delete', '/manage_friends/{uid}/delete_friendship',controller=account_handler, action='handle_friend_delete', conditions=dict(method=['POST']))
+
 if __name__ == '__main__':
     start_service()
