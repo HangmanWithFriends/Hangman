@@ -23,7 +23,7 @@
 		<img class="dropdown-toggle" src={{ avatar }} data-toggle="dropdown"/>
 		<ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
 	      <li role="presentation"><a role="menuitem" tabindex="-1" href="/login">Logout</a></li>
-		  <li role="presentation"><a role="menuitem" tabindex="-1" href="/manage_friends/{{ uid }}">Find Friends - ({{ num_requests }} Pending Requests)</a></li>
+		  <li role="presentation"><a role="menuitem" tabindex="-1" href="/manage_friends/{{ uid }}">Find Friends ({{ num_requests }})</a></li>
 		  <li role="presentation"><a role="menuitem" tabindex="-1" href="/settings/{{ uid }}">Settings</a></li>
 	      <li role="presentation"><a role="menuitem" tabindex="-1" href="/game/1">Back to Game</a></li>   
 	    </ul>
@@ -87,7 +87,7 @@ $(document).ready(function(){
 				<ul>
 					<!-- Get all friends and populate the list -->
 					{% for friend in friends %}
-						<li><img src={{ friend['profile_image'] }} width:24px height:24px>{{ friend['username'] }}</li>     
+						<li>{{ friend['username'] }}</li>
 					{% endfor %}
 				</ul>
 			</div>
