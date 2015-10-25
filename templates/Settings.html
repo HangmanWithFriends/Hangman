@@ -46,13 +46,14 @@ $(document).ready(function(){
 		<div class="col-md-8 col-md-offset-2">
 			<h2 class="dblue-text">Settings</h2>
 			<div id="errorbox"></div>
-			<form id="avatar-upload" action="/upload/avatar" method="post" enctype="multipart/form-data">
+			<iframe name="hiddenFrame" class="hide"></iframe>
+			<form id="avatar-upload" action="/upload/{{ uid }}/avatar" method="post" enctype="multipart/form-data" target="hiddenFrame">
 				<img src={{ avatar }} />
-				<input type="file" name="fileToUpload" id="fileToUpload">
+				<input type="file" name="img_file" id="fileToUpload">
 				<input  class="btn" type="submit" value="Upload Avatar" name="submit">
 			</form>
 			<form name="Settings" id="settings-form" method="post" accept-charset="utf-8">
-				<input type="text" id="user-name-input" name="username" placeholder="Username" value= {{ display_name }} required>
+				<input type="text" id="user-name-input" name="username" placeholder="Username" value={{ display_name }} required>
             	<br>
 				<input type="email" id="user-email-input" name="usermail" placeholder="Email Address" value={{ email }} required>
             	<br>
