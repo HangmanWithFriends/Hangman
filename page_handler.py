@@ -161,7 +161,7 @@ class Page_Handler():
         
         if self.users[uid]['profile_image'] != None:
             #now ensure image is where it needs to be
-            if os.path.isfile(self.images_path+self.users[uid]['profile_image']):
+            if os.path.isfile('img/'+self.users[uid]['profile_image']):
                 image_name = self.users[uid]['profile_image']
 
         return image_name
