@@ -193,11 +193,20 @@ class Page_Handler():
             for word in words:
                 first_three = word[0:3]
                 if first_three in self.db['username_word_starts_to_uids']:
-                    uids = self.db['user_name_word_starts_to_uids']
+                    uids = self.db['username_word_starts_to_uids']
                     for found_uid in uids:
                         return_uids.add(found_uid)         
 
         # don't include users that they are already friends with, or the user themself
         return_uids = return_uids - set(self.users[uid]['friends'] + [uid])
 
-        return list(return_uids)
+        #find exact matches so we can put them in the front of the returned list
+        best_matches = set()
+        for r_uid in return_uids:
+            if (self.users[r_uid]['username'] == search_string) or (self.users[r_uid]['usermail'] == search_string):
+                best_matches.add(r_uid)
+
+        return_uids = return_uids - best_matches
+
+        #put best matches in the front
+        return list(best_matches) + list(return_uids)
