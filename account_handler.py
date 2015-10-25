@@ -10,6 +10,7 @@ import json
 import string
 import cherrypy
 import hashlib
+import copy
 
 class Account_Handler():
     
@@ -64,9 +65,9 @@ class Account_Handler():
         if usermail in self.emails_to_uids:
             result = {'errors':['Email already in use'], 'result':None}
         else:
-            new_uid = self.find_next_user_id()
-            self.emails_to_uids[usermail] = str(new_uid)
-            self.users[str(new_uid)] = {"usermail": usermail, 
+            new_uid = str(self.find_next_user_id())
+            self.add_to_user_search_dicts(username, usermail, new_uid)
+            self.users[new_uid] = {"usermail": usermail,
                                     "hashed_pass": hashed_pass,
                                     "username": username,
                                     "friends": [],
@@ -81,6 +82,7 @@ class Account_Handler():
 
     def get_guest_uid(self):
         userid = "g" + str(self.next_guest_user)
+        #DO NOT self.add_to_user_search_dicts(), Keep the guests out
         self.users[userid] = {"username" : "Guest_" + str(self.next_guest_user),
                               "hashed_pass" : None,
                               "usermail" : None,
@@ -187,7 +189,7 @@ class Account_Handler():
             result = {'result':'Error', 'errors':["'username' is a required field in updating settings post"]}
             return json.dumps(result)
         
-        
+        old_info = copy.copy(self.users[uid])
         else:
             expected_hash = self.users[uid]['hashed_pass']
             hashed_incoming = self.hash_pwd(incoming_data['password']) 
@@ -212,6 +214,9 @@ class Account_Handler():
                         self.users[uid]["hashed_pass"] = hashed_pass
 
                     result['errors'] = []
+
+        self.remove_from_user_search_dicts(old_info['username'], old_info['usermail'], uid)
+        self.add_to_user_search_dicts(incoming_data['username'], incoming_data['usermail'], uid)
 
         return json.dumps(result)
 
@@ -270,6 +275,38 @@ class Account_Handler():
             self.users[uid2]['incominig_friend_requests'].remove(uid1)
         if uid1 in self.users[uid2]['outgoing_friend_requests']:
             self.users[uid2]['outgoing_friend_requests'].remove(uid1)
+
+    def add_to_user_search_dicts(self, username, usermail, uid):
+        self.emails_to_uids[usermail] = uid
+        words = username.split("\s")
+
+        for word in words:
+            if word not in self.db['username_words_to_uids']:
+                self.db['username_words_to_uids'][word] = []
+            if uid not in self.db['username_words_to_uids'][word]:
+                self.db['username_words_to_uids'].append(uid)
+
+            if len(word) >= 3:
+                first_three = word[0:3]
+                if first_three not in self.db['username_word_starts_to_uids']:
+                    self.db['username_words_to_uids'][first_three] = []
+                if uid not in self.db['username_word_starts_to_uids'][first_three]:
+                    self.db['username_word_starts_to_uids'].append(uid)
+
+    def remove_from_user_search_dicts(self, username, usermail, uid):
+        self.emails_to_uids.pop(usermail)
+        words = username.split("\s")
+
+        for word in words:
+            if word in self.db['username_words_to_uids']:
+                if uid in self.db['username_words_to_uids'][word]:
+                    self.db['username_words_to_uids'].remove(uid)
+
+            if len(word) >= 3:
+                first_three = word[0:3]
+                if first_three in self.db['username_word_starts_to_uids']:
+                    if uid not in self.db['username_word_starts_to_uids'][first_three]:
+                        self.db['username_word_starts_to_uids'].remove(uid)
 
     def hash_pwd(self, pwd):
         hashed = hashlib.sha224(pwd).hexdigest()

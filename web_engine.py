@@ -63,7 +63,7 @@ def start_service():
         print 'loading db'
         db = pickle.load(file('HangmanUsers.pickle'))
     else:
-        db = { 'games':{}, 'users':{}, 'emails_to_uids':{} }
+        db = { 'games':{}, 'users':{}, 'emails_to_uids':{}, 'username_words_to_uids':{}, 'username_word_starts_to_uids':{} }
 
     page_handler = Page_Handler(db)
     game_handler = Game_Handler(db)
