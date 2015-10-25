@@ -175,6 +175,7 @@ class Account_Handler():
         cl = cherrypy.request.headers['Content-Length']
         data_json = cherrypy.request.body.read(int(cl))
         incoming_data = json.loads(data_json)
+
         if 'usermail' not in incoming_data:
             result = {'result':'Error', 'errors':["'usermail' is a required field in updating settings post"]}
             return json.dumps(result)
@@ -213,6 +214,40 @@ class Account_Handler():
                     result['errors'] = []
 
         return json.dumps(result)
+
+    def upload_avatar(self, uid, img_file, submit):
+        all_data = None
+
+        while True:
+            data = img_file.file.read(8192)
+            if all_data:
+                all_data += data
+            else:
+                all_data = data
+
+            if not data:
+                break
+
+        size = len(all_data)
+        file_extension = self.get_extension(img_file.filename.lower())
+        filename = str(uid) + '.' + file_extension
+        filepath = './img/' + filename
+
+        print filename
+        saved_file = open(filepath, 'wb') 
+        saved_file.write(all_data) 
+        saved_file.close()
+
+        print 'before: ' + self.users[uid]['profile_image']
+        self.users[uid]['profile_image'] = filename
+        print 'after: ' + self.users[uid]['profile_image']
+
+    def get_extension(self, filename):
+        for ext in ['png', 'jpg', 'gif']:
+            if filename.endswith(ext):
+                return ext
+        
+        return 'png'
 
     def make_friends(self, uid1, uid2):
         if uid2 not in self.users[uid1]['friends']:
