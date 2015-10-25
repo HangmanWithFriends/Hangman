@@ -22,79 +22,87 @@ $(function() {
     return pwd == pwd_confirm    
   }
 
+  $('#avatar-upload').on('submit', function(event) {
+      var uid = $('#uid').text();
+      console.log('avatar-upload')
+      window.location.href = "/settings/" + uid;
+  });
 
   $('#settings-form').on('submit', function(event) { // form id
 	  
-	event.preventDefault();
+    	event.preventDefault();
 
-	var name = $('#user-name-input').val(); // input id
-  	var email = $('#user-email-input').val(); // input id
-  	var pwd = $('#user-password-input').val(); // input id
-	var new_pwd = $('#user-new-password-input').val(); // input id
-  	var new_pwd_confirm = $('#user-new-password-confirm-input').val();
-	var uid = $('#uid').text();
-	var old_email = $('#old_email').text();
-  	var post = true;
-  	console.log('Updating Settings');
-	  console.log(uid);
-  document.getElementById("errorbox").style.color = "Red";
+    	var name = $('#user-name-input').val(); // input id
+      var email = $('#user-email-input').val(); // input id
+      var pwd = $('#user-password-input').val(); // input id
+    	var new_pwd = $('#user-new-password-input').val(); // input id
+      var new_pwd_confirm = $('#user-new-password-confirm-input').val();
 
-  if(!isValidEmail(email)) {
-    $('#user-email-input').val('')
-    document.Settings.usermail.focus()
-    document.getElementById("errorbox").innerHTML = "Email must be in the correct format."
-    event.preventDefault();
-    post = false;
-  }
+    	var uid = $('#uid').text();
+    	var old_email = $('#old_email').text();
+      
+      var post = true;
+      console.log('Updating Settings');
+    	console.log(uid);
 
-  if(!isValidPassword(new_pwd) && new_pwd.length !== 0) {
-    $('#user-new-password-input').val('')
-    $('#user-new-password-confirm-input').val('')
-    document.Settings.newpassword.focus()
-    document.getElementById("errorbox").innerHTML = "Password has to be 7 or more characters, and contain at least 1 number, and 1 letter."
-    event.preventDefault();
-    post = false;
-  }
+      document.getElementById("errorbox").style.color = "Red";
 
-  if(!isPasswordMatch(new_pwd, new_pwd_confirm)) {
-    $('#user-new-password-input').val('');
-    $('#user-new-password-confirm-input').val('');
-    document.Settings.newpassword.focus();
-    document.getElementById("errorbox").innerHTML = "Passwords don't match";
-    event.preventDefault();
-    post = false;
-  }
+      if(!isValidEmail(email)) {
+        $('#user-email-input').val('')
+        document.Settings.usermail.focus()
+        document.getElementById("errorbox").innerHTML = "Email must be in the correct format."
+        event.preventDefault();
+        post = false;
+      }
 
-  if(post){
-    $.ajax({
-          type : 'POST',
-          url: '/settings/'+ uid,
-          contentType: 'application/json',
-          data: JSON.stringify({
-              usermail: email,
-			  old_usermail: old_email,
-              password: pwd,
-			  newpassword: new_pwd,
-              username: name
-          }),
-          dataType: 'json'
-      }).done(function(data) {
-          console.log('done posting');
-          var d = data;
-          if(d.errors.length > 0){
-            var err_message = d.errors[0]
-            console.log(err_message)
-            document.getElementById("errorbox").innerHTML = err_message;
-          }
-         else{
-            var uid = d.result;
-            window.location.href = "/settings/" + uid;
-          }
-      }).fail(function() {
-          document.getElementById("errorbox").innerHTML = "Updating Settings unsuccessful";
-      });
-  }
+      if(!isValidPassword(new_pwd) && new_pwd.length !== 0) {
+        $('#user-new-password-input').val('')
+        $('#user-new-password-confirm-input').val('')
+        document.Settings.newpassword.focus()
+        document.getElementById("errorbox").innerHTML = "Password has to be 7 or more characters, and contain at least 1 number, and 1 letter."
+        event.preventDefault();
+        post = false;
+      }
 
-});
+      if(!isPasswordMatch(new_pwd, new_pwd_confirm)) {
+        $('#user-new-password-input').val('');
+        $('#user-new-password-confirm-input').val('');
+        document.Settings.newpassword.focus();
+        document.getElementById("errorbox").innerHTML = "Passwords don't match";
+        event.preventDefault();
+        post = false;
+      }
+
+      if(post){
+        $.ajax({
+              type : 'POST',
+              url: '/settings/'+ uid,
+              contentType: 'application/json',
+              data: JSON.stringify({
+                  usermail: email,
+    			  old_usermail: old_email,
+                  password: pwd,
+    			  newpassword: new_pwd,
+                  username: name
+              }),
+              dataType: 'json'
+          }).done(function(data) {
+              console.log('done posting');
+              var d = data;
+              if(d.errors.length > 0){
+                var err_message = d.errors[0]
+                console.log(err_message)
+                document.getElementById("errorbox").innerHTML = err_message;
+              }
+             else{
+                var uid = d.result;
+                window.location.href = "/settings/" + uid;
+              }
+          }).fail(function() {
+              document.getElementById("errorbox").innerHTML = "Updating Settings unsuccessful";
+          });
+      }
+
+  });
 });
 
