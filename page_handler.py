@@ -10,6 +10,7 @@ import json
 import requests
 import string
 import cherrypy
+import re
 
 env = Environment(loader=FileSystemLoader(os.path.abspath(os.path.dirname(__file__))+'/templates/'))
 
@@ -184,7 +185,7 @@ class Page_Handler():
 
         #if it's an email, search by email, it's unlikely but possible that the above
         #adds any uids, as an email would need to be part of someones username
-        if regex.match(".*@*.*", search_string):
+        if re.match(".*@*.*", search_string):
             if search_string in self.emails_to_uids:
                 return_uids.add(self.emails_to_uids[search_string])
     

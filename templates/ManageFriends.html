@@ -46,15 +46,12 @@ $(document).ready(function(){
 				<ul>
                     {% for search_result in search_results %}
 					    <li>
+                            <div class="avatar"><img class="avatar" src="{{ search_result['profile_image'] }}"/></div>
                             <table>
                                 <tr>
-                                    <td rowspan="2"><img class="avatar" src="{{ search_result['profile_image'] }}"/></td>
-                                    <td rowspan="2">{{ search_result['username'] }}</td>
-                                    <td rowspan="2">{{ search_result['usermail'] }}</td>
-                                    <td><button href="/friends/{{ uid }}/make_request/{{ search_result['uid'] }}">Accept</button></td>
-                                </tr>
-                                <tr>
-                                    <td><<button href="/friends/{{ uid }}/make_request/{{ search_result['uid'] }}">Accept</button></td>
+                                    <td>{{ search_result['username'] }}</td>
+                                    <td>{{ search_result['usermail'] }}</td>
+                                    <td><button href="/friends/{{ uid }}/make_request/{{ search_result['uid'] }}">Request</button></td>
                                 </tr>
                             </table>
 					    </li>
@@ -75,8 +72,8 @@ $(document).ready(function(){
                                 <tr>
                                     <td>{{ request['username'] }}</td>
                                     <td>{{ request['usermail'] }}</td>
-                                    <td><button href="/friends/{{ uid }}/make_request/{{ request['uid'] }}">Accept</button></td>
-                                    <td><button style="float: right;" href="/friends/{{ uid }}/make_request/{{ request['uid'] }}">Decline</button></td>
+                                    <td><button href="/friends/{{ uid }}/respond_request/{{ request['uid'] }}">Accept</button></td>
+                                    <td><button style="float: right;" href="/friends/{{ uid }}/respond_request/{{ request['uid'] }}">Decline</button></td>
                                 </tr>
                             </table>
 					    </li>

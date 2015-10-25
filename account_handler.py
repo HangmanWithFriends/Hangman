@@ -177,6 +177,7 @@ class Account_Handler():
         cl = cherrypy.request.headers['Content-Length']
         data_json = cherrypy.request.body.read(int(cl))
         incoming_data = json.loads(data_json)
+        old_info = copy.copy(self.users[uid])
 
         if 'usermail' not in incoming_data:
             result = {'result':'Error', 'errors':["'usermail' is a required field in updating settings post"]}
@@ -189,7 +190,6 @@ class Account_Handler():
             result = {'result':'Error', 'errors':["'username' is a required field in updating settings post"]}
             return json.dumps(result)
         
-        old_info = copy.copy(self.users[uid])
         else:
             expected_hash = self.users[uid]['hashed_pass']
             hashed_incoming = self.hash_pwd(incoming_data['password']) 
@@ -284,14 +284,14 @@ class Account_Handler():
             if word not in self.db['username_words_to_uids']:
                 self.db['username_words_to_uids'][word] = []
             if uid not in self.db['username_words_to_uids'][word]:
-                self.db['username_words_to_uids'].append(uid)
+                self.db['username_words_to_uids'][word].append(uid)
 
             if len(word) >= 3:
                 first_three = word[0:3]
                 if first_three not in self.db['username_word_starts_to_uids']:
                     self.db['username_words_to_uids'][first_three] = []
                 if uid not in self.db['username_word_starts_to_uids'][first_three]:
-                    self.db['username_word_starts_to_uids'].append(uid)
+                    self.db['username_word_starts_to_uids'][first_three].append(uid)
 
     def remove_from_user_search_dicts(self, username, usermail, uid):
         self.emails_to_uids.pop(usermail)
@@ -300,13 +300,13 @@ class Account_Handler():
         for word in words:
             if word in self.db['username_words_to_uids']:
                 if uid in self.db['username_words_to_uids'][word]:
-                    self.db['username_words_to_uids'].remove(uid)
+                    self.db['username_words_to_uids'][word].remove(uid)
 
             if len(word) >= 3:
                 first_three = word[0:3]
                 if first_three in self.db['username_word_starts_to_uids']:
                     if uid not in self.db['username_word_starts_to_uids'][first_three]:
-                        self.db['username_word_starts_to_uids'].remove(uid)
+                        self.db['username_word_starts_to_uids'][first_three].remove(uid)
 
     def hash_pwd(self, pwd):
         hashed = hashlib.sha224(pwd).hexdigest()
