@@ -20,7 +20,7 @@
 	<div class="blue"style="height: 30px; margin-top:10px;"></div>
 	<div class="player-avatar">
 		<h3>{{ display_name }}</h3>
-		<img class="dropdown-toggle" src={{ avatar }} data-toggle="dropdown"/>
+		<img id='top_avatar' class="dropdown-toggle" src={{ avatar }} data-toggle="dropdown"/>
 		<ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
 	      <li role="presentation"><a role="menuitem" tabindex="-1" href="/login">Logout</a></li>
 	      <li role="presentation"><a role="menuitem" tabindex="-1" href="/game/1">Back to Game</a></li>   
@@ -48,7 +48,7 @@ $(document).ready(function(){
 			<div id="errorbox"></div>
 			<iframe name="hiddenFrame" class="hide"></iframe>
 			<form id="avatar-upload" action="/upload/{{ uid }}/avatar" method="post" enctype="multipart/form-data" target="hiddenFrame">
-				<img src={{ avatar }} />
+				<img id='side_avatar' src={{ avatar }} />
 				<input type="file" name="img_file" id="fileToUpload">
 				<input  class="btn" type="submit" value="Upload Avatar" name="submit">
 			</form>
