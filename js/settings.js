@@ -22,10 +22,32 @@ $(function() {
     return pwd == pwd_confirm    
   }
 
+  /*function readURL(input){
+    if (input.files && input.files[0]) {
+        console.log("there are files")
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#side_avatar').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+
+        reader.onload = function (e) {
+            $('#top_avatar').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+  }*/
+
   $('#avatar-upload').on('submit', function(event) {
-      var uid = $('#uid').text();
-      console.log('avatar-upload')
-      window.location.href = "/settings/" + uid;
+      setTimeout(function(){
+        var uid = $('#uid').text();
+        window.location.href = "/settings/" + uid;
+      }, 2000);
+
+      //readURL($('#fileToUpload'));
   });
 
   $('#settings-form').on('submit', function(event) { // form id
