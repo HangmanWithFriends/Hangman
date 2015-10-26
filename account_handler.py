@@ -238,14 +238,13 @@ class Account_Handler():
         filename = str(uid) + '.' + file_extension
         filepath = './img/' + filename
 
-        print filename
         saved_file = open(filepath, 'wb') 
         saved_file.write(all_data) 
         saved_file.close()
 
-        print 'before: ' + self.users[uid]['profile_image']
         self.users[uid]['profile_image'] = filename
-        print 'after: ' + self.users[uid]['profile_image']
+
+        #raise cherrypy.HTTPRedirect('/settings/' + str(uid))
 
     def get_extension(self, filename):
         for ext in ['png', 'jpg', 'gif']:
@@ -289,7 +288,7 @@ class Account_Handler():
             if len(word) >= 3:
                 first_three = word[0:3]
                 if first_three not in self.db['username_word_starts_to_uids']:
-                    self.db['username_words_to_uids'][first_three] = []
+                    self.db['username_word_starts_to_uids'][first_three] = []
                 if uid not in self.db['username_word_starts_to_uids'][first_three]:
                     self.db['username_word_starts_to_uids'][first_three].append(uid)
 
