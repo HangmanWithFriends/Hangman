@@ -156,22 +156,25 @@ class Account_Handler():
         raise cherrypy.HTTPRedirect("/lobby/" + str(uid))
         return json.dumps({"result":"Success", "errors": []})
 
-    def handle_friend_delete(self, uid):
-        cl = cherrypy.request.headers['Content-Length']
-        data_json = cherrypy.request.body.read(int(cl))
-        incoming_data = json.loads(data_json)
-        uid_to_delete = None
-
-        if 'uid_to_delete' not in incoming_data:
-            return json.dumps({"result" : "Error", "errors" : ["Request must contain a 'uid_to_delete' key-value pair"]})
-        else:
-            uid_to_delete = incoming_data['uid_to_delete']
+    def handle_friend_delete(self, uid, unfriended_uid):
+#         cl = cherrypy.request.headers['Content-Length']
+#         data_json = cherrypy.request.body.read(int(cl))
+#         incoming_data = json.loads(data_json)
+#         uid_to_delete = None
+# 
+#         if 'uid_to_delete' not in incoming_data:
+#             return json.dumps({"result" : "Error", "errors" : ["Request must contain a 'uid_to_delete' key-value pair"]})
+#         else:
+#             uid_to_delete = incoming_data['uid_to_delete']
 
         if uid not in self.users:
             return json.dumps({"result" : "Error", "errors" : ["Requester uid is unknown to database"]})
+        
 
-        self.delete_friendship(uid, uid_to_delete)
-        self.remove_pairs_pending_requests(uid, uid_to_delete)
+        self.delete_friendship(uid, unfriended_uid)
+        self.remove_pairs_pending_requests(uid, unfriended_uid)
+        
+        raise cherrypy.HTTPRedirect("/lobby/" + str(uid))
         return json.dumps({"result" : "Success", "errors" : []})
     
     def update_settings_request(self,uid):

@@ -88,7 +88,13 @@ $(document).ready(function(){
 				<ul>
 					<!-- Get all friends and populate the list -->
 					{% for friend in friends %}
-						<li>{{ friend['username'] }}</li>
+						<li>
+						  {{ friend['username'] }}
+						  <p> <img style="height: 30px" src={{friend['profile_image']}} /> </p>
+						  <p style="right: 20px" >
+						      <a href="/manage_friends/{{ uid }}/delete_friendship/{{ friend['uid'] }}">Delete Friend</a>
+						  </p>
+						</li>
 					{% endfor %}
 				</ul>
 			</div>
