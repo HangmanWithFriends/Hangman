@@ -107,7 +107,7 @@ def connect_account_handler_dispatches(dispatcher, account_handler):
     dispatcher.connect('update_settings', '/settings/{uid}', controller=account_handler, action='update_settings_request', conditions=dict(method=['POST']))
     dispatcher.connect('upload_avatar', '/upload/{uid}/avatar', controller=account_handler, action='upload_avatar', conditions=dict(method=['POST']))
     dispatcher.connect('handle_new_friend_request', '/manage_friends/{uid}/make_request/{uid_requested}',controller=account_handler, action='handle_new_friend_request', conditions=dict(method=['POST']))
-    dispatcher.connect('handle_friend_request_response', '/manage_friends/{uid}/respond_request/{requester_uid}/{response}',controller=account_handler, action='handle_friend_request_response', conditions=dict(method=['POST']))
+    dispatcher.connect('handle_friend_request_response', '/manage_friends/{uid}/respond_request/{requester_uid}/{response}',controller=account_handler, action='handle_friend_request_response', conditions=dict(method=['GET']))
     dispatcher.connect('handle_friend_delete', '/manage_friends/{uid}/delete_friendship',controller=account_handler, action='handle_friend_delete', conditions=dict(method=['POST']))
 
 if __name__ == '__main__':

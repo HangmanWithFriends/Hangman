@@ -364,7 +364,7 @@ footer{
 #avatar-upload img{
 	width: 128px;	
 }
-
+/*------------------ Manage Friends ---------------------------*/
 .search-results-list{
 	height: 320px;
 	overflow-y: scroll;
@@ -402,6 +402,36 @@ footer{
 	height: 64px;
 	background-color:#0099CC;
 	display:inline-block;
+	vertical-align: bottom;
+}
+
+.incoming-requests-list .friend-info{
+	display: inline-block;
+	text-align: left;
+	background-color: #fff;
+	padding: 6px;
+}
+
+.incoming-requests-list .friend-info h3{
+	margin-top: 0;
+	margin-bottom: 6px;
+}
+.incoming-requests-list .friend-info p{
+	margin-top: 0;
+	margin-bottom: 0;
+}
+.incoming-requests-list .friend-request{
+	display: inline-block;
+	float: right;
+	padding-top: 22px;
+    padding-bottom: 20px;
+	background-color: #fff;
+}
+
+.incoming-requests-list .friend-request img{
+	height: 22px;
+	width: 22px;
+	margin-right: 26px;
 }
 .incoming-requests-list .avatar img{
 	width: 100%;

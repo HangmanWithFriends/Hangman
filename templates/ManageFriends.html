@@ -82,19 +82,17 @@ $(document).ready(function(){
 					<!-- Get all friends and populate the list -->
 					{% for request in pending_requests %}
                         <li>
-                            <div class="avatar"><img class="avatar" src="{{ request['profile_image'] }}"/></div>
-                            <table>
-                                <tr>
-                                    <td>{{ request['username'] }}</td>
-                                    <td>{{ request['usermail'] }}</td>
-                                    <td><form>
-                                        <button type="submit" formmethod="post" formaction="/manage_friends/{{ uid }}/respond_request/{{ request['uid'] }}/accept">Accept</button>
-                                    </form></td>
-                                    <td><form>
-                                        <button style="float: right;" type="submit" formmethod="post" formaction="/manage_friends/{{ uid }}/respond_request/{{ request['uid'] }}/decline">Decline</button>
-                                    </form></td>
-                                </tr>
-                            </table>
+                            <div class="avatar">
+								<img class="avatar" src="{{ request['profile_image'] }}"/>
+							</div>
+							<div class="friend-info">
+                            	<h3>{{ request['username'] }}</h3>                                                           
+                            	<p>{{ request['usermail'] }}</p>
+							</div>
+							<div class="friend-request">
+                            	<a href="/manage_friends/{{ uid }}/respond_request/{{ request['uid'] }}/accept"><img src="/img/checkmark.png"/></a>
+                            	<a href="/manage_friends/{{ uid }}/respond_request/{{ request['uid'] }}/decline"><img src="/img/redx.png"/></a>
+							</div>
 					    </li>
 					<!--<li>
 						    <div class="avatar"><img src="{{ request['profile_image'] }}"/></div>
