@@ -27,7 +27,8 @@ $(function() {
 			}
 			else{
 				// Get user id
-				var uid = d.result
+				var uid = d.result;
+				console.log(uid);
 				window.location.href = "/lobby/" + uid;
 			}
 			

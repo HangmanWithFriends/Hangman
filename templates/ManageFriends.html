@@ -41,7 +41,13 @@ $(document).ready(function(){
 	<div class="container">
 		<div class="col-md-6">
 			<h2 class="dblue-text">FIND YOUR FRIENDS!</h2>
-            <div> HTML FORM GOES HERE </div>
+            <div>
+                <form id="search-form" name="search" action="/manage_friends/{{ uid }}" method="post" accept-charset="utf-8">
+                    <input type="text" id="search_string" name="search_string" placeholder="Search by name or email" required>
+                    <br>
+                    <input class="btn-home" type="submit">
+                </form>
+            </div>
 			<div class="search-results-list">
 				<ul>
                     {% for search_result in search_results %}
@@ -51,7 +57,16 @@ $(document).ready(function(){
                                 <tr>
                                     <td>{{ search_result['username'] }}</td>
                                     <td>{{ search_result['usermail'] }}</td>
-                                    <td><button href="/friends/{{ uid }}/make_request/{{ search_result['uid'] }}">Request</button></td>
+                                    <td>
+                                        <form>
+                                            <button type="submit" formmethod="post" formaction="/manage_friends/{{ uid }}/make_request/{{ search_result['uid'] }}">Request Friend</button>
+                                        </form>
+                                    </td>
+                                    <!-- <div>
+                                        <form action="/manage_friends/{{ uid }}/make_request/{{ search_result['uid'] }}" method="post">
+                                            <input type="submit" value="Request Friend">
+                                        </form>
+                                    </div> -->
                                 </tr>
                             </table>
 					    </li>
@@ -72,8 +87,12 @@ $(document).ready(function(){
                                 <tr>
                                     <td>{{ request['username'] }}</td>
                                     <td>{{ request['usermail'] }}</td>
-                                    <td><button href="/friends/{{ uid }}/respond_request/{{ request['uid'] }}">Accept</button></td>
-                                    <td><button style="float: right;" href="/friends/{{ uid }}/respond_request/{{ request['uid'] }}">Decline</button></td>
+                                    <td><form>
+                                        <button type="submit" formmethod="post" formaction="/manage_friends/{{ uid }}/respond_request/{{ request['uid'] }}/accept">Accept</button>
+                                    </form></td>
+                                    <td><form>
+                                        <button style="float: right;" type="submit" formmethod="post" formaction="/manage_friends/{{ uid }}/respond_request/{{ request['uid'] }}/decline">Decline</button>
+                                    </form></td>
                                 </tr>
                             </table>
 					    </li>

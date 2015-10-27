@@ -133,6 +133,7 @@ class Account_Handler():
             if uid_requested not in self.users[uid]['outgoing_friend_requests']:
                 self.users[uid]['outgoing_friend_requests'].append(uid_requested)
 
+        raise cherrypy.HTTPRedirect('/lobby/' + str(uid))
         return json.dumps({"result":"Success", "is_friends" : is_friends, "errors":[]})
 
     def handle_friend_request_response(self, uid, requester_uid, response):
@@ -147,10 +148,12 @@ class Account_Handler():
         if uid not in self.users:
             return json.dumps({"result":"Error", "errors" : ["Post for friend request response made by unknown user"]})
 
-        if is_accepted and (requster_uid in self.users[uid]['incoming_friend_requests']) and (uid in self.users[requester_uid]['outgoing_friend_requests']):
+        if is_accepted and (requester_uid in self.users[uid]['incoming_friend_requests']) and (uid in self.users[requester_uid]['outgoing_friend_requests']):
             self.make_friends(uid, requester_uid)
 
         self.remove_pairs_pending_requests(uid, requester_uid)
+        
+        raise cherrypy.HTTPRedirect("/lobby/" + str(uid))
         return json.dumps({"result":"Success", "errors": []})
 
     def handle_friend_delete(self, uid):

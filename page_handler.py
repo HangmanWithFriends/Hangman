@@ -97,7 +97,7 @@ class Page_Handler():
         creator_name = self.db['users'][creator_uid]['username']
         guesser_name = self.db['users'][guesser_uid]['username']
         
-		
+
         if(str(uid) == str(game_dict['creator_uid'])):
             return env.get_template('SpectatorGame.html').render(game_dict=game_dict, alphabet=alphabet, word_progress=word_progress, img_name=img_name, gid=str(gid), uid=uid, guesser_name = guesser_name, creator_name = creator_name)
 
@@ -111,14 +111,14 @@ class Page_Handler():
         uid_info = self.get_info_dict_from_uid(uid)
         return env.get_template('Settings.html').render(uid=uid, display_name=uid_info['username'], avatar=uid_info['profile_image'], email=uid_info['usermail'])
 
-    def handle_friends_management_search_html(self, uid):
-        cl = cherrypy.request.headers['Content-Length']
-        data_json = cherrypy.request.body.read(int(cl))
-        incoming_data = json.loads(data_json)
-
-        search_string = None
-        if 'search_string' in incoming_data:
-            search_string = incoming_data['search_string']
+    def handle_friends_management_search_html(self, uid, search_string=None):
+#         cl = cherrypy.request.headers['Content-Length']
+#         data_json = cherrypy.request.body.read(int(cl))
+#         incoming_data = json.loads(data_json)
+# 
+#         search_string = None
+#         if 'search_string' in incoming_data:
+#             search_string = incoming_data['search_string']
 
         return self.get_friends_management_html(uid, search_string)
 
