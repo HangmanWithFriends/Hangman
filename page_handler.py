@@ -174,7 +174,7 @@ class Page_Handler():
 
         return_uids = set()
        
-        words = search_string.split("\s")
+        words = search_string.split()
 
         for word in words:
             if word in self.db['username_words_to_uids']:
@@ -194,7 +194,7 @@ class Page_Handler():
             for word in words:
                 first_three = word[0:3]
                 if first_three in self.db['username_word_starts_to_uids']:
-                    uids = self.db['username_word_starts_to_uids']
+                    uids = self.db['username_word_starts_to_uids'][first_three]
                     for found_uid in uids:
                         return_uids.add(found_uid)         
 
