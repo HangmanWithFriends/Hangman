@@ -22,10 +22,11 @@
 		<h3>{{ display_name }}</h3>
 		<img class="dropdown-toggle" src={{ avatar }} data-toggle="dropdown"/>
 		<ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-	      <li role="presentation"><a role="menuitem" tabindex="-1" href="/login">Logout</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="/lobby/{{ uid }}">Home</a></li>
 		  <li role="presentation"><a role="menuitem" tabindex="-1" href="/manage_friends/{{ uid }}">Find Friends ({{ num_requests }})</a></li>
 		  <li role="presentation"><a role="menuitem" tabindex="-1" href="/settings/{{ uid }}">Settings</a></li>
 	      <li role="presentation"><a role="menuitem" tabindex="-1" href="/game/1">Back to Game</a></li>   
+	      <li role="presentation"><a role="menuitem" tabindex="-1" href="/login">Logout</a></li>
 	    </ul>
 	</div>
 </header>
@@ -87,7 +88,13 @@ $(document).ready(function(){
 				<ul>
 					<!-- Get all friends and populate the list -->
 					{% for friend in friends %}
-						<li>{{ friend['username'] }}</li>
+						<li style="height: 50px">
+						  {{ friend['username'] }}
+						  <p style="left: 80px"> <img style="height: 40px" src={{friend['profile_image']}} /> </p>
+						  <p style="right: 20px" >
+						      <a href="/manage_friends/{{ uid }}/delete_friendship/{{ friend['uid'] }}">Delete Friend</a>
+						  </p>
+						</li>
 					{% endfor %}
 				</ul>
 			</div>

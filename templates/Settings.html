@@ -22,8 +22,10 @@
 		<h3>{{ display_name }}</h3>
 		<img id='top_avatar' class="dropdown-toggle" src={{ avatar }} data-toggle="dropdown"/>
 		<ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-	      <li role="presentation"><a role="menuitem" tabindex="-1" href="/login">Logout</a></li>
-	      <li role="presentation"><a role="menuitem" tabindex="-1" href="/game/1">Back to Game</a></li>   
+		  <li role="presentation"><a role="menuitem" tabindex="-1" href="/lobby/{{ uid }}">Home</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="/settings/{{ uid }}">Settings</a></li>
+	      <li role="presentation"><a role="menuitem" tabindex="-1" href="/game/1">Back to Game</a></li>
+	      <li role="presentation"><a role="menuitem" tabindex="-1" href="/login">Logout</a></li>  
 	    </ul>
 	</div>
 </header>
