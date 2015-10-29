@@ -75,9 +75,13 @@ $(document).ready(function(){
 
 		<div class="col-md-4">
 			<h2 class="dblue-text">READY TO PLAY?</h2>
-			<form id="request-guest-game" name="request-guest-game" action="/game/{{ uid }}/request" method="get" accept-charset="utf-8">
-			<div class="wait-for-game"></div>
-            <input class="btn-home" type="submit" value="Find a Game!">
+			<form id="request-game" name="request-game" action="/game/{{ uid }}/request" method="get" accept-charset="utf-8">
+				<div class="wait-for-game"></div>
+	            <input class="btn-home" type="submit" value="Play another Player">
+            </form>
+
+            <form id="request-game" name="request-game" action="/game/{{ uid }}/ai/request" method="get" accept-charset="utf-8">
+	            <input class="btn-home" type="submit" value="Play the Computer">
             </form>
 			
 		</div>
