@@ -14,6 +14,7 @@ $(function() {
         var win_uid = djson.win;
         var guess_uid = djson.guesser_uid;
         var creator_uid = djson.creator_uid;
+        var answer = djson.answer;
         var message = "";
         var redirect_location = "/lobby/" + uid;
 
@@ -38,7 +39,8 @@ $(function() {
             window.location.href = redirect_location;
         }
         else if(win_uid == creator_uid){
-            message = "You died.";
+            message = "Oh no! You died. The word was " + answer;
+            console.log(answer)
             window.alert(message);
             window.location.href = redirect_location;
         }
