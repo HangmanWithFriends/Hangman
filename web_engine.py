@@ -21,7 +21,7 @@ def auto_save(db):
 
         # If a change has been made to the database, pickle it
         if old_db != db:
-            f = 'HangmanUsers.pickle'
+            f = 'HangmanDB.pickle'
             pickle.dump(db, file(f, 'w'))
             old_db = copy.deepcopy(db)
 
@@ -59,9 +59,9 @@ def start_service():
     cherrypy.config.update(conf)
     app = cherrypy.tree.mount(None, config=conf)
     
-    if os.path.isfile('HangmanUsers.pickle'):
+    if os.path.isfile('HangmanDB.pickle'):
         print 'loading db'
-        db = pickle.load(file('HangmanUsers.pickle'))
+        db = pickle.load(file('HangmanDB.pickle'))
     else:
         db = { 'games':{}, 'users':{}, 'emails_to_uids':{}, 'username_words_to_uids':{}, 'username_word_starts_to_uids':{} }
 
@@ -97,6 +97,7 @@ def connect_game_handler_dispatches(dispatcher, game_handler):
     dispatcher.connect('post_game_prompt', '/game/{uid}/prompt/{gid}',controller=game_handler,action='post_game_prompt',conditions=dict(method=['POST']))
     dispatcher.connect('post_game_request', '/game/{uid}/request',controller=game_handler,action='post_game_request',conditions=dict(method=['POST']))
     dispatcher.connect('get_game_request','/game/{uid}/request',controller=game_handler, action='get_game_request',conditions=dict(method=['GET']))
+    dispatcher.connect('get_ai_game_request','/game/{uid}/ai/request',controller=game_handler, action='get_ai_game_request',conditions=dict(method=['GET']))
     dispatcher.connect('post_guess_JSON', '/game/{uid}/{gid}', controller=game_handler,action='post_guess',conditions=dict(method=['POST']))
     dispatcher.connect('get_game_JSON', '/game/{gid}',controller=game_handler,action='get_game',conditions=dict(method=['GET']))
 
