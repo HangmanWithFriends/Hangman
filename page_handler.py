@@ -33,8 +33,14 @@ class Page_Handler():
         return env.get_template('Lobby.html').render(uid=uid_info['uid'], display_name=uid_info['username'], avatar=uid_info['profile_image'], friends=friends, num_requests=num_requests)
 
     def get_request_phrase_html(self, uid, gid):
+        print 'from page_handler gid is ' + gid
         guesser_uid = self.db['games'][gid]['guesser_uid']
-        guesser_name = self.users[guesser_uid]['username']
+
+        if guesser_uid != 'ai':
+            guesser_name = self.users[guesser_uid]['username']
+        else:
+            guesser_name = 'the Computer'
+
         return env.get_template('RequestPhrase.html').render(uid=uid, gid=gid, guesser_name=guesser_name)
 
     def get_game_html(self, uid, gid):
@@ -94,10 +100,17 @@ class Page_Handler():
         #These would be the users display names
         creator_uid = self.db['games'][gid]['creator_uid']
         guesser_uid = self.db['games'][gid]['guesser_uid']
-        creator_name = self.db['users'][creator_uid]['username']
-        guesser_name = self.db['users'][guesser_uid]['username']
-        
 
+        if creator_uid != 'ai':
+            creator_name = self.db['users'][creator_uid]['username']
+        else:
+            creator_name = "the Computer"
+
+        if guesser_uid != 'ai':
+            guesser_name = self.db['users'][guesser_uid]['username']
+        else:
+            guesser_name = 'the Computer'
+        
         if(str(uid) == str(game_dict['creator_uid'])):
             return env.get_template('SpectatorGame.html').render(game_dict=game_dict, alphabet=alphabet, word_progress=word_progress, img_name=img_name, gid=str(gid), uid=uid, guesser_name = guesser_name, creator_name = creator_name)
 
