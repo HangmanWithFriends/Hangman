@@ -230,7 +230,7 @@ class Game_Handler():
             else:
                 regex_string += '.'
 
-        if float(correct_count)/len(answer) >= 1.0/3:
+        if float(correct_count)/len(answer) >= 2.0/3:
             if len(self.games_table[gid]['ai_possible_words']) is 0:
                 print 'getting phrase'
                 regex = re.compile(regex_string)
@@ -258,7 +258,7 @@ class Game_Handler():
             self.guess_phrase(gid, word)
 
         else:
-            letter = letter_frequency.choose_highest_freq_letter(viable_guess_letters)
+            letter = letter_frequency.choose_random_letter_weighted(viable_guess_letters)
             self.guess_letter(gid, letter)
 
     def make_random_ai_phrase(self):
