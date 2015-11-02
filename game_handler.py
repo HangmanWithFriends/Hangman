@@ -14,6 +14,7 @@ import random
 from jinja2 import Environment, FileSystemLoader
 import pickle
 from time import sleep
+from feed_handler import Feed_Handler
 
 env = Environment(loader=FileSystemLoader(os.path.abspath(os.path.dirname(__file__))+'/templates/'))
 
@@ -26,6 +27,7 @@ class Game_Handler():
         self.waiting_gids = list()
         self.next_int_gid = self.find_next_game_id()
         self.ai_words_list = pickle.load(open('ai/ai_word_list.pickle', 'r'))
+        self.feedhandler = Feed_Handler(db)
  
     def get_dummy_game(self, gid):
         result = {}
@@ -107,14 +109,17 @@ class Game_Handler():
         if len(guess) > 1:
             if guess == game_dict['answer']:
                 game_dict['win'] = game_dict['guesser_uid']
+                self.feedhandler.post_game_result(game_dict['guesser_uid'], game_dict['creator_uid'], True, game_dict['answer'])
         else:
             if len(set(game_dict['answer'])) is len(game_dict['correct_letters']):
                 game_dict['win'] = game_dict['guesser_uid']
+                self.feedhandler.post_game_result(game_dict['guesser_uid'], game_dict['creator_uid'], True, game_dict['answer'])
 
         # Check if the creator won
         guesses_made = len(game_dict['incorrect_letters']) + len(game_dict['incorrect_words'])
         if guesses_made >= 6:
             game_dict['win'] = game_dict['creator_uid']
+            self.feedhandler.post_game_result(game_dict['guesser_uid'], game_dict['creator_uid'], False, game_dict['answer'])
 
 
     def get_game(self, gid):

@@ -11,6 +11,7 @@ import requests
 import string
 import cherrypy
 import re
+from Hangman.feed_handler import Feed_Handler
 
 env = Environment(loader=FileSystemLoader(os.path.abspath(os.path.dirname(__file__))+'/templates/'))
 
@@ -22,6 +23,7 @@ class Page_Handler():
         self.users = db['users']
         self.default_image_name = "unknown.png"
         self.images_path = '/img/'
+        self.feedhandler = Feed_Handler(self.db)
         
     def get_login_html(self):
         return env.get_template('Home.html').render()
@@ -30,7 +32,25 @@ class Page_Handler():
         uid_info = self.get_info_dict_from_uid(uid)
         friends = self.get_friend_info_dicts_from_uid(uid)
         num_requests = len(self.users[uid]['incoming_friend_requests'])
-        return env.get_template('Lobby.html').render(uid=uid_info['uid'], display_name=uid_info['username'], avatar=uid_info['profile_image'], friends=friends, num_requests=num_requests)
+        feed_events = self.feedhandler.get_feed_lines(15)
+        event_phrases = []
+        for elem in feed_events:
+            uid1_info = self.get_info_dict_from_uid(elem[0])
+            uid2_info = self.get_info_dict_from_uid(elem[1])
+            name1 = uid1_info['username']
+            name2 = uid2_info['username']
+            image1= uid1_info['profile_image']
+            image2= uid2_info['profile_image']
+            if elem[2] == 'friendship':
+                display_string = (name1 + ' became friends with ' + name2)
+                event_phrases.append({'display_string' : display_string, 'image_source' : image1})
+            elif elem[2] == 'guesser_wins':
+                display_string = (name1 + ' beat ' + name2 + ' by guessing "' + elem[3] + '"')
+                event_phrases.append({'display_string' : display_string, 'image_source' : image1})
+            elif elem[2] == 'creator_wins':
+                display_string = (name2 + ' stumped ' + name1 + ' with "' + elem[3] + '"')
+                event_phrases.append({'display_string' : display_string, 'image_source' : image2})
+        return env.get_template('Lobby.html').render(uid=uid_info['uid'], display_name=uid_info['username'], avatar=uid_info['profile_image'], friends=friends, num_requests=num_requests, news_feed=event_phrases)
 
     def get_request_phrase_html(self, uid, gid):
         print 'from page_handler gid is ' + gid

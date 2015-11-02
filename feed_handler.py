@@ -18,9 +18,14 @@ class Feed_Handler():
         self.text_file = "news.pickle"
         # Event schema
         # [uid1, uid2, type, game_answer]
-        self.next_id = 1
+        self.next_id = len(self.db['events'])
         self.db = db
         
+#     def get_next_feed_id(self):
+#         if len(self.db['events']) is 0:
+#             return 1
+#         else:
+#             return max(int(x) for x in self.db['events'])
 
     def get_guest_feed(self, uid, num_lines):
         #get most recent min(num_lines, 20) events
@@ -33,6 +38,23 @@ class Feed_Handler():
         #read list of most recent games, new friendships looking for friend's or own uid
         #construct feed from this with most recent events from friends and if necessary just from recent events
         pass
+
+#     def get_feed_lines(self, num_lines):
+#         k = self.db['events'].keys()
+#         k = sorted(k)
+#         if num_lines < len(k) : num_lines = len(k)
+#         event_ids = k[len(k)-num_lines:]    # Gives the last num_lines events
+#         returned_events = []
+#         for id in event_ids:
+#             returned_events.append(self.db['events'][id])
+#         
+#         return returned_events
+        
+    def get_feed_lines(self, num_lines):
+        # Returns list of num_lines most recent event-tuples 
+        li = self.db['events'][num_lines*-1:]
+        li.reverse()
+        return li
 
     def post_game_result(self, guesser_uid, creator_uid, is_winner_guesser, phrase):
         #insert into db/txt file
