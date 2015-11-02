@@ -92,7 +92,7 @@ footer{
 	cursor: pointer;
 }
 
-#login-form ul, .game-list ul, .friend-list ul{
+#login-form ul, .game-list ul, .friend-list ul, .search-results-list ul{
 	list-style:none;
 	margin: 0;
 }
@@ -102,7 +102,7 @@ footer{
 	text-align: center;
 }
 
-#login-form input, #register-form input, #request_phrase-form input, #settings-form input{
+#login-form input, #register-form input, #request_phrase-form input, #settings-form input, #search-form input{
 	width: 100%;
 	margin-top: 10px;
 	font-size: 22px;
@@ -365,39 +365,16 @@ footer{
 	width: 128px;	
 }
 /*------------------ Manage Friends ---------------------------*/
-.search-results-list{
+
+
+.incoming-requests-list,.search-results-list{
 	height: 320px;
 	overflow-y: scroll;
 }
-
-.search-results-list .avatar{
-	width: 64px;
-	height: 64px;
-	background-color:#0099CC;
-	display:inline-block;
+.search-results-list ul{  
+    padding-left: 0px;   
 }
-.search-results-list .avatar img{
-	width: 100%;
-	padding: 8px;
-	max-height: 64px;
-	max-width: 64px;
-	height: 64px;
-}
-.search-results-list li{
-	display: block;
-	border-color: #E0FFFF;
-	border-bottom: 2px solid #E0FFFF;
-	position: relative;
-	height: 66px;
-	background-color: #fff;
-}
-
-.incoming-requests-list{
-	height: 320px;
-	overflow-y: scroll;
-}
-
-.incoming-requests-list .avatar{
+.incoming-requests-list .avatar, .search-results-list .avatar{
 	width: 64px;
 	height: 64px;
 	background-color:#0099CC;
@@ -405,42 +382,44 @@ footer{
 	vertical-align: bottom;
 }
 
-.incoming-requests-list .friend-info{
+.incoming-requests-list .friend-info, .search-results-list .friend-info{
 	display: inline-block;
 	text-align: left;
 	background-color: #fff;
 	padding: 6px;
 }
 
-.incoming-requests-list .friend-info h3{
+.incoming-requests-list .friend-info h3, .search-results-list .friend-info h3{
 	margin-top: 0;
 	margin-bottom: 6px;
 }
-.incoming-requests-list .friend-info p{
+.incoming-requests-list .friend-info p, .search-results-list .friend-info p{
 	margin-top: 0;
 	margin-bottom: 0;
 }
-.incoming-requests-list .friend-request{
+.incoming-requests-list .friend-request, .search-results-list .friend-request{
 	display: inline-block;
 	float: right;
 	padding-top: 22px;
     padding-bottom: 20px;
 	background-color: #fff;
 }
-
+.search-results-list .friend-request{
+    padding-right: 20px;
+}
 .incoming-requests-list .friend-request img{
 	height: 22px;
 	width: 22px;
 	margin-right: 26px;
 }
-.incoming-requests-list .avatar img{
+.incoming-requests-list .avatar img, .search-results-list .avatar img{
 	width: 100%;
 	padding: 8px;
 	max-height: 64px;
 	max-width: 64px;
 	height: 64px;
 }
-.incoming-requests-list li{
+.incoming-requests-list li, .search-results-list li{
 	display: block;
 	border-color: #E0FFFF;
 	border-bottom: 2px solid #E0FFFF;
