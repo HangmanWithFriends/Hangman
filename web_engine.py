@@ -64,7 +64,7 @@ def start_service():
         print 'loading db'
         db = pickle.load(file('HangmanDB.pickle'))
     else:
-        db = { 'games':{}, 'users':{}, 'emails_to_uids':{}, 'username_words_to_uids':{}, 'username_word_starts_to_uids':{}, 'events':{} }
+        db = { 'games':{}, 'users':{}, 'emails_to_uids':{}, 'username_words_to_uids':{}, 'username_word_starts_to_uids':{}, 'events':[] }
     
     if 'ai' not in db['users']:
         db['users']['ai'] = { 'usermail':"ai@watson.com",
@@ -73,7 +73,7 @@ def start_service():
                               'friends': [],
                               'incoming_friend_requests':[],
                               'outgoing_friend_requests':[],
-                              'profile_image' : 'ai.jpg'
+                              'profile_image' : 'watson.jpg'
                             }
 
     if 'events' not in db: db['events'] = list()
