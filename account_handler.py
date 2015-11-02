@@ -11,6 +11,7 @@ import string
 import cherrypy
 import hashlib
 import copy
+from feed_handler import Feed_Handler
 
 class Account_Handler():
     
@@ -22,6 +23,7 @@ class Account_Handler():
         self.next_registered_user = None
         self.next_guest_user = 1
         self.find_next_user_id()
+        self.feedhandler = Feed_Handler(self.db)
     
     def handle_login_request(self):
         result={'result':"Success", 'errors':[]}
@@ -141,6 +143,7 @@ class Account_Handler():
         is_accepted = False   
         if response == "accept":
             is_accepted = True
+            
         
         if requester_uid not in self.users:
             return json.dumps({"result":"Error", "errors" : ["Requester uid is unknown to database"]})
@@ -264,6 +267,8 @@ class Account_Handler():
             self.users[uid1]['friends'].append(uid2)
         if uid1 not in self.users[uid2]['friends']:
             self.users[uid2]['friends'].append(uid1)
+        
+        self.feedhandler.post_new_friendship(uid1, uid2)
 
     def delete_friendship(self, uid1, uid2):
         if uid2 in self.users[uid1]['friends']:

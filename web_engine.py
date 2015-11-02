@@ -31,7 +31,8 @@ def start_service():
     conf = {'global': 
                 {
                     'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
-                    'tools.staticdir.root': os.path.dirname(os.path.abspath(__file__))
+                    'tools.staticdir.root': os.path.dirname(os.path.abspath(__file__)),
+                    'server.socket_host':'0.0.0.0'
                 }, 
             
             '/' : 
@@ -74,6 +75,8 @@ def start_service():
                               'outgoing_friend_requests':[],
                               'profile_image' : 'ai.jpg'
                             }
+
+    if 'events' not in db: db['events'] = list()
 
     page_handler = Page_Handler(db)
     game_handler = Game_Handler(db)
