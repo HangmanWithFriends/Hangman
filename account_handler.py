@@ -270,6 +270,6 @@ class Account_Handler():
         if uid1 in self.users[uid2]['outgoing_friend_requests']:
             self.users[uid2]['outgoing_friend_requests'].remove(uid1)
 
-   def hash_pwd(self, pwd):
+    def hash_pwd(self, pwd):
         hashed = hashlib.sha224(pwd).hexdigest()
         return hashed
