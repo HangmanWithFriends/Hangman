@@ -31,7 +31,8 @@ def start_service():
     conf = {'global': 
                 {
                     'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
-                    'tools.staticdir.root': os.path.dirname(os.path.abspath(__file__))
+                    'tools.staticdir.root': os.path.dirname(os.path.abspath(__file__)),
+                    'server.socket_host':'0.0.0.0'
                 }, 
             
             '/' : 
