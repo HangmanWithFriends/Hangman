@@ -53,24 +53,19 @@ $(document).ready(function(){
 			<div class="search-results-list">
 				<ul>
                     {% for search_result in search_results %}
-					    <li>
-                            <div class="avatar"><img class="avatar" src="{{ search_result['profile_image'] }}"/></div>
-                            <table>
-                                <tr>
-                                    <td>{{ search_result['username'] }}</td>
-                                    <td>{{ search_result['usermail'] }}</td>
-                                    <td>
-                                        <form>
-                                            <button type="submit" formmethod="post" formaction="/manage_friends/{{ uid }}/make_request/{{ search_result['uid'] }}">Request Friend</button>
-                                        </form>
-                                    </td>
-                                    <!-- <div>
-                                        <form action="/manage_friends/{{ uid }}/make_request/{{ search_result['uid'] }}" method="post">
-                                            <input type="submit" value="Request Friend">
-                                        </form>
-                                    </div> -->
-                                </tr>
-                            </table>
+					    <li>                                                     
+                            <div class="avatar">
+								<img class="avatar" src="{{ search_result['profile_image'] }}"/>
+							</div>
+							<div class="friend-info">
+                            	<h3>{{ search_result['username'] }}</h3>                                                           
+                            	<p>{{ search_result['usermail'] }}</p>
+							</div>
+							<div class="friend-request">
+                            	<form>
+                                        <button type="submit" formmethod="post" formaction="/manage_friends/{{ uid }}/make_request/{{ search_result['uid'] }}">Request Friend</button>
+                                </form>
+							</div>                           
 					    </li>
                     {% endfor %}
 				</ul>
