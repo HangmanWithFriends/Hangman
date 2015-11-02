@@ -69,7 +69,7 @@ def start_service():
     if 'ai' not in db['users']:
         db['users']['ai'] = { 'usermail':"ai@watson.com",
                               'hashed_pass' : 'ai',
-                              'username': "the Computer",
+                              'username': "Computer",
                               'friends': [],
                               'incoming_friend_requests':[],
                               'outgoing_friend_requests':[],
