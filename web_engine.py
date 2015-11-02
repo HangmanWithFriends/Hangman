@@ -64,6 +64,16 @@ def start_service():
         db = pickle.load(file('HangmanDB.pickle'))
     else:
         db = { 'games':{}, 'users':{}, 'emails_to_uids':{}, 'username_words_to_uids':{}, 'username_word_starts_to_uids':{}, 'events':{} }
+    
+    if 'ai' not in db['users']:
+        db['users']['ai'] = { 'usermail':"ai@watson.com",
+                              'hashed_pass' : 'ai',
+                              'username': "the Computer",
+                              'friends': [],
+                              'incoming_friend_requests':[],
+                              'outgoing_friend_requests':[],
+                              'profile_image' : 'ai.jpg'
+                            }
 
     page_handler = Page_Handler(db)
     game_handler = Game_Handler(db)
