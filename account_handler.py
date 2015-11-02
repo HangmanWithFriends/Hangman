@@ -160,16 +160,6 @@ class Account_Handler():
         return json.dumps({"result":"Success", "errors": []})
 
     def handle_friend_delete(self, uid, unfriended_uid):
-#         cl = cherrypy.request.headers['Content-Length']
-#         data_json = cherrypy.request.body.read(int(cl))
-#         incoming_data = json.loads(data_json)
-#         uid_to_delete = None
-# 
-#         if 'uid_to_delete' not in incoming_data:
-#             return json.dumps({"result" : "Error", "errors" : ["Request must contain a 'uid_to_delete' key-value pair"]})
-#         else:
-#             uid_to_delete = incoming_data['uid_to_delete']
-
         if uid not in self.users:
             return json.dumps({"result" : "Error", "errors" : ["Requester uid is unknown to database"]})
         
@@ -291,6 +281,7 @@ class Account_Handler():
         words = username.split()
 
         for word in words:
+            word = word.lower()
             if word not in self.db['username_words_to_uids']:
                 self.db['username_words_to_uids'][word] = []
             if uid not in self.db['username_words_to_uids'][word]:
@@ -308,6 +299,7 @@ class Account_Handler():
         words = username.split()
 
         for word in words:
+            word = word.lower()
             if word in self.db['username_words_to_uids']:
                 if uid in self.db['username_words_to_uids'][word]:
                     self.db['username_words_to_uids'][word].remove(uid)
