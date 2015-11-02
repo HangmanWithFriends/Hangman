@@ -44,35 +44,13 @@ $(document).ready(function(){
 			<h2 class="dblue-text">SEE WHO ELSE IS HANGING:</h2>
 			<div class="game-list">
 				<ul>
+                {% for item in news_feed %}
 					<li>
-						<div class="avatar"><img src="../img/dumbledore.jpg"/></div>
-						<p>Albus Dumbledore started a game with Norman Morales</p>
+						<div class="avatar"><img src={{ item['img_source'] }}> </div>
+						<p>{{ item['display_string'] }}</p>
 					</li>
-					<li>
-						<div class="avatar"><img src="../img/hermione.jpg"/></div>
-						<p>Hermione Granger just beat Ryan Boccabella</p>
-					</li>
-					<li>
-						<div class="avatar"><img src="../img/dobby.jpg"/></div>
-						<p>Dobby is now friends with Jesse Hamilton</p>
-					</li>
-					<li>
-						<div class="avatar"><img src="../img/dumbledore.jpg"/></div>
-						<p>Albus Dumbledore is now friends with Hagrid</p>
-					</li>
-					<li>
-						<div class="avatar"><img src="../img/ginny.jpg"/></div>
-						<p>Ginny Weasly just beat Ron Weasly</p>
-					</li>
-					<li>
-						<div class="avatar"><img src="../img/lordv.jpg"/></div>
-						<p>Lord Voldermort just beat Cornelius Fudge</p>
-					</li>
-					<li>
-						<div class="avatar"><img src="../img/hermione.jpg"/></div>
-						<p>Hermione Granger is now friends with Natalie Sanders</p>
-					</li>
-				</ul>
+                {% endfor %}
+			    </ul>
 			</div>
 		</div>
 
