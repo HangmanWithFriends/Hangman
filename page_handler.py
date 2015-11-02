@@ -210,6 +210,7 @@ class Page_Handler():
         words = search_string.split()
 
         for word in words:
+            word = word.lower()
             if word in self.db['username_words_to_uids']:
                 #multiple usernames could include the same word
                 uids = self.db['username_words_to_uids'][word]
@@ -225,7 +226,7 @@ class Page_Handler():
         #search by first three letters of each word 
         else:
             for word in words:
-                first_three = word[0:3]
+                first_three = word[0:3].lower()
                 if first_three in self.db['username_word_starts_to_uids']:
                     uids = self.db['username_word_starts_to_uids'][first_three]
                     for found_uid in uids:
