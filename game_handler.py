@@ -3,12 +3,16 @@ This class is responsible for handling requests
 that want to get JSON responses regarding the game state.
 '''
 
+import re
 import os.path
 import json
 import requests
 import cherrypy
+import string
+import letter_frequency
 import random
 from jinja2 import Environment, FileSystemLoader
+import pickle
 from time import sleep
 
 env = Environment(loader=FileSystemLoader(os.path.abspath(os.path.dirname(__file__))+'/templates/'))
@@ -21,6 +25,7 @@ class Game_Handler():
         self.games_table = db['games']
         self.waiting_gids = list()
         self.next_int_gid = self.find_next_game_id()
+        self.ai_words_list = pickle.load(open('ai/ai_word_list.pickle', 'r'))
  
     def get_dummy_game(self, gid):
         result = {}
@@ -85,13 +90,17 @@ class Game_Handler():
         correct_letters = game_dict['correct_letters']
         incorrect_letters = game_dict['incorrect_letters']
 
-        if not letter in correct_letters and not letter in incorrect_letters:
-            if letter in answer:
+        if letter not in correct_letters and letter not in incorrect_letters:
+            if letter.upper() in answer.upper():
+                print letter + ' in ' + answer
                 game_dict['correct_letters'].append(letter)
             else:
+                print letter + ' not in ' + answer
                 game_dict['incorrect_letters'].append(letter)
 
             self.check_win(game_dict, letter)
+
+        print letter + ' already guessed'
 
     def check_win(self, game_dict, guess):
         # Check if the guesser won
@@ -111,6 +120,10 @@ class Game_Handler():
     def get_game(self, gid):
         # Active Game
         if gid in self.games_table:
+            #make the ai player guess a letter each time there is a get on an ai game if the ai is guessing
+            if self.games_table[gid]['is_ai'] and self.games_table[gid]['guesser_uid'] == "ai":
+                self.make_ai_guess(gid)
+
             output = self.games_table[gid]
             output['result'] = 'Success'
             output['errors'] = []
@@ -122,10 +135,19 @@ class Game_Handler():
         return json.dumps(output, encoding='latin-1')
     
     def get_game_request(self, uid):
-        request_state = self.post_game_request(uid)
-        waiting = request_state['waiting']
+        request_state = self.handle_get_game_request(uid)
         gid = request_state['gid']
 
+        self.wait_for_game(uid, gid)
+
+    def get_ai_game_request(self, uid):
+        request_state = self.handle_get_ai_game_request(uid)
+        gid = request_state['gid']
+
+        print 'from gameplay gid is ' + str(gid)
+        self.wait_for_game(uid, gid)
+
+    def wait_for_game(self, uid, gid):
         #if waiting: 
         while(1):
             if gid not in self.games_table:
@@ -133,6 +155,7 @@ class Game_Handler():
             else:
                 creator = self.games_table[gid]['creator_uid']
                 if creator == uid:
+                    print 'from gameplay gid is ' + str(gid)
                     raise cherrypy.HTTPRedirect('/phrase/' + str(uid) + '/' + str(gid))
                 else:
                     answer = self.games_table[gid]['answer']
@@ -143,7 +166,7 @@ class Game_Handler():
                     else:
                         raise cherrypy.HTTPRedirect('/gameplay/' + str(uid) + '/' + str(gid))
         
-    def post_game_request(self, uid):
+    def handle_get_game_request(self, uid):
         waiting = True # whether or not we need to wait for a second player
         uid = str(uid)
 
@@ -157,7 +180,8 @@ class Game_Handler():
                 (guesser_uid, creator_uid) = self.assign_player_roles(first_uid, uid)
                 self.games_table[new_gid] = {'answer': None, 
                                          'incorrect_letters': [], 'incorrect_words': [], 'correct_letters': [], 
-                                         'guesser_uid' : guesser_uid, 'creator_uid':creator_uid,
+                                         'guesser_uid' : guesser_uid, 'creator_uid':creator_uid, 
+                                         'is_ai':False, 'ai_possible_words':[],
                                          'win': None}
                 waiting = False
 
@@ -169,7 +193,79 @@ class Game_Handler():
             waiting = True
 
         output = {'gid': new_gid, 'waiting': waiting, 'errors':[]}
-        return output #json.dumps(output, encoding='latin-1')
+        return output
+
+    def handle_get_ai_game_request(self, uid):
+        new_gid = str(self.next_int_gid)
+        self.next_int_gid += 1
+        ai_uid = "ai"
+        (guesser_uid, creator_uid) = self.assign_player_roles(uid, ai_uid)
+        self.games_table[new_gid] = {'answer': None,
+                                     'incorrect_letters': [], 'incorrect_words': [], 'correct_letters': [],
+                                     'guesser_uid' : guesser_uid, 'creator_uid':creator_uid, 
+                                     'is_ai':True, 'ai_possible_words':[],
+                                     'win': None}
+
+        if creator_uid == ai_uid:
+            self.games_table[new_gid]['answer'] = self.make_random_ai_phrase()
+
+        output = {'gid': new_gid, 'waiting':False, 'errors':[]}
+        return output
+
+    def make_ai_guess(self, gid):
+        #pick letter
+        answer = self.games_table[gid]['answer']
+        correct_letters = self.games_table[gid]['correct_letters']
+        incorrect_letters = self.games_table[gid]['incorrect_letters']
+
+        guessed_letters = set(correct_letters + incorrect_letters)
+        viable_guess_letters = set(list(string.ascii_uppercase)) - guessed_letters
+        correct_count = 0
+
+        regex_string = ""
+        for letter in answer:
+            if letter in correct_letters:
+                regex_string += letter.lower()
+                correct_count += 1
+            else:
+                regex_string += '.'
+
+        if float(correct_count)/len(answer) >= 2.0/3:
+            if len(self.games_table[gid]['ai_possible_words']) is 0:
+                print 'getting phrase'
+                regex = re.compile(regex_string)
+
+                self.games_table[gid]['ai_possible_words'] = [m.group(0).upper() for l in self.ai_words_list for m in [regex.search(l)] if m]
+                print len(self.games_table[gid]['ai_possible_words'])
+                word = self.games_table[gid]['ai_possible_words'].pop()
+                print len(self.games_table[gid]['ai_possible_words'])
+
+                # Set possible words to None to denote all possible words have been guessed
+                if len(self.games_table[gid]['ai_possible_words']) is 0:
+                    self.games_table[gid]['ai_possible_words'] = None
+
+            # All words fitting regex in AI knowledge base have been guessed
+            elif self.games_table[gid]['ai_possible_words'] is None:
+                print 'no phrases left to guess'
+
+                letter = letter_frequency.choose_highest_freq_letter(viable_guess_letters)
+                self.guess_letter(gid, letter)
+            else:
+                print 'guessing phrase'
+
+                word = self.games_table[gid]['ai_possible_words'].pop()
+
+            self.guess_phrase(gid, word)
+
+        else:
+            letter = letter_frequency.choose_random_letter_weighted(viable_guess_letters)
+            self.guess_letter(gid, letter)
+
+    def make_random_ai_phrase(self):
+        word = random.choice(self.ai_words_list)
+
+        print word
+        return word.upper()
 
     def post_game_prompt(self, uid, gid, answer=None):
         if uid != self.games_table[gid]['creator_uid']:

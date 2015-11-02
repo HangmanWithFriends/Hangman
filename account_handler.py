@@ -283,7 +283,7 @@ class Account_Handler():
 
     def add_to_user_search_dicts(self, username, usermail, uid):
         self.emails_to_uids[usermail] = uid
-        words = username.split("\s")
+        words = username.split()
 
         for word in words:
             if word not in self.db['username_words_to_uids']:
@@ -300,7 +300,7 @@ class Account_Handler():
 
     def remove_from_user_search_dicts(self, username, usermail, uid):
         self.emails_to_uids.pop(usermail)
-        words = username.split("\s")
+        words = username.split()
 
         for word in words:
             if word in self.db['username_words_to_uids']:

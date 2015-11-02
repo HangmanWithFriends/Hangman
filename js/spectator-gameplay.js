@@ -45,7 +45,8 @@ $.ajax({
             window.location.href = redirect_location;
         }
         else if(win_uid == creator_uid){
-            message = "You died.";
+            message = "Oh no! You died. The word was " + answer;
+            console.log(word);
             window.alert(message);
             window.location.href = redirect_location;
         }
