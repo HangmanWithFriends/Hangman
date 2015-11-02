@@ -18,7 +18,7 @@ class Feed_Handler():
         self.text_file = "news.pickle"
         # Event schema
         # [uid1, uid2, type, game_answer]
-        self.next_id = len(self.db['events'])
+        self.next_id = len(db['events'])
         self.db = db
         
 #     def get_next_feed_id(self):
@@ -61,13 +61,13 @@ class Feed_Handler():
         if is_winner_guesser: game_type = 'guesser_wins'
         else: game_type = 'creator_wins'
         new_event = [guesser_uid, creator_uid, game_type, phrase]
-        self.db['events'][self.next_id] = new_event
+        self.db['events'].append(new_event)
         self.next_id += 1
 
     def post_new_friendship(self, uid1, uid2):
         #insert into db/txt file
         new_event = [uid1, uid2, 'friendship', None]
-        self.db['events'][self.next_id] = new_event
+        self.db['events'].append(new_event)
         self.next_id += 1
         
 

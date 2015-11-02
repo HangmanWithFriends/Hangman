@@ -11,7 +11,7 @@ import string
 import cherrypy
 import hashlib
 import copy
-from Hangman.feed_handler import Feed_Handler
+from feed_handler import Feed_Handler
 
 class Account_Handler():
     

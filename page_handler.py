@@ -11,7 +11,7 @@ import requests
 import string
 import cherrypy
 import re
-from Hangman.feed_handler import Feed_Handler
+from feed_handler import Feed_Handler
 
 env = Environment(loader=FileSystemLoader(os.path.abspath(os.path.dirname(__file__))+'/templates/'))
 
