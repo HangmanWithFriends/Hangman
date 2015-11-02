@@ -205,43 +205,11 @@ class Page_Handler():
         if not search_string:
             return []
 
-        return_uids = set()
-       
-        words = search_string.split()
-
-        for word in words:
-            word = word.lower()
-            if word in self.db['username_words_to_uids']:
-                #multiple usernames could include the same word
-                uids = self.db['username_words_to_uids'][word]
-                for found_uid in uids:
-                    return_uids.add(found_uid)
-
-        #if it's an email, search by email, it's unlikely but possible that the above
-        #adds any uids, as an email would need to be part of someones username
-        if re.match(".*@*.*", search_string):
-            if search_string in self.emails_to_uids:
-                return_uids.add(self.emails_to_uids[search_string])
-    
-        #search by first three letters of each word 
-        else:
-            for word in words:
-                first_three = word[0:3].lower()
-                if first_three in self.db['username_word_starts_to_uids']:
-                    uids = self.db['username_word_starts_to_uids'][first_three]
-                    for found_uid in uids:
-                        return_uids.add(found_uid)         
-
-        # don't include users that they are already friends with, or the user themself
-        return_uids = return_uids - set(self.users[uid]['friends'] + [uid])
-
-        #find exact matches so we can put them in the front of the returned list
-        best_matches = set()
-        for r_uid in return_uids:
-            if (self.users[r_uid]['username'] == search_string) or (self.users[r_uid]['usermail'] == search_string):
-                best_matches.add(r_uid)
-
-        return_uids = return_uids - best_matches
-
-        #put best matches in the front
-        return list(best_matches) + list(return_uids)
+        match_uids = []
+  
+        for k in self.db['users'].keys():
+            val = self.db['users'][k]
+            if search_string in val['username'].lower(): match_uids.append(k)
+            elif search_string in val['usermail'].lower(): match_uids.append(k)
+            
+        return match_uids
