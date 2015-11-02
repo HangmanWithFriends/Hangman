@@ -397,13 +397,23 @@ footer{
 	margin-top: 0;
 	margin-bottom: 0;
 }
-.incoming-requests-list .friend-request, .search-results-list .friend-request{
+.incoming-requests-list .friend-request{
 	display: inline-block;
 	float: right;
 	padding-top: 22px;
     padding-bottom: 20px;
 	background-color: #fff;
 }
+
+
+.search-results-list .friend-request {
+    display: block;
+    float: right;
+    padding-top: 20px;
+    padding-bottom: 18px;
+    background-color: #fff;
+}
+
 .search-results-list .friend-request{
     padding-right: 20px;
 }
