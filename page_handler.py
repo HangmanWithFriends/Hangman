@@ -209,7 +209,9 @@ class Page_Handler():
   
         for k in self.db['users'].keys():
             val = self.db['users'][k]
+            usermail = val['usermail']
             if search_string in val['username'].lower(): match_uids.append(k)
-            elif search_string in val['usermail'].lower(): match_uids.append(k)
+            elif usermail:
+	        if search_string in val['usermail'].lower(): match_uids.append(k)
             
         return match_uids
