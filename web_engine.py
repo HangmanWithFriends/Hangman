@@ -9,9 +9,11 @@ import cherrypy
 import os
 import time
 import copy
+import sys
 from page_handler import Page_Handler
 from game_handler import Game_Handler
 from account_handler import Account_Handler
+from createMockDB import createMockDB
 
 def auto_save(db):
     old_db = copy.deepcopy(db)
@@ -77,7 +79,11 @@ def start_service():
                             }
 
     if 'events' not in db: db['events'] = list()
-
+    
+    #Overwrite DB for testing
+    if len(sys.argv) > 1 and sys.argv[1] == '-d':
+        db = createMockDB()
+    
     page_handler = Page_Handler(db)
     game_handler = Game_Handler(db)
     account_handler = Account_Handler(db)
