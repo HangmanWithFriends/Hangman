@@ -1,4 +1,4 @@
-$(function() {
+function sendGuess() {
     var uid_element = document.getElementById("uid");
     var gid_element = document.getElementById("gid");
 
@@ -44,6 +44,20 @@ $(function() {
             window.alert(message);
             window.location.href = redirect_location;
         }
-    })
-});
+    });
+}
 
+var letterGlobal;
+
+function sendLetter(letter) {
+    console.log(letter);
+    //setLG(letter);
+}
+
+function setLG(toSet) {
+    letterGlobal = toSet;
+}
+
+function getLG() {
+    return letterGlobal;
+}
