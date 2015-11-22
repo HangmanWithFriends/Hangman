@@ -55,6 +55,7 @@ def createMockDB():
                                 "incorrect_letters" : ['A', 'C', 'K'],
                                 "incorrect_words" : ['testbadword'],
                                 "correct_letters" : ['E', 'R', 'D', 'T'],
+                                "is_ai":False,
                                 "guesser_uid":"3",
                                 "creator_uid":"g7",
                                 "win":None
@@ -63,6 +64,7 @@ def createMockDB():
     db['games']['2']={
                                 "answer":"test",
                                 "incorrect_letters" : ['A', 'M', 'L', 'R'],
+                                "is_ai":False,
                                 "incorrect_words" : [],
                                 "correct_letters" : ['E', 'S'],
                                 "guesser_uid":"2",
