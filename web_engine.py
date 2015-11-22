@@ -24,6 +24,8 @@ def auto_save(db):
         # If a change has been made to the database, pickle it
         if old_db != db:
             f = 'HangmanDB.pickle'
+            if len(sys.argv) > 1 and sys.argv[1] == '-d':
+                f = "TestHangmanDB.pickle"
             pickle.dump(db, file(f, 'w'))
             old_db = copy.deepcopy(db)
 
