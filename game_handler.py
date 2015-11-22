@@ -26,7 +26,14 @@ class Game_Handler():
         self.games_table = db['games']
         self.waiting_gids = list()
         self.next_int_gid = self.find_next_game_id()
-        self.ai_words_list = pickle.load(open('ai/ai_word_list.pickle', 'r'))
+        try:
+            self.ai_words_list = pickle.load(open('ai/ai_word_list.pickle', 'r'))
+        except:
+            try:
+                self.ai_words_list = pickle.load(open('../ai/ai_word_list.pickle', 'r'))
+            except:
+                print 'Unable to load ai word list from pickle file'
+                exit(1)
         self.feedhandler = Feed_Handler(db)
  
     def get_dummy_game(self, gid):
@@ -102,7 +109,8 @@ class Game_Handler():
 
             self.check_win(game_dict, letter)
 
-        print letter + ' already guessed'
+        else:
+            print letter + ' already guessed'
 
     def check_win(self, game_dict, guess):
         # Check if the guesser won
