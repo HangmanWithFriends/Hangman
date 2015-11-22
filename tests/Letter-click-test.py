@@ -5,8 +5,12 @@ from selenium.webdriver.common.action_chains import ActionChains
 from string import ascii_uppercase
 import time
 import os 
+import thread
 
-os.system('python ../web_engine.py -d')
+def fire_web_engine():
+    os.system('python ../web_engine.py -d')
+
+thread.start_new_thread(fire_web_engine, ())
 
 passed= True
 browser = webdriver.Firefox() # Get local session of firefox

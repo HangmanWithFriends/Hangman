@@ -7,6 +7,37 @@ from createMockDB import createMockDB
 from game_handler import Game_Handler
 
 
+def duplicate_phrase(phrase):
+    guessed_phrases = games['1']['incorrect_words']
+    game_handler.guess_phrase('1', phrase)
+    new_guessed_phrases = games['1']['incorrect_words']
+    if new_guessed_phrases != guessed_phrases:
+        print "> The set of incorrect words has changed: FAILED"
+    else:
+        print "> The set of incorrect words has not changed: PASSED"
+
+def correct_phrase(phrase):
+    has_winner = games['1']['win']
+    if(has_winner is None):
+        game_handler.guess_phrase('1', phrase)
+        has_winner = games['1']['win']
+        if(has_winner):
+            print "> The correctly guessed phrase won the game: PASSED"
+        else:
+            print "> The correctly guessed phrase failed to win the game: FAILED"
+    else:
+        print "> The game already had a winner, bad test configuration"
+
+def incorrect_phrase(phrase):
+    guessed_phrases = games['1']['incorrect_words']
+    game_handler.guess_phrase('1', phrase)
+    new_guessed_phrases = games['1']['incorrect_words']
+    if new_guessed_phrases != guessed_phrases and new_guessed_phrases[-1] == phrase:
+        print "> The set of incorrect words has changed: PASSED"
+    else:
+        print "> The set of incorrect words has not changed: FAILED"
+
+ 
 def letter_in_word(letter):
 	#try:
 		if letter not in games['1']['correct_letters']:
@@ -72,3 +103,6 @@ if __name__ == "__main__":
 	letter_not_in_word("P")
 	letter_already_used("E")
 	letter_completes_word("T")
+    duplicate_phrase("TESTBADWORD")
+    incorrect_phrase("TESTING")
+    correct_phrase("TESINGWORD")
