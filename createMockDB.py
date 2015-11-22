@@ -52,7 +52,7 @@ def createMockDB():
 
     db['games']['1']={
                                 "answer":"TESTINGWORD",
-                                "incorrect_letters" : ['A', 'C', 'K'],
+                                "incorrect_letters" : ['A', 'C'],
                                 "incorrect_words" : ['TESTBADWORD'],
                                 "correct_letters" : ['E', 'R', 'D', 'T'],
                                 "is_ai":False,

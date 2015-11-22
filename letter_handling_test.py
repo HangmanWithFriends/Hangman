@@ -8,7 +8,7 @@ from game_handler import Game_Handler
 
 
 def duplicate_phrase(phrase):
-    guessed_phrases = games['1']['incorrect_words']
+    guessed_phrases = copy.deepcopy(games['1']['incorrect_words'])
     game_handler.guess_phrase('1', phrase)
     new_guessed_phrases = games['1']['incorrect_words']
     if new_guessed_phrases != guessed_phrases:
@@ -17,7 +17,7 @@ def duplicate_phrase(phrase):
         print "> The set of incorrect words has not changed: PASSED"
 
 def correct_phrase(phrase):
-    has_winner = games['1']['win']
+    has_winner = copy.deepcopy(games['1']['win'])
     if(has_winner is None):
         game_handler.guess_phrase('1', phrase)
         has_winner = games['1']['win']
@@ -29,7 +29,7 @@ def correct_phrase(phrase):
         print "> The game already had a winner, bad test configuration"
 
 def incorrect_phrase(phrase):
-    guessed_phrases = games['1']['incorrect_words']
+    guessed_phrases = copy.deepcopy(games['1']['incorrect_words'])
     game_handler.guess_phrase('1', phrase)
     new_guessed_phrases = games['1']['incorrect_words']
     if new_guessed_phrases != guessed_phrases and new_guessed_phrases[-1] == phrase:
@@ -92,17 +92,18 @@ def letter_completes_word(letter):
 
 
 if __name__ == "__main__":
-	mockDB = createMockDB()
-
-	global games
-	global game_handler
-	games = mockDB["games"]
-	game_handler = Game_Handler(mockDB)
-
-	letter_in_word("I")
-	letter_not_in_word("P")
-	letter_already_used("E")
-	letter_completes_word("T")
+    
+    mockDB = createMockDB()
+    
+    global games
+    global game_handler
+    games = mockDB["games"]
+    game_handler = Game_Handler(mockDB)
+    
+    letter_in_word("I")
+    letter_not_in_word("P")
+    letter_already_used("E")
+    letter_completes_word("T")
     duplicate_phrase("TESTBADWORD")
     incorrect_phrase("TESTING")
-    correct_phrase("TESINGWORD")
+    correct_phrase("TESTINGWORD")
