@@ -85,6 +85,8 @@ class Game_Handler():
             output = {'result':'Failure', 'message':"Must be the guessing user to guess"}
         else:
             output=None
+            
+        return output
 
     def guess_phrase(self, gid, phrase):
         if gid not in self.games_table:
