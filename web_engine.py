@@ -24,6 +24,8 @@ def auto_save(db):
         # If a change has been made to the database, pickle it
         if old_db != db:
             f = 'HangmanDB.pickle'
+            if len(sys.argv) > 1 and sys.argv[1] == '-d':
+                f = "TestHangmanDB.pickle"
             pickle.dump(db, file(f, 'w'))
             old_db = copy.deepcopy(db)
 
@@ -117,7 +119,8 @@ def connect_game_handler_dispatches(dispatcher, game_handler):
     dispatcher.connect('post_game_request', '/game/{uid}/request',controller=game_handler,action='post_game_request',conditions=dict(method=['POST']))
     dispatcher.connect('get_game_request','/game/{uid}/request',controller=game_handler, action='get_game_request',conditions=dict(method=['GET']))
     dispatcher.connect('get_ai_game_request','/game/{uid}/ai/request',controller=game_handler, action='get_ai_game_request',conditions=dict(method=['GET']))
-    dispatcher.connect('post_guess_JSON', '/game/{uid}/{gid}', controller=game_handler,action='post_guess',conditions=dict(method=['POST']))
+    dispatcher.connect('post_guess_JSON', '/game/{uid}/{gid}/phrase', controller=game_handler,action='post_phrase_guess',conditions=dict(method=['POST']))
+    dispatcher.connect('post_letter_JSON', '/game/{uid}/{gid}/letter', controller=game_handler,action='post_letter_guess',conditions=dict(method=['POST']))
     dispatcher.connect('get_game_JSON', '/game/{gid}',controller=game_handler,action='get_game',conditions=dict(method=['GET']))
 
 def connect_account_handler_dispatches(dispatcher, account_handler):

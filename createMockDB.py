@@ -51,18 +51,20 @@ def createMockDB():
                             }
 
     db['games']['1']={
-                                "answer":"testingword",
+                                "answer":"TESTINGWORD",
                                 "incorrect_letters" : ['A', 'C', 'K'],
-                                "incorrect_words" : ['testbadword'],
+                                "incorrect_words" : ['TESTBADWORD'],
                                 "correct_letters" : ['E', 'R', 'D', 'T'],
+                                "is_ai":False,
                                 "guesser_uid":"3",
                                 "creator_uid":"g7",
                                 "win":None
                             }
 
     db['games']['2']={
-                                "answer":"test",
+                                "answer":"TEST",
                                 "incorrect_letters" : ['A', 'M', 'L', 'R'],
+                                "is_ai":False,
                                 "incorrect_words" : [],
                                 "correct_letters" : ['E', 'S'],
                                 "guesser_uid":"2",

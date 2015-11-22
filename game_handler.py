@@ -26,7 +26,14 @@ class Game_Handler():
         self.games_table = db['games']
         self.waiting_gids = list()
         self.next_int_gid = self.find_next_game_id()
-        self.ai_words_list = pickle.load(open('ai/ai_word_list.pickle', 'r'))
+        try:
+            self.ai_words_list = pickle.load(open('ai/ai_word_list.pickle', 'r'))
+        except:
+            try:
+                self.ai_words_list = pickle.load(open('../ai/ai_word_list.pickle', 'r'))
+            except:
+                print 'Unable to load ai word list from pickle file'
+                exit(1)
         self.feedhandler = Feed_Handler(db)
  
     def get_dummy_game(self, gid):
@@ -40,35 +47,46 @@ class Game_Handler():
         result["errors"] = []
         result["result"] = "Success"
         return json.dumps(result)
-    
-    def post_guess(self, uid, gid, guess):
-        if(gid not in self.games_table):
-            output = {'result':'Error', 'errors':["Game does not exist"]}
-            return json.dumps(output, encoding='latin-1')
-        
-        if(uid != self.games_table[gid]['guesser_uid']):
-            output = {'result':'Error', 'errors':["Must be the guessing user to guess"]}
-        
-        if not guess:
-            output = {'result':'Failure', 'message':"Incoming data not valid"}
-            return json.dumps(output, encoding='latin-1')
-
-        if uid != self.games_table[gid]['guesser_uid']:
-            output = {'result':'Failure', 'message':"Must be the guessing user to guess"}
-            return json.dumps(output, encoding='latin-1')
+   
+    def post_phrase_guess(self, uid, gid, guess):
+        is_bad = self.validate_guess_and_guesser(uid, gid, guess)
+        if(is_bad is not None):
+            return json.dumps(is_bad, encoding='latin-1')
 
         guess = guess.upper()
-
-        if len(guess) is 1:
-            self.guess_letter(gid, guess)
-
-        elif len(guess) > 1:
-            self.guess_phrase(gid, guess)
+        self.guess_phrase(gid, guess)
 
         output ={'result':'Success', 'message': None}
 
-#         return json.dumps(output,encoding='latin-1')
         raise cherrypy.HTTPRedirect('/gameplay/' + str(uid) + '/' + str(gid))
+
+    def post_letter_guess(self, uid, gid, guess):
+        is_bad = self.validate_guess_and_guesser(uid, gid, guess)
+        if(is_bad is not None):
+            return json.dumps(is_bad, encoding='latin-1')
+
+        guess = guess.upper()
+        self.guess_letter(gid, guess)
+
+        output ={'result':'Success', 'message': None}
+
+        raise cherrypy.HTTPRedirect('/gameplay/' + str(uid) + '/' + str(gid))
+
+    def validate_guess_and_guesser(self, uid, gid, guess):
+        if(gid not in self.games_table):
+            output = {'result':'Error', 'errors':["Game does not exist"]}
+        elif(uid != self.games_table[gid]['guesser_uid']):
+            output = {'result':'Error', 'errors':["Must be the guessing user to guess"]}
+        
+        elif not guess:
+            output = {'result':'Failure', 'message':"Incoming data not valid"}
+
+        elif uid != self.games_table[gid]['guesser_uid']:
+            output = {'result':'Failure', 'message':"Must be the guessing user to guess"}
+        else:
+            output=None
+            
+        return output
 
     def guess_phrase(self, gid, phrase):
         if gid not in self.games_table:
@@ -102,7 +120,8 @@ class Game_Handler():
 
             self.check_win(game_dict, letter)
 
-        print letter + ' already guessed'
+        else:
+            print letter + ' already guessed'
 
     def check_win(self, game_dict, guess):
         # Check if the guesser won

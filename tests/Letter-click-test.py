@@ -4,6 +4,9 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from string import ascii_uppercase
 import time
+import os 
+
+os.system('python ../web_engine.py -d')
 
 passed= True
 browser = webdriver.Firefox() # Get local session of firefox
