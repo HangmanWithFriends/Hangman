@@ -252,6 +252,11 @@ footer{
 	font-size: 32px;
 	padding-left: 8px;
 	padding-right: 8px;
+	cursor: pointer;
+}
+
+.game .gallows .character-box ul li:hover{
+	color: #0099CC;	
 }
 
 .game .gallows .character-box ul .used{
