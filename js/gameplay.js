@@ -51,6 +51,23 @@ var letterGlobal;
 
 function sendLetter(letter) {
     console.log(letter);
+    setLG(letter);
+    
+    var uid_element = document.getElementById("uid");
+    var gid_element = document.getElementById("gid");
+
+    var uid = uid_element.innerHTML;
+    var gid = gid_element.innerHTML;
+    
+    setTimeout(function(){
+      $.ajax({
+          type: "POST",
+          url: '/game/'+ uid +'/' + gid + '/letter',
+          data: {guess: getLG()},
+        }).done(function(){             
+            location.reload();   
+        });
+    }, 200);
     
 }
 
