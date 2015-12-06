@@ -61,7 +61,7 @@ class Page_Handler():
         else:
             guesser_name = 'the Computer'
 
-        return env.get_template('RequestPhrase.html').render(uid=uid, gid=gid, guesser_name=guesser_name)
+        return env.get_template('RequestPhrase.html').render(uid=uid, gid=gid, guesser_name=guesser_name, error=0)
 
     def get_game_html(self, uid, gid):
         return env.get_template('Game.html').render(uid=uid, gid=gid)
@@ -74,7 +74,7 @@ class Page_Handler():
         return env.get_template('GuestLobby.html').render(uid=uid, display_name = display_name);
     
     def get_guest_request_phrase_html(self):
-        return env.get_template('GuestRequestPhrase.html').render()
+        return env.get_template('GuestRequestPhrase.html').render(error = 0)
 
     def get_guest_lobby_html(self, uid):
         uid_info = self.get_info_dict_from_uid(uid) 

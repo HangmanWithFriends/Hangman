@@ -292,34 +292,26 @@ class Game_Handler():
         return word.upper()
 
     def post_game_prompt(self, uid, gid, answer=None):
+        template = "RequestPhrase.html"
+        if(gid[0] == 'g'):
+            template = "GuestRequestPhrasei.html"
+
+        guesser_name = "your opponent"
+
         if uid != self.games_table[gid]['creator_uid']:
-            output = {'result': 'Failure', 'message': "Must be the creating user to create prompt"}
-            return json.dumps(output, encoding='latin-1')
+            return env.get_template(template).render(uid=uid, gid=gid, guesser_name = guesser_name, error = 1)
 
         if not answer:
-            output = {'result': 'Failure', 'message': 'Incoming data insufficient'}
-            return json.dumps(output, encoding='latin-1')
+            return env.get_template(template).render(uid=uid, gid=gid, guesser_name = guesser_name, error = 1)
 
         answer = answer.upper()
         stripped_answer = ''.join(answer.split())  # Answer without whitespace
-
-        if not answer is None:
-            if len(stripped_answer) in range(3, 31) and answer.isalpha():
-                self.games_table[gid]['answer'] = answer
-                output = {'result': 'Success', 'message': 'Your game will begin shortly!'}
-            else:
-                output = {'result': 'Failure', 'message': 'Your phrase must be between 3 and 30 alphabetical characters.'}
+        if len(stripped_answer) in range(3, 31) and answer.isalpha():
+            self.games_table[gid]['answer'] = answer
+            output = {'result': 'Success', 'message': 'Your game will begin shortly!'}
+            raise cherrypy.HTTPRedirect('/gameplay/' + str(uid) + '/' + str(gid))
         else:
-            output = {'result': 'Failure', 'message': 'Empty answer'}
-
-        if not answer is None:
-            if len(stripped_answer) in range(3, 31) and answer.isalpha():
-                self.games_table[gid]['answer'] = answer
-                output = {'result': 'Success', 'message': 'Your game will begin shortly!'}
-            else:
-                output = {'result': 'Error', 'message': 'Your phrase must be between 3 and 30 alphabetical characters.'}
-        raise cherrypy.HTTPRedirect('/gameplay/' + str(uid) + '/' + str(gid))
-        return json.dumps(output, encoding='latin-1')
+            return env.get_template(template).render(uid=uid, gid=gid, guesser_name = guesser_name, error = 1)
 
     def assign_player_roles(self, uid1, uid2):
         if random.randint(0,1) == 0:

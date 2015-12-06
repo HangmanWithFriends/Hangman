@@ -30,11 +30,16 @@
 <body>
 	<div class="col-md-4 col-md-offset-4 Home">
 		<h2>Enter the Phrase For <br>{{ guesser_name }} to Guess</h2>
+        {% if error != 0 %}
+        <p>hello</p>
+        {%endif %}
 		<form id="request_phrase-form" name="request_phrase" action="/game/{{ uid }}/prompt/{{ gid }}" method="post" accept-charset="utf-8">
-			<input type="text" name="answer" placeholder="Phrase" required>
+			<input type="text" id="ans" name="answer" placeholder="Phrase" required>
 			<button  class="btn-home" type="submit" value="Submit">Submit</button>
 		</form>
 		 
 	</div>
 </body>
+
+<script src="/js/manage_phrase_entry.js"></script>
 </html>
