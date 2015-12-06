@@ -296,7 +296,7 @@ class Game_Handler():
         if(gid[0] == 'g'):
             template = "GuestRequestPhrasei.html"
 
-        guesser_name = "your opponent"
+        guesser_name = "Your Opponent"
 
         if uid != self.games_table[gid]['creator_uid']:
             return env.get_template(template).render(uid=uid, gid=gid, guesser_name = guesser_name, error = 1)
@@ -305,8 +305,8 @@ class Game_Handler():
             return env.get_template(template).render(uid=uid, gid=gid, guesser_name = guesser_name, error = 1)
 
         answer = answer.upper()
-        stripped_answer = ''.join(answer.split())  # Answer without whitespace
-        if len(stripped_answer) in range(3, 31) and answer.isalpha():
+        stripped_answer = ''.join(answer.split(' '))  # Answer without whitespace
+        if len(answer) in range(3, 31) and stripped_answer.isalpha():
             self.games_table[gid]['answer'] = answer
             output = {'result': 'Success', 'message': 'Your game will begin shortly!'}
             raise cherrypy.HTTPRedirect('/gameplay/' + str(uid) + '/' + str(gid))
