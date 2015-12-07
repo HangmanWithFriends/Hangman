@@ -11,7 +11,7 @@ var wrong_phrases = [];
 var new_right_letters = [];
 var new_wrong_letters = [];
 var new_wrong_phrases = [];
-
+resizeDiv();
 $.ajax({
         type : 'GET',
         url : '/game/'+ gid,
@@ -54,6 +54,16 @@ $.ajax({
             myInterval = setInterval(function(){ poll_updates(); }, 3000);
         }
 });
+
+window.onresize = function(event) {
+	resizeDiv();
+}
+
+function resizeDiv() {
+vpw = $(window).width();
+vph = $(window).height()/2;
+	$('#gallows-img').css({'height': vph + 'px'});
+}
 
 function poll_updates(){
     $.ajax({

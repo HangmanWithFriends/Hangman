@@ -45,7 +45,19 @@ $(function() {
             window.location.href = redirect_location;
         }
     });
+	resizeDiv();
 });
+
+
+window.onresize = function(event) {
+	resizeDiv();
+}
+
+function resizeDiv() {
+vpw = $(window).width();
+vph = $(window).height()/2;
+	$('#gallows-img').css({'height': vph + 'px'});
+}
 
 var letterGlobal;
 
@@ -67,7 +79,7 @@ function sendLetter(letter) {
         }).done(function(){             
             location.reload();   
         });
-    }, 200);
+    }, 300);
     
 }
 

@@ -37,8 +37,8 @@
             <li id=gid>{{ gid }}</li>
         </ul>
     </div>
-	<div class="container">
-		<div class="col-md-6 col-md-offset-1" >	
+	<div class="container lblue">
+		<div class="col-md-5 col-md-offset-1" >	
             <h3> Your are playing against {{ creator_name }}.</h3>
 			<div class="game">
 				<div class="header">
@@ -48,7 +48,7 @@
 					<span>{{ word_progress }}</span>
 				</div>				
 				<div class="gallows">
-					<img src={{ img_name }} alt="Hangman Gallows">
+					<img src={{ img_name }} alt="Hangman Gallows" id="gallows-img">
 					<div class="character-box">
 						<ul>
                             <!-- All letters, class based on if its in correct or in incorrect -->
