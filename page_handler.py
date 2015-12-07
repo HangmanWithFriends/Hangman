@@ -30,8 +30,9 @@ class Page_Handler():
     
     def get_lobby_html(self, uid):
         uid_info = self.get_info_dict_from_uid(uid)
-        friends = self.get_friend_info_dicts_from_uid(uid)
-        num_requests = len(self.users[uid]['incoming_friend_requests'])
+        friends = self.users[uid]['friends'] if self.users[uid]['friends'] else []
+        requests = self.users[uid]['incoming_friend_requests']
+        num_requests = len(requests) if requests else 0
         feed_events = self.feedhandler.get_feed_lines(15)
         event_phrases = []
         for elem in feed_events:
@@ -132,10 +133,15 @@ class Page_Handler():
             guesser_name = 'the Computer'
         
         if(str(uid) == str(game_dict['creator_uid'])):
-            return env.get_template('SpectatorGame.html').render(game_dict=game_dict, alphabet=alphabet, word_progress=word_progress, img_name=img_name, gid=str(gid), uid=uid, guesser_name = guesser_name, creator_name = creator_name)
+            if 'g' in uid:
+                return env.get_template('SpectatorGuestGame.html').render(game_dict=game_dict, alphabet=alphabet, word_progress=word_progress, img_name=img_name, gid=str(gid), uid=uid, guesser_name = guesser_name, creator_name = creator_name)
+            else:
+                return env.get_template('SpectatorGame.html').render(game_dict=game_dict, alphabet=alphabet, word_progress=word_progress, img_name=img_name, gid=str(gid), uid=uid, guesser_name = guesser_name, creator_name = creator_name)
 
- 
-        return env.get_template('Game.html').render(game_dict=game_dict, alphabet=alphabet, word_progress=word_progress, img_name=img_name, gid=str(gid), uid=uid, guesser_name = guesser_name, creator_name = creator_name)
+        if 'g' in uid:
+            return env.get_template('GuestGame.html').render(game_dict=game_dict, alphabet=alphabet, word_progress=word_progress, img_name=img_name, gid=str(gid), uid=uid, guesser_name = guesser_name, creator_name = creator_name)
+        else:
+            return env.get_template('Game.html').render(game_dict=game_dict, alphabet=alphabet, word_progress=word_progress, img_name=img_name, gid=str(gid), uid=uid, guesser_name = guesser_name, creator_name = creator_name)
     
     def get_wait_html(self, uid, gid):
         return env.get_template('Wait.html').render(uid=uid, gid=gid)
@@ -174,15 +180,18 @@ class Page_Handler():
     def get_friend_info_dicts_from_uid(self, uid):
         if uid not in self.db['users']:
             return []
-
+        print uid
         friends_uids = self.users[uid]['friends']
         friends_dicts_list = []
-        for f_uid in friends_uids:
-            friends_dicts_list.append(self.get_info_dict_from_uid(f_uid))
+
+        if friends_uids:
+            for f_uid in friends_uids:
+                friends_dicts_list.append(self.get_info_dict_from_uid(f_uid))
 
         return friends_dicts_list
     
     def get_info_dict_from_uid(self, uid):
+        print "uid = " + uid
         to_return = {'uid':uid, 'username':self.users[uid]['username'], 'profile_image':self.images_path+self.get_image_name_from_uid(uid)}
         if uid[0] != 'g':
             to_return['usermail'] = self.users[uid]['usermail']
