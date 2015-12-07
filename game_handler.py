@@ -136,7 +136,7 @@ class Game_Handler():
 
         # Check if the creator won
         guesses_made = len(game_dict['incorrect_letters']) + len(game_dict['incorrect_words'])
-        if guesses_made >= 6:
+        if guesses_made == 6:
             game_dict['win'] = game_dict['creator_uid']
             self.feedhandler.post_game_result(game_dict['guesser_uid'], game_dict['creator_uid'], False, game_dict['answer'])
 
