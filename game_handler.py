@@ -136,7 +136,7 @@ class Game_Handler():
 
         # Check if the creator won
         guesses_made = len(game_dict['incorrect_letters']) + len(game_dict['incorrect_words'])
-        if guesses_made == 6:
+        if guesses_made >= 6:
             game_dict['win'] = game_dict['creator_uid']
             self.feedhandler.post_game_result(game_dict['guesser_uid'], game_dict['creator_uid'], False, game_dict['answer'])
 
@@ -148,6 +148,19 @@ class Game_Handler():
             if self.games_table[gid]['is_ai'] and self.games_table[gid]['guesser_uid'] == "ai":
                 self.make_ai_guess(gid)
 
+            output = self.games_table[gid]
+            output['result'] = 'Success'
+            output['errors'] = []
+
+        # Logic Error: No active game with this gid
+        else:
+            output = {'result': 'Error', 'errors': ['This is not an active game id.']}
+
+        return json.dumps(output, encoding='latin-1')
+    
+    def get_game_no_ai_guess(self, gid):
+        # Active Game
+        if gid in self.games_table:
             output = self.games_table[gid]
             output['result'] = 'Success'
             output['errors'] = []

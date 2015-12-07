@@ -14,7 +14,7 @@ var new_wrong_phrases = [];
 resizeDiv();
 $.ajax({
         type : 'GET',
-        url : '/game/'+ gid,
+        url : '/game/'+ gid + '/no_ai',
         contentType: 'application/json',
 	}).done(function(data) {
 		old_djson = JSON.parse(data);

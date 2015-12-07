@@ -122,6 +122,7 @@ def connect_game_handler_dispatches(dispatcher, game_handler):
     dispatcher.connect('post_guess_JSON', '/game/{uid}/{gid}/phrase', controller=game_handler,action='post_phrase_guess',conditions=dict(method=['POST']))
     dispatcher.connect('post_letter_JSON', '/game/{uid}/{gid}/letter', controller=game_handler,action='post_letter_guess',conditions=dict(method=['POST']))
     dispatcher.connect('get_game_JSON', '/game/{gid}',controller=game_handler,action='get_game',conditions=dict(method=['GET']))
+    dispatcher.connect('get_game_JSON_no_ai','/game/{gid}/no_ai',controller=game_handler,action='get_game_no_ai_guess',conditions=dict(method=['GET']))
 
 def connect_account_handler_dispatches(dispatcher, account_handler):
     dispatcher.connect('handle_login','/login',controller=account_handler, action='handle_login_request',conditions=dict(method=['POST']))
