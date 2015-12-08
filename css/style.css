@@ -241,9 +241,7 @@ footer{
 	background-color: #fff;
 }
 
-.game .gallows img{
-	
-}
+
 .game .gallows .character-box ul{
 	list-style:none;
 	margin: 0;	
@@ -276,10 +274,6 @@ footer{
 
 .game .user-input form{
 	max-width: 470px;
-	position: relative;
-}
-.game img{
-	width: 100%
 	position: relative;
 }
 
@@ -471,6 +465,27 @@ footer{
 }
 
 @media only screen and (max-device-width : 550px) {
+	header{
+		background-color: #0099CC;	
+	}
+	.player-avatar{
+		position: initial;
+		text-align: center;
+	}
+	header h1 {
+		position: initial;
+		left: 0px;
+		font-size: 26px;
+	}
 	
+	.game .gallows img {
+		max-height: 350px;
+	}	
+	.game .user-input {
+    	max-width: initial;    
+	}
+	.game .user-input form {
+    	max-width: initial;
+	}
 	
 }

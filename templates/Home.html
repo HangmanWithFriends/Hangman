@@ -3,16 +3,17 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<title>Hangman With Friends</title>
 	<meta name="description" content="Hangman With Friends">
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	
 
 	<link rel="stylesheet" href="/css/style.css">
 	
   	<link rel="stylesheet" href="../css/bootstrap.css">
-	<script src="../js/bootstrap.js"></script>
+	
 </head>
 <header>
 	<div class="blue" style="height: 60px"></div>
@@ -20,25 +21,31 @@
 	<div class="blue"style="height: 30px; margin-top:10px;"></div>
 </header>
 	
-<body>
-	<div class="col-md-4 col-md-offset-4 Home">
-		<h2>Log In To Hang!</h2>
-		<form id="login-form"name="login" accept-charset="utf-8">
-			<input type="email" id="user-email-input" name="usermail" placeholder="Email Address" required>
-			<input type="password" id="user-password-input" name="password" placeholder="Password" required>	
-			<input  class="btn-home" type="submit" value="Login">			
-		</form>
-		<h3>or</h3>
-		<form name="Signup" action="/register" method="get" accept-charset="utf-8">
-			<input class="btn-home" type="submit" value="Sign Up">
-		</form>
-		
-		<form id="guest-login" name="Guest" action="/get-guest-uid" method="get" accept-charset="utf-8">
-			<input class="btn-home" type="submit" value="Play As Guest">
-		</form>
-		
+<body class="lblue">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3 Home">
+				<h2>Log In To Hang!</h2>
+				<form id="login-form"name="login" accept-charset="utf-8">
+					<input type="email" id="user-email-input" name="usermail" placeholder="Email Address" required>
+					<input type="password" id="user-password-input" name="password" placeholder="Password" required>	
+					<input  class="btn-home" type="submit" value="Login">			
+				</form>
+				<h3>or</h3>
+				<form name="Signup" action="/register" method="get" accept-charset="utf-8">
+					<input class="btn-home" type="submit" value="Sign Up">
+				</form>
+
+				<form id="guest-login" name="Guest" action="/get-guest-uid" method="get" accept-charset="utf-8">
+					<input class="btn-home" type="submit" value="Play As Guest">
+				</form>
+
+			</div>
+		</div>
 	</div>
 	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="../js/bootstrap.js"></script>
 	<script src="js/userlogin.js"></script>
 	<script src="js/home.js"></script>
 	
