@@ -78,7 +78,8 @@ class Account_Handler():
                                     }
 
             result = {'errors':[], 'result':new_uid}
-            
+            self.emails_to_uids[usermail] = new_uid
+    
         return json.dumps(result)
 
     def get_guest_uid(self):

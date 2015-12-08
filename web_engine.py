@@ -27,6 +27,7 @@ def auto_save(db):
             if len(sys.argv) > 1 and sys.argv[1] == '-d':
                 f = "TestHangmanDB.pickle"
             pickle.dump(db, file(f, 'w'))
+            os.system('cp ' + f + ' ' + f +"_copy")
             old_db = copy.deepcopy(db)
 
 def start_service():
